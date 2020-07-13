@@ -28,6 +28,10 @@ module.exports = {
     ** Run ESLint on save
     */
     extend (config, { isDev, isClient }) {
+      config.module.rules.push({
+        // test: /\.pug$/,
+        // loader: 'pug-plain-loader'
+      })
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -37,6 +41,17 @@ module.exports = {
         })
       }
     },
+  },
+  css: [
+    // global for project
+    '~assets/css/main.scss'
+  ],
+  modules: [
+    '@nuxtjs/style-resources',
+    '@nuxtjs/axios',
+  ],
+  styleResources: {
+    scss: ['./assets/css/*.scss']
   },
 }
 

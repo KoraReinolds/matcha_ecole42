@@ -1,12 +1,12 @@
 <template lang="pug">
-  h2 Main
+  h2 Settings
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'Main',
+  name: 'Settings',
   components: {
   },
   data: () => ({

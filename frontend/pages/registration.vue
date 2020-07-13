@@ -1,12 +1,12 @@
 <template lang="pug">
-  h2 Main
+  h2 Registration
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'Main',
+  name: 'Registration',
   components: {
   },
   data: () => ({

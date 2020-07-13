@@ -1,0 +1,35 @@
+$error-color: #B71C1C;
+$main-color: rgb(226, 150, 214);
+$main-color-hover: darken($main-color, 10%);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+);
+
+.link {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 20px;
+  background: $main-color;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  &:hover {
+    background: $main-color-hover;
+  }
+  &.disabled {
+    cursor: default;
+    background: lightgray;
+  }
+}
