@@ -2,25 +2,21 @@
   div.form
     h2 Login
     TextField(
-      label="Login"
-      v-model="login"
+      v-for="rule in Object.values(rules)"
       rounded
       filled
-    )
-    TextField(
-      label="Password"
-      v-model="password"
-      rounded
-      filled
+      :key="`login-${rule.title}`"
+      :label="rule.title"
+      v-model="rule.value"
+      :rules="rule"
     )
     div.form-actions
-      a.link(@click="$router.push('/registration')") Registration
+      nuxt-link.link(to="/registration") Registration
       a.link Forget password
-      span.btn(@click.prevent="signIn({ login, password })") LogIn
+      span.btn(:class="{ disabled: !formValid }" @click.prevent="login()") LogIn
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import TextField from '@/components/TextField.vue';
 
 export default {
@@ -29,14 +25,40 @@ export default {
     TextField,
   },
   data: () => ({
-    location: '',
-    login: '',
-    password: '',
+    rules: {
+      login: {
+        value: '',
+        title: 'Login',
+        valid: false,
+        rules: [
+          (value) => !!value || 'Required',
+        ],
+      },
+      password: {
+        value: '',
+        title: 'Password',
+        valid: false,
+        rules: [
+          (value) => !!value || 'Required',
+        ],
+      },
+    }
   }),
+  computed: {
+    formValid: function() {
+      return Object.values(this.rules).every((rule) => rule.valid === true);
+    },
+  },
   methods: {
-    ...mapActions({
-      signIn: 'auth/LOGIN',
-    }),
+    login() {
+      if (this.formValid) this.$store.dispatch('auth/LOGIN',
+        Object.entries(this.rules)
+          .reduce((req, [key, rule]) => {
+            req[key] = rule.value;
+            return req;
+          }, {})
+      );
+    }
   },
   mounted() {
   },
@@ -44,18 +66,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.form {
-  width: 95%;
-  max-width: 500px;
-  margin: 5% auto;
-  background: #fff;
-  padding: 40px 20px;
-  border-radius: 10px;
-  .form-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-  }
-}
 </style>

@@ -33,3 +33,19 @@ $grid-breakpoints: (
     background: lightgray;
   }
 }
+
+// login and registration
+.form {
+  width: 95%;
+  max-width: 500px;
+  margin: 5% auto;
+  background: #fff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  .form-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+}

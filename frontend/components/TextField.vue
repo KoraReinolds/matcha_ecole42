@@ -18,7 +18,7 @@ export default {
     outlined: Boolean,
     filled: Boolean,
     rounded: Boolean,
-    rules: Array,
+    rules: Object,
     many: Boolean,
     error: String,
   },
@@ -35,12 +35,6 @@ export default {
   mixins: [],
   computed: {
     modesClasses: function() {
-      console.log({
-        filled: this.filledMode,
-        regular: this.regularMode,
-        outlined: this.outlinedMode,
-        rounded: this.roundedMode,
-      })
       return {
         filled: this.filledMode,
         regular: this.regularMode,
