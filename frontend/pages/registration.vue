@@ -6,6 +6,7 @@
         :key="`registration-${rule.title}`"
         :label="rule.title"
         v-model="rule.value"
+        @valid="rule.valid = $event.value"
         :rules="rule"
       )
       div.form-actions

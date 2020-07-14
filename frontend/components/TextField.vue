@@ -68,14 +68,14 @@ export default {
           msg = rule(value);
           if (msg !== true) {
             this.errorMsg = msg;
-            this.rules.valid = false;
+            this.$emit('valid', { name: 'changeValid', value: false });
             return false;
           }
           return true;
         });
         if (msg === true) {
           this.errorMsg = null;
-          this.rules.valid = true;
+          this.$emit('valid', { name: 'changeValid', value: true });
         }
       }
     },
