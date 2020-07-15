@@ -6,10 +6,9 @@
       rounded
       filled
       :key="`login-${rule.title}`"
-      :label="rule.title"
+      :data="rule"
+      @validate="validate"
       v-model="rule.value"
-      @valid="rule.valid = $event.value"
-      :rules="rule"
     )
     div.form-actions
       nuxt-link.link(to="/registration") Registration
@@ -19,9 +18,11 @@
 
 <script>
 import TextField from '@/components/TextField.vue';
+import validateMixin from '@/mixins/validateMixin';
 
 export default {
   name: 'login',
+  mixins: [validateMixin],
   components: {
     TextField,
   },
@@ -29,6 +30,7 @@ export default {
     rules: {
       login: {
         value: '',
+        errorMsg: '',
         title: 'Login',
         valid: false,
         rules: [
@@ -37,6 +39,7 @@ export default {
       },
       password: {
         value: '',
+        errorMsg: '',
         title: 'Password',
         valid: false,
         rules: [
@@ -46,9 +49,6 @@ export default {
     }
   }),
   computed: {
-    formValid: function() {
-      return Object.values(this.rules).every((rule) => rule.valid === true);
-    },
   },
   methods: {
     login() {

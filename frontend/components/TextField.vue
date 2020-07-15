@@ -1,26 +1,23 @@
 <template lang="pug">
-  div(:class="['text-field', modesClasses, { focus: focus, empty: !value, error: errorMsg || error }]")
+  div(:class="['text-field', modesClasses, { focus: focus, empty: !value, error: data.errorMsg }]")
     fieldset(:class="['input-field']" align="left" aria-hidden="true" @click.prevent="($refs.input || $refs.textarea).focus()")
       legend(:style="{ width: (focus || value) ? `${legendLen + 8}px`: '0px' }")
       textarea(v-if="textarea" ref="textarea" type="text" @focus="onFocuc" @blur="onBlur" @input="$emit('input', $event.target.value);" :value="value")
       input(v-else ref="input" type="text" @focus="onFocus" @blur="onBlur" @input="$emit('input', $event.target.value)" :value="value")
-      label(ref="label") {{ label }}
-    div(:class="['tooltip-field']") {{ errorMsg || error }}
+      label(ref="label") {{ data.title }}
+    div(:class="['tooltip-field']") {{ data.errorMsg }}
 </template>
 
 <script>
 export default {
   name: 'TextField',
   props: {
-    label: String,
     value: String,
-    color: String,
     outlined: Boolean,
     filled: Boolean,
     rounded: Boolean,
-    rules: Object,
+    data: Object,
     many: Boolean,
-    error: String,
   },
   data: () => ({
     filledMode: null,
@@ -29,7 +26,6 @@ export default {
     roundedMode: null,
     focus: false,
     legendLen: null,
-    errorMsg: null,
     textarea: null,
   }),
   mixins: [],
@@ -61,28 +57,10 @@ export default {
         }px`;
       }
     },
-    validate(value) {
-      if (this.rules && this.rules.rules) {
-        let msg = null;
-        this.rules.rules.every((rule) => {
-          msg = rule(value);
-          if (msg !== true) {
-            this.errorMsg = msg;
-            this.$emit('valid', { name: 'changeValid', value: false });
-            return false;
-          }
-          return true;
-        });
-        if (msg === true) {
-          this.errorMsg = null;
-          this.$emit('valid', { name: 'changeValid', value: true });
-        }
-      }
-    },
   },
   watch: {
     value() {
-      if (this.validate) this.validate(this.value);
+      this.$emit('validate', this.data);
       this.$nextTick(() => {
         this.setHeight(this.$refs.textarea);
       });

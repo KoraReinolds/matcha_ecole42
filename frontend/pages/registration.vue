@@ -4,10 +4,9 @@
       TextField(
         v-for="rule in Object.values(rules)"
         :key="`registration-${rule.title}`"
-        :label="rule.title"
+        :data="rule"
+        @validate="validate"
         v-model="rule.value"
-        @valid="rule.valid = $event.value"
-        :rules="rule"
       )
       div.form-actions
         nuxt-link.link(to="/login") Back
@@ -17,9 +16,11 @@
 
 <script>
 import TextField from '@/components/TextField.vue';
+import validateMixin from '@/mixins/validateMixin';
 
 export default {
   name: 'Registration',
+  mixins: [validateMixin],
   components: {
     TextField,
   },
@@ -27,6 +28,7 @@ export default {
     rules: {
       login: {
         value: '',
+        errorMsg: '',
         title: 'Login',
         valid: false,
         rules: [
@@ -37,6 +39,7 @@ export default {
       },
       password: {
         value: '',
+        errorMsg: '',
         title: 'Password',
         valid: false,
         rules: [
@@ -45,6 +48,7 @@ export default {
       },
       fname: {
         value: '',
+        errorMsg: '',
         title: 'First Name',
         valid: false,
         rules: [
@@ -55,6 +59,7 @@ export default {
       },
       lname: {
         value: '',
+        errorMsg: '',
         title: 'Last Name',
         valid: false,
         rules: [
@@ -65,6 +70,7 @@ export default {
       },
       email: {
         value: '',
+        errorMsg: '',
         title: 'E-mail',
         valid: false,
         rules: [
@@ -75,9 +81,6 @@ export default {
     },
   }),
   computed: {
-    formValid: function() {
-      return Object.values(this.rules).every((rule) => rule.valid === true);
-    },
   },
   methods: {
     register() {
