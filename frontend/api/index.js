@@ -51,4 +51,13 @@ export default {
       })
   },
 
+  getUser(data) {
+    console.log(data, HTTP.post('profile-get/', data));
+    return HTTP.post('profile-get/', data)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+  },
+
 };

@@ -1,6 +1,6 @@
 <template lang="pug">
   div.form
-      h2 Registration
+      h2.title Registration
       TextField(
         v-for="rule in Object.values(rules)"
         :key="`registration-${rule.title}`"

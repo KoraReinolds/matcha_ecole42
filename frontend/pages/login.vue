@@ -1,6 +1,6 @@
 <template lang="pug">
   div.form
-    h2 Login
+    h2.title Login
     TextField(
       v-for="rule in Object.values(rules)"
       rounded

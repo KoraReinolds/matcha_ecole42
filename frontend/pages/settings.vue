@@ -1,5 +1,5 @@
 <template lang="pug">
-  h2 Settings
+  h2 Settings {{user}}
 </template>
 
 <script>
@@ -13,15 +13,19 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      token: 'auth/TOKEN',
+      user: 'user/USER',
     }),
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
+      getUser: 'user/GET_USER'
     }),
   },
   mounted() {
+    this.getUser(this.token);
   },
 };
 </script>

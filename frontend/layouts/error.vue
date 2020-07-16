@@ -2,7 +2,7 @@
   div.container
     h1(v-if="error.statusCode === 404") Страница не найдена
     h1(v-else) Произошла ошибка
-    nuxt-link.button--green(to="/") Вернуться на главную
+    nuxt-link.btn(to="/") Вернуться на главную
 </template>
 
 <script>

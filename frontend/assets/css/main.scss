@@ -42,6 +42,9 @@ $grid-breakpoints: (
   background: #fff;
   padding: 40px 20px;
   border-radius: 10px;
+  .title {
+    margin-bottom: 20px;
+  }
   .form-actions {
     display: flex;
     flex-direction: row;
