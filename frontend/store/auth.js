@@ -66,6 +66,36 @@ export const state = () => ({
       "value.match(/[^@]+@[^.]+\..+/) !== null || 'Must be properly formatted'",
     ],
   },
+  biography: {
+    value: '',
+    errorMsg: '',
+    title: 'Biography',
+    valid: false,
+    rules: [
+      "!!value || 'Required'",
+      "(value && value.length <= 1024) || 'Max 1024 characters'",
+    ],
+  },
+  gender: {
+    options: ['male', 'female', 'bisexual'],
+    value: '',
+    errorMsg: '',
+    title: 'Gender',
+    valid: false,
+    rules: [
+      "!!value || 'Required'",
+    ],
+  },
+  preferences: {
+    options: ['male', 'female', 'bisexual'],
+    value: [],
+    errorMsg: '',
+    title: 'Preferences',
+    valid: false,
+    rules: [
+      "!!value.length || 'Required'",
+    ],
+  },
   location: {
     value: '',
     errorMsg: '',
@@ -95,6 +125,9 @@ export const getters = {
   LAST_NAME: (state) => state.lastName,
   AGE: (state) => state.age,
   MAIL: (state) => state.mail,
+  BIOGRAPHY: (state) => state.biography,
+  GENDER: (state) => state.gender,
+  PREFERENCES: (state) => state.preferences,
   LOCATION: (state) => state.location,
 }
 export const mutations = {
@@ -122,11 +155,11 @@ export const mutations = {
   SET_USER: (state, user) => {
     state.firstName.value =   user.fname;
     state.lastName.value =    user.lname;
-    // state.biography.value =   user.biography;
     state.mail.value =        user.email;
     state.age.value =         user.age;
-    // state.gender.value =      user.gender;
-    // state.preferences.value = user.preference,
+    state.biography.value =   user.biography;
+    state.gender.value =      user.gender;
+    state.preferences.value = user.preference,
     // state.tags.value =        user.tags,
     state.avatar =            user.avatar;
     // state.images.value =      user.images;

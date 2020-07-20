@@ -26,6 +26,18 @@ export default {
       get() { return this.getMail.value; },
       set(value) { this.setValue({ key: 'mail', value }); },
     },
+    biography: {
+      get() { return this.getBiography.value; },
+      set(value) { this.setValue({ key: 'biography', value }); },
+    },
+    gender: {
+      get() { return this.getGender.value; },
+      set(value) { this.setValue({ key: 'gender', value }); },
+    },
+    preferences: {
+      get() { return this.getPreferences.value; },
+      set(value) { this.setValue({ key: 'preferences', value }); },
+    },
     ...mapGetters({
       getLogin: 'auth/LOGIN',
       getPassword: 'auth/PASSWORD',
@@ -33,6 +45,9 @@ export default {
       getLastName: 'auth/LAST_NAME',
       getAge: 'auth/AGE',
       getMail: 'auth/MAIL',
+      getBiography: 'auth/BIOGRAPHY',
+      getGender: 'auth/GENDER',
+      getPreferences: 'auth/PREFERENCES',
     }),
   },
   methods: {

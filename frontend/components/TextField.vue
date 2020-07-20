@@ -1,11 +1,35 @@
 <template lang="pug">
-  div(:class="['text-field', modesClasses, { focus: focus, empty: !value, error: data.errorMsg }]")
-    fieldset(:class="['input-field']" align="left" aria-hidden="true" @click.prevent="($refs.input || $refs.textarea).focus()")
-      legend(:style="{ width: (focus || value) ? `${legendLen + 8}px`: '0px' }")
-      textarea(v-if="textarea" ref="textarea" type="text" @focus="onFocuc" @blur="onBlur" @input="$emit('input', $event.target.value);" :value="value")
-      input(v-else ref="input" type="text" @focus="onFocus" @blur="onBlur" @input="$emit('input', $event.target.value)" :value="value")
+  div.text-field(
+    :class="[modesClasses, { focus, empty: !value, error: data.errorMsg }]"
+  )
+    fieldset.input-field(
+      align="left"
+      aria-hidden="true"
+      @click.prevent="($refs.input || $refs.textarea).focus()"
+    )
+      legend(
+        :style="{ width: `${(focus || value) ? legendLen + 8 : 0}px` }"
+      )
+      textarea(
+        v-if="textarea"
+        ref="textarea"
+        type="text"
+        @focus="onFocus"
+        @blur="onBlur"
+        @input="$emit('input', $event.target.value);"
+        :value="value"
+      )
+      input(
+        v-else
+        ref="input"
+        type="text"
+        @focus="onFocus"
+        @blur="onBlur"
+        @input="$emit('input', $event.target.value)"
+        :value="value"
+      )
       label(ref="label") {{ data.title }}
-    div(:class="['tooltip-field']") {{ data.errorMsg }}
+    div.tooltip-field {{ data.errorMsg }}
 </template>
 
 <script>
