@@ -4,8 +4,24 @@
   </div>
 </template>
 
-<style lang="scss">
+<script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
+export default {
+  methods: {
+    ...mapMutations({
+    }),
+    ...mapActions({
+      getLocation: 'auth/GET_LOCATION',
+    }),
+  },
+  mounted() {
+    this.getLocation();
+  }
+}
+</script>
+
+<style lang="scss">
 html {
   box-sizing: border-box;
 }

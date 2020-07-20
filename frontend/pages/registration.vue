@@ -2,11 +2,24 @@
   div.form
       h2.title Registration
       TextField(
-        v-for="rule in Object.values(rules)"
-        :key="`registration-${rule.title}`"
-        :data="rule"
-        @validate="validate"
-        v-model="rule.value"
+        :data="getLogin"
+        v-model="login"
+      )
+      TextField(
+        :data="getPassword"
+        v-model="password"
+      )
+      TextField(
+        :data="getFirstName"
+        v-model="firstName"
+      )
+      TextField(
+        :data="getLastName"
+        v-model="lastName"
+      )
+      TextField(
+        :data="getMail"
+        v-model="mail"
       )
       div.form-actions
         nuxt-link.link(to="/login") Back
@@ -15,82 +28,30 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import fieldMixin from '@/mixins/fieldMixin';
 import TextField from '@/components/TextField.vue';
-import validateMixin from '@/mixins/validateMixin';
 
 export default {
   name: 'Registration',
-  mixins: [validateMixin],
+  mixins: [fieldMixin],
   components: {
     TextField,
   },
   data: () => ({
-    rules: {
-      login: {
-        value: '',
-        errorMsg: '',
-        title: 'Login',
-        valid: false,
-        rules: [
-          (value) => !!value || 'Required',
-          (value) => (value && value.length >= 3) || 'Min 3 characters',
-          (value) => (value && value.length <= 10) || 'Max 10 characters',
-        ],
-      },
-      password: {
-        value: '',
-        errorMsg: '',
-        title: 'Password',
-        valid: false,
-        rules: [
-          (value) => !!value || 'Required',
-        ],
-      },
-      fname: {
-        value: '',
-        errorMsg: '',
-        title: 'First Name',
-        valid: false,
-        rules: [
-          (value) => !!value || 'Required',
-          (value) => (value && value.length >= 3) || 'Min 3 characters',
-          (value) => (value && value.length <= 10) || 'Max 10 characters',
-        ],
-      },
-      lname: {
-        value: '',
-        errorMsg: '',
-        title: 'Last Name',
-        valid: false,
-        rules: [
-          (value) => !!value || 'Required',
-          (value) => (value && value.length >= 3) || 'Min 3 characters',
-          (value) => (value && value.length <= 10) || 'Max 10 characters',
-        ],
-      },
-      email: {
-        value: '',
-        errorMsg: '',
-        title: 'E-mail',
-        valid: false,
-        rules: [
-          (value) => !!value || 'Required',
-          (value) => value.match(/[^@]+@[^.]+\..+/) !== null || 'Must be properly formatted',
-        ],
-      }
-    },
   }),
   computed: {
+    ...mapGetters({
+      formValid: 'auth/REG_VALID',
+    }),
   },
   methods: {
+    ...mapMutations({
+    }),
+    ...mapActions({
+    }),
     register() {
-      if (this.formValid) this.$store.dispatch('auth/REGISTRATION', 
-        Object.entries(this.rules)
-          .reduce((req, [key, rule]) => {
-            req[key] = rule.value;
-            return req;
-          }, {})
-      );
+      if (this.formValid) this.$store.dispatch('auth/REGISTRATION');
     }
   },
   mounted() {

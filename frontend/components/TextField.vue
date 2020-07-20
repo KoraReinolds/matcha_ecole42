@@ -60,7 +60,6 @@ export default {
   },
   watch: {
     value() {
-      this.$emit('validate', this.data);
       this.$nextTick(() => {
         this.setHeight(this.$refs.textarea);
       });
