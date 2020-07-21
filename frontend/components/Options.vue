@@ -70,6 +70,9 @@ export default {
 .option-field {
   text-align: left;
   .options {
+    .tooltip-field {
+      height: 30px;
+    }
     input {
       z-index: -1;
       opacity: 0;

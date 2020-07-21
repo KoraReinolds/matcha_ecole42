@@ -35,10 +35,16 @@
       v-model="preferences"
       many
     )
+    TagsField.form-field(
+      v-model="tags"
+      :maxTags="5"
+      :data="getTags"
+    )
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import TagsField from '@/components/TagsField.vue';
 import TextField from '@/components/TextField.vue';
 import Options from '@/components/Options.vue';
 import fieldMixin from '@/mixins/fieldMixin';
@@ -47,6 +53,7 @@ export default {
   name: 'Settings',
   mixins: [fieldMixin],
   components: {
+    TagsField,
     TextField,
     Options,
   },

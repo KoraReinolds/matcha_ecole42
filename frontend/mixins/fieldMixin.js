@@ -38,6 +38,10 @@ export default {
       get() { return this.getPreferences.value; },
       set(value) { this.setValue({ key: 'preferences', value }); },
     },
+    tags: {
+      get() { return this.getTags.value; },
+      set(value) { this.setValue({ key: 'tags', value }); },
+    },
     ...mapGetters({
       getLogin: 'auth/LOGIN',
       getPassword: 'auth/PASSWORD',
@@ -48,6 +52,7 @@ export default {
       getBiography: 'auth/BIOGRAPHY',
       getGender: 'auth/GENDER',
       getPreferences: 'auth/PREFERENCES',
+      getTags: 'auth/TAGS',
     }),
   },
   methods: {

@@ -96,6 +96,15 @@ export const state = () => ({
       "!!value.length || 'Required'",
     ],
   },
+  tags: {
+    value: [],
+    errorMsg: '',
+    title: 'New tag',
+    valid: false,
+    rules: [
+      "!!value.length || 'Required'",
+    ],
+  },
   location: {
     value: '',
     errorMsg: '',
@@ -128,6 +137,7 @@ export const getters = {
   BIOGRAPHY: (state) => state.biography,
   GENDER: (state) => state.gender,
   PREFERENCES: (state) => state.preferences,
+  TAGS: (state) => state.tags,
   LOCATION: (state) => state.location,
 }
 export const mutations = {
@@ -160,7 +170,7 @@ export const mutations = {
     state.biography.value =   user.biography;
     state.gender.value =      user.gender;
     state.preferences.value = user.preference,
-    // state.tags.value =        user.tags,
+    state.tags.value =        user.tags,
     state.avatar =            user.avatar;
     // state.images.value =      user.images;
     if (user.location) {
