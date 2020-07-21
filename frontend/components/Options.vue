@@ -4,7 +4,7 @@
   )
     div.title.left {{ data.title }}
     div.options(
-      :class="{ many: type === 'checkbox', icons: icons }"
+      :class="{ many: type === 'checkbox', icons }"
     )
       div(
         v-for="opt in data.options"
@@ -21,9 +21,13 @@
         label(
           :class="{ label: !icons }"
           :for="data.title+opt"
-        ) {{ opt }}
-        //- font-awesome-icon.icon.fa-2x(v-if="icons" :class="{ active: value.includes(opt) }" :icon="icons[opt]")
-        //- template(v-else) {{ opt }}
+        )
+          font-awesome-icon.icon.fa-2x(
+            v-if="icons"
+            :icon="['fas', icons[opt]]"
+            :class="{ active: type === 'radio' ? data.value === opt : data.value.includes(opt) }"
+          )
+          template(v-else) {{ opt }}
       div.tooltip-field {{ data.errorMsg }}
 </template>
 
@@ -147,7 +151,6 @@ export default {
       display: flex;
       padding: 10px 0;
       .icon {
-        color: #fff;
         cursor: pointer;
         &.active {
           color: $main-color;

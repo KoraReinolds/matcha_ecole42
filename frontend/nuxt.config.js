@@ -49,6 +49,19 @@ module.exports = {
   modules: [
     '@nuxtjs/style-resources',
     '@nuxtjs/axios',
+    ['nuxt-fontawesome', {
+      component: 'font-awesome-icon',
+      imports: [
+        {
+          set: '@fortawesome/free-solid-svg-icons',
+          icons: [
+            'faMars',
+            'faVenus',
+            'faTransgender',
+          ]
+        }
+      ]
+    }]
   ],
   styleResources: {
     scss: ['./assets/css/*.scss']
