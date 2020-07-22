@@ -59,6 +59,8 @@ module.exports = {
             'faVenus',
             'faTransgender',
             'faTimesCircle',
+            'faCheck',
+            'faPlus',
           ]
         }
       ]

@@ -40,10 +40,16 @@
       :maxTags="5"
       :data="getTags"
     )
+    ImagesField.form-field.images(
+      v-model="images"
+      :maxTags="5"
+      :data="getImages"
+    )
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import ImagesField from '@/components/ImagesField.vue';
 import TagsField from '@/components/TagsField.vue';
 import TextField from '@/components/TextField.vue';
 import Options from '@/components/Options.vue';
@@ -53,6 +59,7 @@ export default {
   name: 'Settings',
   mixins: [fieldMixin],
   components: {
+    ImagesField,
     TagsField,
     TextField,
     Options,

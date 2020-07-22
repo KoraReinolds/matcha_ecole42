@@ -16,7 +16,7 @@
           :value="opt"
           @change="change"
           :name="data.title"
-          :checked="opt === value || value.includes(opt)"
+          :checked="optionChecked(opt)"
         )
         label(
           :class="{ label: !icons }"
@@ -25,7 +25,7 @@
           font-awesome-icon.icon.fa-2x(
             v-if="icons"
             :icon="['fas', icons[opt]]"
-            :class="{ active: type === 'radio' ? data.value === opt : data.value.includes(opt) }"
+            :class="{ active: optionChecked(opt) }"
           )
           template(v-else) {{ opt }}
       div.tooltip-field {{ data.errorMsg }}
@@ -48,6 +48,11 @@ export default {
   computed: {
   },
   methods: {
+    optionChecked(opt) {
+      return this.type === 'radio' ?
+        this.data.value === opt :
+        this.data.value.includes(opt)
+    },
     change(event) {
       if (Array.isArray(this.value)) {
         const { value } = event.target;

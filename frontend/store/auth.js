@@ -105,6 +105,16 @@ export const state = () => ({
       "!!value.length || 'Required'",
     ],
   },
+  images: {
+    main: 0,
+    value: [],
+    errorMsg: '',
+    title: 'Images',
+    valid: false,
+    rules: [
+      "!!value.length || 'Required'",
+    ],
+  },
   location: {
     value: '',
     errorMsg: '',
@@ -138,9 +148,11 @@ export const getters = {
   GENDER: (state) => state.gender,
   PREFERENCES: (state) => state.preferences,
   TAGS: (state) => state.tags,
+  IMAGES: (state) => state.images,
   LOCATION: (state) => state.location,
 }
 export const mutations = {
+  SET_MAIN_IMAGE: (state, index) => state.images.main = index,
   SET_TOKEN: (state, token) => state.token = token,
   SET_VALUE: (state, { key, value }) => {
     state[key].value = value;
@@ -161,7 +173,6 @@ export const mutations = {
       }
     }
   },
-  SET_LOCATION: (state, location) => state.location.value = location,
   SET_USER: (state, user) => {
     state.firstName.value =   user.fname;
     state.lastName.value =    user.lname;
@@ -185,7 +196,7 @@ export const actions = {
       await API.getLocationByGPS().catch((e) => {}) ||
       await API.getLocationByIP().catch((e) => {}) ||
       { x: 0, y: 0 };
-    commit('SET_LOCATION', location);
+    commit('SET_VALUE', { key: 'location', value: location });
   },
 
   async GET_USER ({ commit, state }) {
@@ -239,6 +250,34 @@ export const actions = {
         }
       })
       .catch((e) => {});
+  },
+
+  LOAD_IMAGE ({ commit, state }, files) {
+    const len = state.images.value.length;
+    if (files[0].type === 'image/jpeg' && len < 5) {
+      const img = {
+        src: null,
+        index: [0,1,2,3,4].filter(val => 
+          !state.images.value.map(img => img.index).includes(val))[0],
+      };
+      const reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = () => {
+        const fd = new FormData();
+        fd.append('image', reader.result.split(',')[1]);
+        API.uploadImage(fd)
+          .then((resp) => {
+            img.src = resp.data.data.display_url;
+            commit('SET_VALUE', {
+              key: 'images',
+              value: [...state.images.value, img],
+            });
+            console.log(img);
+            if (!len) commit('SET_MAIN_IMAGE', 0);
+          })
+          .catch((e) => console.log(e));
+      };
+    }
   }
 
 }
