@@ -43,12 +43,17 @@
     ImagesField.form-field.images(
       v-model="images"
       :maxTags="5"
-      :data="getImages"
+      //- :data="getImages"
+    )
+    MapField.form-field.map(
+      :data="getLocation"
+      v-model="location"
     )
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import MapField from '@/components/MapField.vue';
 import ImagesField from '@/components/ImagesField.vue';
 import TagsField from '@/components/TagsField.vue';
 import TextField from '@/components/TextField.vue';
@@ -59,6 +64,7 @@ export default {
   name: 'Settings',
   mixins: [fieldMixin],
   components: {
+    MapField,
     ImagesField,
     TagsField,
     TextField,

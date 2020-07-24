@@ -61,6 +61,7 @@ module.exports = {
             'faTimesCircle',
             'faCheck',
             'faPlus',
+
           ]
         }
       ]
@@ -69,5 +70,8 @@ module.exports = {
   styleResources: {
     scss: ['./assets/css/*.scss']
   },
+  plugins: [
+    { src: '~/plugins/ymapPlugin.js',  mode: 'client' }
+  ]
 }
 

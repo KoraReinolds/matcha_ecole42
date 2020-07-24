@@ -118,7 +118,7 @@ export const state = () => ({
   location: {
     value: '',
     errorMsg: '',
-    title: 'E-mail',
+    title: 'Location',
     valid: false,
     rules: [
       "!!value || 'Required'",
@@ -183,7 +183,7 @@ export const mutations = {
     state.preferences.value = user.preference,
     state.tags.value =        user.tags,
     state.avatar =            user.avatar;
-    // state.images.value =      user.images;
+    state.images.value =      user.images;
     if (user.location) {
       state.location.value =  user.location;
     }

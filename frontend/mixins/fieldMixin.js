@@ -46,6 +46,10 @@ export default {
       get() { return this.getImages.value; },
       set(value) { this.setValue({ key: 'images', value }); },
     },
+    location: {
+      get() { return this.getLocation.value; },
+      set(value) { this.setValue({ key: 'location', value }); },
+    },
     ...mapGetters({
       getLogin: 'auth/LOGIN',
       getPassword: 'auth/PASSWORD',
@@ -58,6 +62,7 @@ export default {
       getPreferences: 'auth/PREFERENCES',
       getTags: 'auth/TAGS',
       getImages: 'auth/IMAGES',
+      getLocation: 'auth/LOCATION',
     }),
   },
   methods: {
