@@ -1,6 +1,6 @@
 <template lang="pug">
   div.map-field(
-    v-if="showMap"
+    v-if="showMap && (curLocation || data.value)"
   )
     span.title.left {{ data.title }}
     yandex-map.map(
@@ -19,9 +19,15 @@
         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
         cluster-name="1"
       )
+      div.btn.curCoord(
+        v-if="data.value"
+        @click="$emit('input', '');"
+      ) set my curent place
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+
 export default {
   name: 'MapField',
   data: () => ({
@@ -31,11 +37,15 @@ export default {
     data: Object,
   },
   components: {
-    },
+  },
   computed: {
+    ...mapGetters({
+      curLocation: 'auth/CUR_LOCATION',
+    }),
     mark: function() {
-      return [this.data.value.x, this.data.value.y];
-    }
+      let loc = this.data.value || this.curLocation;
+      return [loc.x, loc.y];
+    },
   },
   methods: {
     getCoord(e) {
@@ -52,9 +62,15 @@ export default {
 <style scoped lang="scss">
 .map-field {
   .map {
+    position: relative;
     padding: 10px 0;
     width: 100%;
     height: 500px;
+    .curCoord {
+      position: absolute;
+      top: 20px;
+      left: 10px;
+    }
   }
 }
 </style>

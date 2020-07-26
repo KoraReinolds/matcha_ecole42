@@ -14,7 +14,9 @@
       filled
     )
     div.form-actions
-      nuxt-link.link(to="/registration") Registration
+      nuxt-link.link(
+        to="/registration"
+      ) Registration
       a.link Forget password
       span.btn(:class="{ disabled: !formValid }" @click.prevent="signIn()") LogIn
 </template>

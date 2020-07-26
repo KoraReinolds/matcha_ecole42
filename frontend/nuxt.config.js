@@ -61,7 +61,14 @@ module.exports = {
             'faTimesCircle',
             'faCheck',
             'faPlus',
-
+            'faBell',
+            'faCogs',
+            'faSignOutAlt',
+            'faUser',
+            'faHistory',
+            'faSearch',
+            'faEye',
+            'faCommentAlt',
           ]
         }
       ]

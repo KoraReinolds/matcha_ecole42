@@ -1,6 +1,13 @@
 $error-color: #B71C1C;
 $main-color: rgb(226, 150, 214);
 $main-color-hover: darken($main-color, 10%);
+$main-color-shadow: darken($main-color, 15%);
+$wrapper-width: 1200px;
+$padding_content: 10px;
+$footer-height-mobile: 30px;
+$footer-height: 50px;
+$header-height-mobile: 30px;
+$header-height: 50px;
 
 $grid-breakpoints: (
   xs: 0,
@@ -9,6 +16,17 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
 );
+
+@media (max-width: map-get($grid-breakpoints, sm)) {
+  .only_laptop {
+    display: none !important;
+  }
+}
+@media (min-width: map-get($grid-breakpoints, sm)) {
+  .only_mobile {
+    display: none !important; 
+  }
+}
 
 .link {
   cursor: pointer;

@@ -123,9 +123,19 @@ export const state = () => ({
     rules: [
       "!!value || 'Required'",
     ],
-  }
+  },
+  curLocation: null,
 })
 export const getters = {
+  INFO_FILLED: (state) => Object.values(state)
+    .filter(el => el && el.value !== undefined)
+    .map(val => val.value)
+    .some(val => val === '' || val === [] || val === null),
+  GET_USER: (state) => Object.entries(state).reduce((sum, [key, val]) => {
+    if (val && val.value) sum[key] = val.value;
+    return sum;
+  }, {}),
+  CUR_LOCATION: (state) => state.curLocation,
   TOKEN: (state) => state.token,
   LOGIN_VALID: (state) => [
       state.login.valid,
@@ -188,15 +198,38 @@ export const mutations = {
       state.location.value =  user.location;
     }
   },
+  SET_CUR_LOCATION: (state, location) => state.curLocation = location,
+  CLEAR_FIELDS: (state) => {
+    state.token = '';
+    state.login.value = '';
+    state.password.value = '';
+    state.firstName.value = '';
+    state.lastName.value = '';
+    state.mail.value = '';
+    state.age.value = '';
+    state.biography.value = '';
+    state.gender.value = '';
+    state.preferences.value = [];
+    state.tags.value = [];
+    state.avatar = -1;
+    state.images.value = [];
+    state.location.value = null;
+  }
 }
 export const actions = {
+
+  LOGOUT({ commit }) {
+    this.$router.push({ name: 'login' });
+    Cookie.remove('token');
+    commit('CLEAR_FIELDS');
+  },
 
   async GET_LOCATION ({ commit }) {
     let location =
       await API.getLocationByGPS().catch((e) => {}) ||
       await API.getLocationByIP().catch((e) => {}) ||
       { x: 0, y: 0 };
-    commit('SET_VALUE', { key: 'location', value: location });
+    commit('SET_CUR_LOCATION', location);
   },
 
   async GET_USER ({ commit, state }) {
@@ -239,7 +272,7 @@ export const actions = {
     await API.login({
       login:    state.login.value,
       password: state.password.value,
-      location: state.location.value,
+      location: state.curLocation,
     })
       .then(({ type, message, token, login }) => {
         if (type === 'ok') {

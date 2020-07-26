@@ -1,13 +1,20 @@
-<template>
-  <div class="wrapper">
-    <nuxt/>
-  </div>
+<template lang="pug">
+  div.wrapper
+    Header
+    nuxt.content
+    Footer
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
+  components: {
+    Header,
+    Footer,
+  },
   methods: {
     ...mapMutations({
     }),
@@ -29,9 +36,15 @@ html {
   box-sizing: inherit;
 }
 .wrapper {
-  max-width: 1200px;
+  max-width: $wrapper-width;
   width: 100%;
   margin: 0 auto;
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    padding-top: $header-height-mobile;
+    padding-bottom: $footer-height-mobile;
+  }
+  padding-top: $header-height;
+  padding-bottom: $footer-height;
 }
 body,
 html {

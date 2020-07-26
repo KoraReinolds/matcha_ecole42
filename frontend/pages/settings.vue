@@ -43,12 +43,15 @@
     ImagesField.form-field.images(
       v-model="images"
       :maxTags="5"
-      //- :data="getImages"
+      :data="getImages"
     )
     MapField.form-field.map(
       :data="getLocation"
       v-model="location"
     )
+    div.btn(
+      @click="updateUser"
+    ) Save Changes
 </template>
 
 <script>
@@ -78,6 +81,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      updateUser: 'auth/UPDATE_USER'
     }),
     ...mapActions({
       getUser: 'auth/GET_USER'
@@ -103,14 +107,13 @@ export default {
   }
   .map,
   .images,
-  .textarea,
-  .form-actions {
+  .textarea {
     width: 100%;
   }
-  // @media (max-width: $mobile-breakpoint) {
-  //   .btn {
-  //     width: 100%;
-  //   }
-  // }
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    .btn {
+      width: 100%;
+    }
+  }
 }
 </style>
