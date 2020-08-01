@@ -23,7 +23,7 @@ function dropDatabase(callback) {
 function requireModels(callback) {
   require('./models/user');
   
-  a.each(Object.keys(mongo.models), function(modelName, callback) {
+  a.each(Object.keys(mongo.models), (modelName, callback) => {
     mongo.models[modelName].ensureIndexes(callback);
   }, callback);
 }
@@ -31,12 +31,17 @@ function requireModels(callback) {
 function createUsers(callback) {
 
   let users = [
-    {login: 'Вася', password: '123'},
-    {login: 'Петя', password: '123'},
-    {login: 'admin', password: '123'}
+    // {
+    //   login: "mskiles",
+    //   password: "123",
+    //   lname: "skiles",
+    //   fname: "masyn",
+    //   location: { x: 1, y: 2 },
+    //   email: "reinokdskora@gmail.com"
+    // }
   ];
 
-  a.each(users, function(userData, callback) {
+  a.each(users, (userData, callback) => {
     new mongo.models.User(userData).save(callback);
   }, callback);
 }
