@@ -22,7 +22,6 @@ let schema = new mongo.Schema({
   },
   location: {
     type: Object,
-    required: true,
   },
   email: {
     type: String,
@@ -38,7 +37,25 @@ let schema = new mongo.Schema({
   created: {
     type: Date,
     default: Date.now,
-  }
+  },
+  biography: {
+    type: String,
+  },
+  tags: {
+    type: Array,
+  },
+  gender: {
+    type: String,
+  },
+  preference: {
+    type: Array,
+  },
+  images: {
+    type: Object,
+  },
+  avatar: {
+    type: Number,
+  },
 })
 
 schema.methods.generateSessionToken = function(user, callback) {
@@ -70,11 +87,10 @@ schema.statics.login = function(body, callback) {
         if (user.checkPassword(body.password)) {
           user.generateSessionToken(user, (err, token) => {
             if (err) callback(err)
-            console.log(token)
-            callback(null, ["ok", token]);
+            callback(null, { type: "ok", token });
           })
         } else {
-          callback(null, ["error", "Неверное имя пользователя или пароль"]);
+          callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
         }
       }
     }
@@ -90,12 +106,21 @@ schema.statics.registration = function(body, callback) {
     },
     (user, callback) => {
       if (user) {
-        callback(null, ["error", "Пользователь с таким логином уже существует"]);
+        callback(null, { type: "error", message: "Пользователь с таким логином уже существует" });
       } else {
-        let user = new User(body);
+        let user = new User({
+          ...body,
+          avatar: -1,
+          biography: '',
+          tags: [],
+          gender: '',
+          preferences: [],
+          images: []
+        });
+        console.log(user);
         user.save((err) => {
           if (err) return callback(err);
-          callback(null, ["ok", user.login]);
+          callback(null, { type: "ok", message: user.login });
         });
       }
     }

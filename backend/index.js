@@ -5,10 +5,17 @@ const bodyParser = require("body-parser");
 const router = express.Router();
 const auth = require('./routes/auth');
 const cors = require('cors');
+const User = require('./models/user').User;
 
 router.use((req, res, next) => {
   console.log('Time: ', Date.now());
-  next();
+  User.findOne({token: req.body.activationCode}, (err, user) => {
+    if (err) {
+      res.send(JSON.stringify({ type: "error", message: "Произошла ошибка. Обратитесь к администратору", err, }));
+    }
+    req.user = user;
+    next();
+  });
 });
 
 const app = express();
