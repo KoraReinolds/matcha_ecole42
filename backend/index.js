@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const bodyParser = require("body-parser");
 const router = express.Router();
+const errorRoute = express.Router();
 const auth = require('./routes/auth');
 const cors = require('cors');
 const User = require('./models/user').User;
@@ -14,6 +15,7 @@ router.use((req, res, next) => {
       res.send(JSON.stringify({ type: "error", message: "Произошла ошибка. Обратитесь к администратору", err, }));
     }
     req.user = user;
+    console.log("USER", user);
     next();
   });
 });
@@ -26,6 +28,13 @@ app.use(bodyParser.json());
 
 app.use('/', router);
 app.use('/', auth);
+errorRoute.use((req, res, next) => {
+  res.send(JSON.stringify({
+    type: "error",
+    message: "Произошла ошибка. Обратитесь к администратору",
+  }));
+});
+app.use('/', errorRoute);
 
 http.createServer(app).listen(port, function() {
   console.log('Express server listening on port ' + port);

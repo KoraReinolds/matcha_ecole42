@@ -2,41 +2,32 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user').User;
 
-router.post('/register', (req, res) => {
+router.post('/profile-update', (req, res, next) => {
+  User.updateUser(req, (err, params) => {
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
+  })
+})
+
+router.post('/register', (req, res, next) => {
   User.registration(req.body, (err, params) => {
-    if (err) {
-      params.type = "error";
-      params.message = "Произошла ошибка. Обратитесь к администратору";
-    }
-    res.send(JSON.stringify(params));
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
   })
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   User.login(req.body, (err, params) => {
-    if (err) {
-      params.type = "error";
-      params.message = "Произошла ошибка. Обратитесь к администратору";
-    }
-    res.send(JSON.stringify(params));
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
   })
 })
 
-router.post('/profile-get', (req, res) => {
-  User.findOne({login: req.body.login},
-    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
-    (err, data) => {
-      let type = "ok";
-      let message = "";
-      if (err) {
-        type = "error";
-        message = "Произошла ошибка. Обратитесь к администратору";
-      } else if (!data) {
-        type = "error";
-        message = "Пользователь не найден";
-      }
-      res.send(JSON.stringify({ type, message, err, data }));
-    });
+router.post('/profile-get', (req, res, next) => {
+  User.getUserByName(req.body.login, (err, params) => {
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
+  });
 })
 
 module.exports = router;

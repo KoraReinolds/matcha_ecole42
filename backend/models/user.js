@@ -20,6 +20,9 @@ let schema = new mongo.Schema({
     type: String,
     required: true,
   },
+  age: {
+    type: Number,
+  },
   location: {
     type: Object,
   },
@@ -97,6 +100,33 @@ schema.statics.login = function(body, callback) {
   ], callback);
 };
 
+schema.statics.updateUser = async function(req, callback) {
+  console.log(req.user);
+  if (req.user) {
+    console.log(req.body)
+    await this.findOneAndUpdate({ login: "mskiles" }, req.body);
+    callback(null, { type: "ok", message: "Данные успешно обновленны" });
+  } else {
+    callback(403)
+  }
+  // User.findOne({login: name},
+  //   { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
+  //   (err, data) => {
+  //     if (err) return callback(err);
+  //   })
+}
+
+schema.statics.getUserByName = function(name, callback) {
+  const User = this;
+
+  User.findOne({login: name},
+    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
+    (err, data) => {
+      if (err) return callback(err);
+      callback(null, { type: "ok", message: "", data });
+    })
+}
+
 schema.statics.registration = function(body, callback) {
   const User = this;
 
@@ -110,6 +140,7 @@ schema.statics.registration = function(body, callback) {
       } else {
         let user = new User({
           ...body,
+          age: null,
           avatar: -1,
           biography: '',
           tags: [],
