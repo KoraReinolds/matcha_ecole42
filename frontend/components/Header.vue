@@ -51,7 +51,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'header',
+  name: 'header-component',
   data: () => ({
     // startLen: 0,
   }),

@@ -3,9 +3,8 @@ const Cookie = process.client ? require('js-cookie') : undefined
 
 export const state = () => ({
   token: null,
-  avatar: null,
   login: {
-    value: '',
+    value: 'mskiles',
     errorMsg: '',
     title: 'Login',
     valid: false,
@@ -14,7 +13,7 @@ export const state = () => ({
     ],
   },
   password: {
-    value: '',
+    value: '123',
     errorMsg: '',
     title: 'Password',
     valid: false,
@@ -23,7 +22,7 @@ export const state = () => ({
     ],
   },
   firstName: {
-    value: '',
+    value: 'maslyn',
     errorMsg: '',
     title: 'First Name',
     valid: false,
@@ -34,7 +33,7 @@ export const state = () => ({
     ],
   },
   lastName: {
-    value: '',
+    value: 'skiles',
     errorMsg: '',
     title: 'Last Name',
     valid: false,
@@ -57,7 +56,7 @@ export const state = () => ({
     ],
   },
   mail: {
-    value: '',
+    value: 'reinoldskora@gmail.com',
     errorMsg: '',
     title: 'E-mail',
     valid: false,
@@ -165,6 +164,7 @@ export const mutations = {
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
   SET_TOKEN: (state, token) => state.token = token,
   SET_VALUE: (state, { key, value }) => {
+    console.log(key, value);
     state[key].value = value;
     if (state[key].rules) {
       let msg = null;
@@ -192,11 +192,11 @@ export const mutations = {
     state.gender.value =      user.gender;
     state.preferences.value = user.preference,
     state.tags.value =        user.tags,
-    state.avatar =            user.avatar;
     state.images.value =      user.images;
     if (user.location) {
       state.location.value =  user.location;
     }
+    state.images.main =       user.avatar;
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
   CLEAR_FIELDS: (state) => {
@@ -211,14 +211,37 @@ export const mutations = {
     state.gender.value = '';
     state.preferences.value = [];
     state.tags.value = [];
-    state.avatar = -1;
     state.images.value = [];
     state.location.value = null;
   }
 }
 export const actions = {
 
-  LOGOUT({ commit }) {
+  async UPDATE_USER ({ commit, state }) {
+    await API.updateUser({
+      activationCode: state.token,
+      avatar:         state.images.main,
+      login:          state.login.value,
+      password:       state.password.value,
+      firstName:      state.firstName.value,
+      lastName:       state.lastName.value,
+      mail:           state.mail.value,
+      biography:      state.biography.value,
+      gender:         state.gender.value,
+      preference:    state.preferences.value,
+      tags:           state.tags.value,
+      images:         state.images.value,
+      location:       state.location.value,
+    })
+    .then(({ type }) => {
+      if (type === 'ok') {
+      } else if (type === 'error') {
+      }
+    })
+    .catch((e) => {});
+  },
+
+  LOGOUT ({ commit }) {
     this.$router.push({ name: 'login' });
     Cookie.remove('token');
     commit('CLEAR_FIELDS');
@@ -250,7 +273,7 @@ export const actions = {
       .catch((e) => {});
   },
 
-  async REGISTRATION ({ commit, state }) {
+  async REGISTRATION ({ commit, dispatch, state }) {
     await API.registration({
       login:    state.login.value,
       password: state.password.value,
@@ -261,7 +284,7 @@ export const actions = {
     })
     .then(({ type }) => {
       if (type === 'ok') {
-        this.$router.push({ path: '/settings' });
+        dispatch('SIGN_IN');
       } else if (type === 'error') {
       }
     })

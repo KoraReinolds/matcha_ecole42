@@ -1,7 +1,8 @@
 <template lang="pug">
-  div.wrapper
-    Header
-    nuxt.content
+  div.app
+    div.wrapper
+      Header
+      nuxt.content
     Footer
 </template>
 
@@ -35,7 +36,11 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+.app {
+  position: relative;
+}
 .wrapper {
+  position: relative;
   max-width: $wrapper-width;
   width: 100%;
   margin: 0 auto;

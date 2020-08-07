@@ -41,7 +41,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'footer',
+  name: 'footer-component',
   data: () => ({
   }),
   components: {
@@ -66,7 +66,8 @@ export default {
 footer {
   left: 0;
   z-index: 3;
-  position: fixed;
+  position: absolute;
+  // position: fixed;
   bottom: 0;
   margin-top: -$footer-height;
   height: $footer-height;
@@ -80,6 +81,7 @@ footer {
   width: 100vw;
   background-color: $main-color;
   .footer_content {
+    // position: absolute;
     font-family: 'Oswald', sans-serif;
     font-size: 18px;
     text-align: right;

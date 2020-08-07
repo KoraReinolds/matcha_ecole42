@@ -81,9 +81,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateUser: 'auth/UPDATE_USER'
     }),
     ...mapActions({
+      updateUser: 'auth/UPDATE_USER',
       getUser: 'auth/GET_USER'
     }),
   },

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-  baseURL: 'https://matcha-server.herokuapp.com/',
+  // baseURL: 'https://matcha-server.herokuapp.com/',
+  baseURL: 'http://localhost:4000',
   headers: {
     Authorization: 'Bearer {token}',
   },
@@ -39,6 +40,15 @@ export default {
         })
         .catch(() => reject(new Error('No support for geolocation')));
     });
+  },
+
+  updateUser(data) {
+    console.log(data);
+    return HTTP.post('profile-update/', data)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
   },
 
   login(data) {

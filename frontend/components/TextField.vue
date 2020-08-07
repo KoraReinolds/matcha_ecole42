@@ -36,7 +36,7 @@
 export default {
   name: 'TextField',
   props: {
-    value: String,
+    value: [String, Number],
     outlined: Boolean,
     filled: Boolean,
     rounded: Boolean,

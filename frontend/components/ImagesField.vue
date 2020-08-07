@@ -58,11 +58,10 @@ export default {
       loadImage: 'auth/LOAD_IMAGE',
     }),
     deleteImg(img) {
+      debugger;
       this.$emit('input', this.data.value.filter(val => val !== img));
-      if (this.data.value.length &&
-        img.index === this.data.main &&
-        this.data.value.length) {
-        this.setAsMainImg(this.data.value[0].index);
+      if (this.data.value.length) {
+        if (img.index === this.data.main) this.setAsMainImg(this.data.value[0].index);
       } else this.setAsMainImg(-1);
     },
     setAsMainImg(index) {

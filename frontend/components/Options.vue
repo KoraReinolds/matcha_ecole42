@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'Options',
   props: {
@@ -175,5 +174,4 @@ export default {
     }
   }
 }
-
 </style>
