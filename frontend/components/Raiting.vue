@@ -15,7 +15,7 @@ export default {
     opacity: null,
   }),
   props: {
-    value: String,
+    value: [String, Number],
     size: Number,
   },
   mounted() {

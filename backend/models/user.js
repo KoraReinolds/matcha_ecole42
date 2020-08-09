@@ -59,6 +59,9 @@ let schema = new mongo.Schema({
   avatar: {
     type: Number,
   },
+  fameRaiting: {
+    type: Number,
+  },
 })
 
 schema.statics.getUsers = function(options, callback) {
@@ -66,10 +69,12 @@ schema.statics.getUsers = function(options, callback) {
     { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0 },
     (err, users) => {
     if (err) return callback(err);
-    callback(null, { type: "ok", message: "", data: users });
+    let res = {
+      users: users.slice(options.skip, options.skip + options.limit),
+      length: users.length,
+    }
+    callback(null, { type: "ok", message: "", data: res });
   })
-    .skip(options.skip)
-    .limit(options.limit);
 };
 
 schema.statics.login = function(body, callback) {

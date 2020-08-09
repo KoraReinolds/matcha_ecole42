@@ -41,6 +41,7 @@ const generateUser = () => {
   const lname = randomValueFromArray(gender === 'male' ? manLNames : womanLNames);
   const email = `${fname}@mail.ru`;
   const age = getRandomValue(18, 55);
+  const fameRaiting = getRandomValue(0, 1000);
   const preference = randomArray(1, genderArray.length, genderArray);
   const biography = randomText(1, 5, sentences);
   const images = [
@@ -56,6 +57,7 @@ const generateUser = () => {
     password: "123",
     email,
     age,
+    fameRaiting,
     gender,
     preference,
     biography,
