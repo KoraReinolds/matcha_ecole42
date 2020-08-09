@@ -64,6 +64,7 @@ const generateUser = () => {
     tags,
     images,
     avatar,
+    likeList: [],
   };
 }
 

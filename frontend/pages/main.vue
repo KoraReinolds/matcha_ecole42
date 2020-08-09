@@ -40,17 +40,21 @@ export default {
       }),
     ...mapActions({
       getUsers: 'users/GET_USERS',
+      getUser: 'auth/GET_USER',
     }),
   },
   mounted() {
-    if (!this.users) this.getUsers();
+    if (!this.users) {
+      this.getUsers();
+      this.getUser();
+    }
   },
 };
 </script>
 
 <style scoped lang="scss">
 #main {
-  padding: 0 20px;
+  padding: 50px 20px;
   display: flex;
   .user-list {
     

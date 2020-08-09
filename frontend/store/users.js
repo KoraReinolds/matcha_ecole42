@@ -4,12 +4,12 @@ export const state = () => ({
   users: null,
   curPage: 1,
   maxLength: null,
-  limit: 2,
+  limit: 3,
 })
 export const getters = {
   USERS: (state) => state.users,
   CUR_PAGE: (state) => state.curPage,
-  LAST_PAGE: (state) => state.maxLength / state.limit,
+  LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
 }
 export const mutations = {
   SET_USERS: (state, { users, length }) => {

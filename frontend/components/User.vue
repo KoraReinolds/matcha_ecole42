@@ -2,8 +2,9 @@
   div.user(
     :class="[user.gender]"
   )
-    //- :active="myLikeList.includes(user.login)"
-    div.main
+    div.main(
+      :class="[`${user.gender}_background-light`]"
+    )
       div.image
         CustomImage.custom_image(
           :src="user.images[user.avatar].src"
@@ -18,8 +19,8 @@
         )
           Like.like(
             :user="user"
-            :active="true"
             :size="2"
+            :active="myLikeList.includes(user.login)"
           )
       div.content
         span.fio
@@ -31,6 +32,7 @@
         div.only_laptop.tags
           Tag(
             v-for="tag in user.tags"
+            :class="[`${user.gender}_background`]"
             :key="`user_tag_${tag}`"
             :name="tag"
           )
@@ -83,7 +85,7 @@ export default {
   computed: {
     ...mapGetters({
       // mobile: 'IS_MOBILE',
-      // myLikeList: 'auth/MY_LIKES',
+      myLikeList: 'auth/MY_LIKES',
     }),
   },
   methods: {
@@ -110,64 +112,64 @@ export default {
 
 <style scoped lang="scss">
 
-@media (max-width: map-get($grid-breakpoints, sm)) {
-  .user {
-    height: 80vh;
-    .like-icon {
-      z-index: 10;
-      bottom: 1px;
-      right: 50%;
-      transform: translateX(50%);
-      position: fixed;
-      height: 50px;
-      width: 50px;
-      background: #fff;
-      border-radius: 50%;
-      .like {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-    .gender {
-      position: fixed;
-      top: 70px;
-      right: 10px;
-      opacity: 0.8;
-    }
-    .pref_icon {
-      position: fixed;
-      top: 70px;
-      opacity: 0.8;
-    }
-    .pref_icon:nth-child(n) {
-      right: 180px;
-    }
-    .pref_icon:nth-child(2n) {
-      right: 140px;
-    }
-    .pref_icon:nth-child(3n) {
-      right: 100px;
-    }
-    .fio {
-      bottom: 70px;
-      left: 30px;
-      font-family: 'Lobster', cursive;
-      position: fixed;
-      font-size: 25px;
-    }
-    img {
-      opacity: 0.9;
-      height: 80%;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      mask-image: linear-gradient(rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-    }
-  }
-}
+// @media (max-width: map-get($grid-breakpoints, sm)) {
+//   .user {
+//     height: 80vh;
+//     .like-icon {
+//       z-index: 10;
+//       bottom: 1px;
+//       right: 50%;
+//       transform: translateX(50%);
+//       position: fixed;
+//       height: 50px;
+//       width: 50px;
+//       background: #fff;
+//       border-radius: 50%;
+//       .like {
+//         position: absolute;
+//         left: 50%;
+//         top: 50%;
+//         transform: translate(-50%, -50%);
+//       }
+//     }
+//     .gender {
+//       position: fixed;
+//       top: 70px;
+//       right: 10px;
+//       opacity: 0.8;
+//     }
+//     .pref_icon {
+//       position: fixed;
+//       top: 70px;
+//       opacity: 0.8;
+//     }
+//     .pref_icon:nth-child(n) {
+//       right: 180px;
+//     }
+//     .pref_icon:nth-child(2n) {
+//       right: 140px;
+//     }
+//     .pref_icon:nth-child(3n) {
+//       right: 100px;
+//     }
+//     .fio {
+//       bottom: 70px;
+//       left: 30px;
+//       font-family: 'Lobster', cursive;
+//       position: fixed;
+//       font-size: 25px;
+//     }
+//     img {
+//       opacity: 0.9;
+//       height: 80%;
+//       width: 100%;
+//       position: fixed;
+//       top: 0;
+//       left: 0;
+//       mask-image: linear-gradient(rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+//     }
+//   }
+// }
 @media (min-width: map-get($grid-breakpoints, sm)) {
 
   .user {
@@ -175,7 +177,9 @@ export default {
     align-items: center;
     height: 300px;
     width: 800px;
-    margin-top: 50px;
+    &:not(:nth-child(1)) {
+      margin-top: 50px;
+    }
 
     .sidebar {
       height: 100%;
@@ -191,10 +195,8 @@ export default {
     .main {
       display: flex;
       align-items: center;
-      justify-content: start;
       width: 600px;
       height: 100%;
-      background: rgba($color: $main-color, $alpha: 0.4);
       border-radius: 20px;
 
       .image {

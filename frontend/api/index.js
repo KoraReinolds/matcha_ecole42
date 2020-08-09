@@ -83,4 +83,12 @@ export default {
       })
   },
 
+  likeUser(data) {
+    return HTTP.post('like-user/', data)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+  },
+
 };

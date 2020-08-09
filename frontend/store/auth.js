@@ -124,6 +124,7 @@ export const state = () => ({
     ],
   },
   curLocation: null,
+  likeList: [123],
 })
 export const getters = {
   INFO_FILLED: (state) => Object.values(state)
@@ -160,8 +161,10 @@ export const getters = {
   IMAGES: (state) => state.images,
   LOCATION: (state) => state.location,
   MY_LOCATION: (state) => state.location.value || state.curLocation,
+  MY_LIKES: (state) => state.likeList,
 }
 export const mutations = {
+  TOGGLE_LIKE_USER: (state, likeList) => state.likeList = likeList,
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
   SET_TOKEN: (state, token) => state.token = token,
   SET_VALUE: (state, { key, value }) => {
@@ -198,6 +201,7 @@ export const mutations = {
       state.location.value =  user.location;
     }
     state.images.main =       user.avatar;
+    state.likeList =          user.likeList;
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
   CLEAR_FIELDS: (state) => {
@@ -335,6 +339,29 @@ export const actions = {
           .catch((e) => console.log(e));
       };
     }
+  },
+
+  async LIKE ({ commit, state }, login) {
+    let index = state.likeList.indexOf(login);
+    // debugger;
+    let newLikeList = [...state.likeList];
+    if (index === -1) {
+      newLikeList.push(login);
+    } else {
+      newLikeList.splice(index, 1);
+    }
+    await API.likeUser({
+      login,
+      likeList: newLikeList,
+      activationCode: state.token,
+    })
+      .then(({ type, message }) => {
+        if (type === 'ok') {
+          commit('TOGGLE_LIKE_USER', newLikeList);
+        } else if (type === 'error') {
+        }
+      })
+      .catch((e) => {});
   }
 
 }

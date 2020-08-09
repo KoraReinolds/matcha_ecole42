@@ -46,7 +46,7 @@ export default {
 <style scoped lang="scss">
 @media (min-width: map-get($grid-breakpoints, sm)) {
   .pagination {
-    padding-top: 20px;
+    margin-top: 30px;
     height: 50px;
     width: 100%;
     .page {

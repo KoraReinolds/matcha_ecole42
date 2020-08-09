@@ -125,4 +125,10 @@ $colors: (
   .#{$name}_color {
     color: $value;
   }
+  .#{$name}_background {
+    background: $value;
+  }
+  .#{$name}_background-light {
+    background: rgba($color: $value, $alpha: 0.4);
+  }
 }

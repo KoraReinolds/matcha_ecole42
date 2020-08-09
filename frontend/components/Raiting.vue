@@ -5,7 +5,9 @@
       :class="[`fa-${size}x`]"
       :style="{ opacity }"
     )
-    span {{ value }}
+    span(
+      :style="{ fontSize: `${size * 10}px` }"
+    ) {{ value }}
 </template>
 
 <script>

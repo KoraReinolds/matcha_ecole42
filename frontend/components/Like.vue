@@ -3,12 +3,12 @@
     :class="[`fa-${size}x`, { active }]"
     :style="{ cursor: disabled === '' ? 'default' : 'pointer' }"
     icon="heart"
-    @click="disabled !== '' && like(user)"
+    @click="disabled !== '' && like(user.login)"
   )
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'Like',
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      like: 'users/LIKE',
+      like: 'auth/LIKE',
     }),
   },
   mounted() {

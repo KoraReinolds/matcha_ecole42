@@ -62,11 +62,14 @@ let schema = new mongo.Schema({
   fameRaiting: {
     type: Number,
   },
+  likeList: {
+    type: Array,
+  }
 })
 
 schema.statics.getUsers = function(options, callback) {
   this.find({ login: { $ne: options.login } },
-    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0 },
+    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0, likeList: 0 },
     (err, users) => {
     if (err) return callback(err);
     let res = {
@@ -104,7 +107,7 @@ schema.statics.login = function(body, callback) {
 schema.statics.updateUser = async function(req, callback) {
   console.log(req.user);
   if (req.user) {
-    await this.findOneAndUpdate({ login: "mskiles" }, req.body);
+    await this.findOneAndUpdate({ login: req.user.login }, req.body);
     callback(null, { type: "ok", message: "Данные успешно обновленны" });
   } else {
     callback(403)
@@ -121,6 +124,30 @@ schema.statics.getUserByName = function(name, callback) {
       callback(null, { type: "ok", message: "", data });
     })
 }
+
+schema.statics.likeUser = function(req, callback) {
+  const User = this;
+
+  a.waterfall([
+    (callback) => {
+      User.findOne({login: req.body.login}, callback);
+    },
+    (user, callback) => {
+      if (!user) {
+        callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+      } else {
+        User.findOneAndUpdate(
+          { login: req.user.login },
+          { likeList: req.body.likeList },
+          function(err, doc) {
+            if (err) callback(404)
+            callback(null, { type: "ok", message: "Данные успешно обновленны" })
+          }
+        );
+      }
+    }
+  ], callback);
+};
 
 schema.statics.registration = function(body, callback) {
   const User = this;
