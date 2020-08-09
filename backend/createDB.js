@@ -1,5 +1,6 @@
 const mongo = require('./mongo');
 const a = require('async');
+const dataGenerator = require('./dataGeneration');
 
 a.series([
   open,
@@ -30,16 +31,7 @@ function requireModels(callback) {
 
 function createUsers(callback) {
 
-  let users = [
-    // {
-    //   login: "mskiles",
-    //   password: "123",
-    //   lname: "skiles",
-    //   fname: "masyn",
-    //   location: { x: 1, y: 2 },
-    //   email: "reinokdskora@gmail.com"
-    // }
-  ];
+  let users = dataGenerator.generateUsers(10);
 
   a.each(users, (userData, callback) => {
     new mongo.models.User(userData).save(callback);

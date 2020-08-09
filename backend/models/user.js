@@ -61,19 +61,15 @@ let schema = new mongo.Schema({
   },
 })
 
-schema.methods.generateSessionToken = function(user, callback) {
-  crypto.randomBytes(48, (err, buffer) => {
-    console.log(user)
-    user.token = buffer.toString('hex');
-    user.save((err) => {
-      if (err) return callback(err);
-      callback(null, user.token);
-    });
-  });
-};
-
-schema.methods.encryptPassword = function(password) {
-  return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+schema.statics.getUsers = function(options, callback) {
+  this.find({ login: { $ne: options.login } },
+    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0 },
+    (err, users) => {
+    if (err) return callback(err);
+    callback(null, { type: "ok", message: "", data: users });
+  })
+    .skip(options.skip)
+    .limit(options.limit);
 };
 
 schema.statics.login = function(body, callback) {
@@ -103,17 +99,11 @@ schema.statics.login = function(body, callback) {
 schema.statics.updateUser = async function(req, callback) {
   console.log(req.user);
   if (req.user) {
-    console.log(req.body)
     await this.findOneAndUpdate({ login: "mskiles" }, req.body);
     callback(null, { type: "ok", message: "Данные успешно обновленны" });
   } else {
     callback(403)
   }
-  // User.findOne({login: name},
-  //   { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
-  //   (err, data) => {
-  //     if (err) return callback(err);
-  //   })
 }
 
 schema.statics.getUserByName = function(name, callback) {
@@ -170,6 +160,21 @@ schema.virtual('password')
 
 schema.methods.checkPassword = function(password) {
   return this.encryptPassword(password) === this.hashedPassword;
+};
+
+schema.methods.generateSessionToken = function(user, callback) {
+  crypto.randomBytes(48, (err, buffer) => {
+    console.log(user)
+    user.token = buffer.toString('hex');
+    user.save((err) => {
+      if (err) return callback(err);
+      callback(null, user.token);
+    });
+  });
+};
+
+schema.methods.encryptPassword = function(password) {
+  return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
 };
 
 exports.User = mongo.model('User', schema);
