@@ -30,6 +30,11 @@ export default {
 </script>
 
 <style lang="scss">
+.app,
+#__layout,
+#__nuxt {
+  min-height: 100vh;
+}
 html {
   box-sizing: border-box;
 }

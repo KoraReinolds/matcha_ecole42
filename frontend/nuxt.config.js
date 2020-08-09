@@ -10,7 +10,15 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Lobster&display=swap'
+      }
     ]
   },
   /*
@@ -69,6 +77,13 @@ module.exports = {
             'faSearch',
             'faEye',
             'faCommentAlt',
+            'faLocationArrow',
+            'faStar',
+            'faBan',
+            'faHeartBroken',
+            'faHeart',
+            'faUserSlash',
+            'faCircle',
           ]
         }
       ]

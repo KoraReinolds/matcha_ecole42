@@ -159,6 +159,7 @@ export const getters = {
   TAGS: (state) => state.tags,
   IMAGES: (state) => state.images,
   LOCATION: (state) => state.location,
+  MY_LOCATION: (state) => state.location.value || state.curLocation,
 }
 export const mutations = {
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
@@ -228,7 +229,7 @@ export const actions = {
       mail:           state.mail.value,
       biography:      state.biography.value,
       gender:         state.gender.value,
-      preference:    state.preferences.value,
+      preference:     state.preferences.value,
       tags:           state.tags.value,
       images:         state.images.value,
       location:       state.location.value,

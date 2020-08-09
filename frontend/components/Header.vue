@@ -12,7 +12,7 @@
           :to="`/user/${user.login}`"
         ) My page
         nuxt-link.link(
-          to=`/user/main`
+          to=`/main`
         ) Search
         nuxt-link.link(
           to=`/history`

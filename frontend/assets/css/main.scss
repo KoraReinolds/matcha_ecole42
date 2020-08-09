@@ -1,4 +1,6 @@
 $error-color: #B71C1C;
+$font-color: #2c3e50;
+$like-color: #E53935;
 $main-color: rgb(226, 150, 214);
 $main-color-hover: darken($main-color, 10%);
 $main-color-shadow: darken($main-color, 15%);
@@ -110,5 +112,17 @@ $grid-breakpoints: (
     &:before, &:after {
       border-top: 1px solid rgba($color: $error-color, $alpha: 0.45);
     }
+  }
+}
+
+$colors: (
+  male: #64B5F6,
+  female: #EF9A9A,
+  bisexual: #81C784,
+);
+ 
+@each $name, $value in $colors {
+  .#{$name}_color {
+    color: $value;
   }
 }
