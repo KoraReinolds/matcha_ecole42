@@ -260,10 +260,10 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  async GET_USER ({ commit, state }) {
+  async GET_USER ({ commit, state }, login) {
     console.log({
       activationCode: state.token,
-      login: state.login.value,
+      login: login || state.login.value,
     })
     await API.getUser({
       activationCode: state.token,
