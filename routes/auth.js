@@ -39,7 +39,7 @@ router.post('/login', (req, res, next) => {
 })
 
 router.post('/profile-get', (req, res, next) => {
-  User.getUserByName(req.body.login, (err, params) => {
+  User.getUserByName(req, (err, params) => {
     if (err) next(err)
     else res.send(JSON.stringify(params));
   });

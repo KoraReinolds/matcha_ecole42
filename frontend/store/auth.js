@@ -193,10 +193,10 @@ export const mutations = {
     state.mail.value =        user.email;
     state.age.value =         user.age;
     state.biography.value =   user.biography;
-    state.gender.value =      user.gender;
-    state.preferences.value = user.preference,
+    state.gender.value =      user.gender || [];
+    state.preferences.value = user.preference || [],
     state.tags.value =        user.tags,
-    state.images.value =      user.images;
+    state.images.value =      user.images || [];
     if (user.location) {
       state.location.value =  user.location;
     }

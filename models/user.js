@@ -114,8 +114,9 @@ schema.statics.updateUser = async function(req, callback) {
   }
 }
 
-schema.statics.getUserByName = function(name, callback) {
+schema.statics.getUserByName = function(req, callback) {
   const User = this;
+  const name = req.body.login === undefined ? req.user.login : req.body.login;
 
   User.findOne({login: name},
     { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
