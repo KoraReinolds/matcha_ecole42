@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const mongo = require('../mongo');
+const mongo = require('../db/mongo');
 const a = require('async');
 
 let schema = new mongo.Schema({

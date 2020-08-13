@@ -7,6 +7,7 @@ const errorRoute = express.Router();
 const auth = require('./routes/auth');
 const cors = require('cors');
 const User = require('./models/user').User;
+const port = process.env.PORT || 4000;
 
 router.use((req, res, next) => {
   console.log('Time: ', Date.now());
@@ -21,7 +22,6 @@ router.use((req, res, next) => {
 });
 
 const app = express();
-const port = 4000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

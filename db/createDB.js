@@ -1,6 +1,6 @@
 const mongo = require('./mongo');
 const a = require('async');
-const dataGenerator = require('./dataGeneration');
+const dataGenerator = require('../dataGeneration');
 
 a.series([
   open,
@@ -22,7 +22,7 @@ function dropDatabase(callback) {
 }
 
 function requireModels(callback) {
-  require('./models/user');
+  require('../models/user');
   
   a.each(Object.keys(mongo.models), (modelName, callback) => {
     mongo.models[modelName].ensureIndexes(callback);
@@ -32,6 +32,13 @@ function requireModels(callback) {
 function createUsers(callback) {
 
   let users = dataGenerator.generateUsers(10);
+  users.push({
+    login:    "mskiles",
+    password: "123",
+    lname:    "skiles",
+    fname:    "maslyn",
+    email:    "reinokdskora@gmail.com"
+  });
 
   a.each(users, (userData, callback) => {
     new mongo.models.User(userData).save(callback);

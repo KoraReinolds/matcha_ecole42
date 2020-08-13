@@ -45,4 +45,8 @@ router.post('/profile-get', (req, res, next) => {
   });
 })
 
+router.get('/', (req, res, next) => {
+  res.send("API matcha");
+})
+
 module.exports = router;
