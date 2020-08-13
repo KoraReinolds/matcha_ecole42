@@ -1,6 +1,6 @@
 <template lang="pug">
   font-awesome-icon.icon.block(
-    :class="[`fa-${size}x`, { blockColor: active }]"
+    :class="[`fa-${size}x`, { block_color: active }]"
     icon="user-slash"
     @click="block(user)"
   )
@@ -15,6 +15,7 @@ export default {
   }),
   props: {
     size: Number,
+    active: Boolean,
     user: Object,
   },
   computed: {

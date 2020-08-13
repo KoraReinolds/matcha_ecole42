@@ -124,11 +124,11 @@ export const state = () => ({
     ],
   },
   curLocation: null,
-  likeList: [123],
+  likeList: [],
 })
 export const getters = {
-  INFO_FILLED: (state) => Object.values(state)
-    .filter(el => el && el.value !== undefined)
+  INFO_FILLED: (state) => !Object.values(state)
+    .filter(el => el && el.value !== undefined && el.title !== 'Location')
     .map(val => val.value)
     .some(val => val === '' || val === [] || val === null),
   GET_USER: (state) => Object.entries(state).reduce((sum, [key, val]) => {
@@ -193,7 +193,7 @@ export const mutations = {
     state.mail.value =        user.email;
     state.age.value =         user.age;
     state.biography.value =   user.biography;
-    state.gender.value =      user.gender || [];
+    state.gender.value =      user.gender;
     state.preferences.value = user.preference || [],
     state.tags.value =        user.tags,
     state.images.value =      user.images || [];
@@ -231,6 +231,7 @@ export const actions = {
       firstName:      state.firstName.value,
       lastName:       state.lastName.value,
       mail:           state.mail.value,
+      age:            state.age.value,
       biography:      state.biography.value,
       gender:         state.gender.value,
       preference:     state.preferences.value,
@@ -263,7 +264,7 @@ export const actions = {
   async GET_USER ({ commit, state }, login) {
     console.log({
       activationCode: state.token,
-      login: login || state.login.value,
+      login,
     })
     await API.getUser({
       activationCode: state.token,

@@ -1,82 +1,84 @@
 <template lang="pug">
   div#user-page(
     v-if="user && me"
-  ) {{ user }}
-    //- div.main-images
-    //-   CustomImage(
-    //-     :width="mobile ? '100%' : '200px'"
-    //-     :height="mobile ? '100%' : '300px'"
-    //-     :src="user.images[user.avatar].src"
-    //-     :key="'user_image'+user.login"
-    //-   )
-    //-   div.icons(
-    //-     v-if="user.index !== me.index"
-    //-   )
-    //-     Like(
-    //-       :size="2"
-    //-       :active="myLikeList.includes(user.index)"
-    //-       :user="user"
-    //-     )
-    //-     Ban(
-    //-       :size="2"
-    //-       :user="user"
-    //-     )
-    //-     Block(
-    //-       :size="2"
-    //-       :user="user"
-    //-     )
-    //-   //- ChatLink.chat-link(
-    //- //-     v-if="user.index != me.index &&
-    //- //-     myLikeList.includes(user.index) &&
-    //- //-     visitorLikeList.includes(user.index)"
-    //- //-     :user="user"
-    //-   //- )
-    //- div.info
-    //-   div.field
-    //-     span.fio
-    //-       NameLink(
-    //-         :user="user"
-    //-       )
-    //-       Raiting.rate(
-    //-         :value="user.fameRating"
-    //-       )
-    //-       Distance.dist(
-    //-         :value="user.dist"
-    //-       )
-    //-       Online.online(
-    //-         :time="this.user.time"
-    //-       )
+  )
+    div.main-images
+      CustomImage(
+        :width="mobile ? '100%' : '200px'"
+        :height="mobile ? '100%' : '300px'"
+        :src="user.images[user.avatar].src"
+        :key="'user_image'+user.login"
+      )
+      div.icons(
+        v-if="!myPage"
+      )
+        Like(
+          :size="2"
+          :active="myLikeList.includes(user.login)"
+          :user="user"
+        )
+        Ban(
+          :size="2"
+          :active="true"
+          :user="user"
+        )
+        Block(
+          :size="2"
+          :active="true"
+          :user="user"
+        )
+      ChatLink.chat-link(
+        v-if="chatAvailable"
+        :user="user"
+      )
+    div.info
+      div.field
+        span.fio
+          NameLink(
+            :user="user"
+          )
+          Raiting.rate(
+            :value="user.fameRaiting"
+            :size="1"
+          )
+          Distance.dist(
+            :value="user.location"
+            :size="1"
+          )
+          Online.online(
+            :time="this.user.time"
+          )
 
-    //-   div.title.left Gender
-    //-   div.field.gender {{ user.gender }}
+      div.title.left Gender
+      div.field.gender {{ user.gender }}
 
-    //-   div.title.left Preferences
-    //-   div.field.preferences
-    //-     span(
-    //-       v-for="pref in user.preference"
-    //-       :key="`user_pref_${pref}`"
-    //-     ) {{ pref }}
+      div.title.left Preferences
+      div.field.preferences
+        span(
+          v-for="pref in user.preference"
+          :key="`user_pref_${pref}`"
+        ) {{ pref }}
 
-    //-   div.title.left Biography
-    //-   div.field.biography {{ user.biography }}
+      div.title.left Biography
+      div.field.biography {{ user.biography }}
 
-    //-   div.title.left Tags
-    //-   div.field.tags
-    //-     Tag(
-    //-       v-for="tag in user.tags"
-    //-       :key="`user_tag_${tag}`"
-    //-       :name="tag"
-    //-     )
+      div.title.left Tags
+      div.field.tags
+        Tag(
+          v-for="tag in user.tags"
+          :key="`user_tag_${tag}`"
+          :name="tag"
+        )
 
-    //-   div.title.left Images
-    //-   div.field.images
-    //-     CustomImage.image(
-    //-       height="100px"
-    //-       width="100px"
-    //-       v-for="img in user.pictures"
-    //-       :src="img.src"
-    //-       :key="'img'+img.id"          
-    //-     )
+      div.title.left Images
+      div.field.images
+        CustomImage.image(
+          height="100px"
+          width="100px"
+          v-for="img in user.images"
+          :src="img.src"
+          :key="'img'+img.index"
+        )
 
 </template>
 
@@ -111,10 +113,14 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      me: 'user/USER',
+      me: 'auth/GET_USER',
       user: 'user/USER',
+      myPage: 'úser/MY_PAGE',
+      myLikeList: 'auth/MY_LIKES',
+      chatAvailable: 'user/CHAT_AVAILABLE',
+
+
       visitorLikeList: 'users/VISITOR_LIKES',
-      myLikeList: 'users/MY_LIKES',
       location: 'user/LOCATION',
       mobile: 'IS_MOBILE',
     }),

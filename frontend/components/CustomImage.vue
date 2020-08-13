@@ -13,8 +13,8 @@ export default {
   name: 'CustomImage',
   props: {
     src: String,
-    width: Number,
-    height: Number,
+    width: [Number, String],
+    height: [Number, String],
     rounded: Boolean,
   },
   data: () => ({

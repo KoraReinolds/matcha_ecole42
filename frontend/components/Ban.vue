@@ -1,6 +1,6 @@
 <template lang="pug">
   font-awesome-icon.icon.ban(
-    :class="[`fa-${size}x`, { banColor: active }]"
+    :class="[`fa-${size}x`, { ban_color: active }]"
     icon="ban"
     @click="ban(user)"
   )
@@ -15,6 +15,7 @@ export default {
   }),
   props: {
     size: Number,
+    active: Boolean,
     user: Object,
   },
   computed: {

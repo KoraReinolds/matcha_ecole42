@@ -119,6 +119,8 @@ $colors: (
   male: #64B5F6,
   female: #EF9A9A,
   bisexual: #81C784,
+  block: #2c3e50,
+  ban: #B71C1C,
 );
  
 @each $name, $value in $colors {

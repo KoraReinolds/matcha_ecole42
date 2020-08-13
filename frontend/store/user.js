@@ -5,6 +5,11 @@ export const state = () => ({
 })
 export const getters = {
   USER: (state) => state.user,
+  MY_PAGE: (state, getters, rootState) => state.user.login === rootState.auth.login.value,
+  CHAT_AVAILABLE: (state, getters, rootState) => {
+    return state.user.likeList.includes(rootState.auth.login.value) &&
+    rootState.auth.likeList.includes(state.user.login);
+  },
 }
 export const mutations = {
   SET_USER: (state, user) => state.user = user,
