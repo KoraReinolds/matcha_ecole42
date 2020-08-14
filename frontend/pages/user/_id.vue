@@ -42,7 +42,7 @@
             :size="1"
           )
           Distance.dist(
-            :value="user.location"
+            :value="user.location || user.curLocation"
             :size="1"
           )
           Online.online(

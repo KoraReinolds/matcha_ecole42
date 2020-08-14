@@ -31,7 +31,7 @@ const randomText = (min, max, arr) => {
 };
 
 const generateUser = () => {
-  const location = {
+  const curLocation = {
     x: (myLocation.x * 10000000 - getRandomValue(-2000000, 2000000)) / 10000000,
     y: (myLocation.y * 10000000 - getRandomValue(-2000000, 2000000)) / 10000000,
   };
@@ -51,7 +51,8 @@ const generateUser = () => {
   const avatar = getRandomValue(0, images.length - 1);
   return {
     filledInformation: true,
-    location,
+    location: null,
+    curLocation,
     login: `${fname}-${getRandomValue(0, 1000)}`,
     fname,
     lname,

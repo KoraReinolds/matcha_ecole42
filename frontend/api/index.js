@@ -53,7 +53,7 @@ export default {
   login(data) {
     return HTTP.post('login/', data)
       .then((response) => {
-        console.log(response.data);
+        console.log(data, response.data);
         return response.data;
       })
   },

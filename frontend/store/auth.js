@@ -199,9 +199,11 @@ export const mutations = {
     state.images.main =       user.avatar;
     state.likeList =          user.likeList;
     state.filledInformation = user.filledInformation;
-    if (user.location) {
-      state.location.value =  user.location;
-    }
+    state.location.value =    user.location;
+    state.curLocation =       user.curLocation;
+    // if (user.location) {
+    //   state.location.value =  user.location;
+    // }
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
   CLEAR_FIELDS: (state) => {

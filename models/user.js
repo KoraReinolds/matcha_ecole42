@@ -26,6 +26,9 @@ let schema = new mongo.Schema({
   location: {
     type: Object,
   },
+  curLocation: {
+    type: Object,
+  },
   email: {
     type: String,
     required: true,
@@ -67,7 +70,7 @@ let schema = new mongo.Schema({
   },
   filledInformation: {
     type: Boolean,
-  }
+  },
 })
 
 schema.statics.getUsers = function(options, callback) {
@@ -97,7 +100,11 @@ schema.statics.login = function(body, callback) {
         if (user.checkPassword(body.password)) {
           user.generateSessionToken(user, (err, token) => {
             if (err) callback(err)
-            callback(null, { type: "ok", token });
+            user.curLocation = body.location;
+            user.save((err) => {
+              if (err) return callback(err);
+              callback(null, { type: "ok", token });
+            });
           })
         } else {
           callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
