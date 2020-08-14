@@ -84,11 +84,9 @@ export default {
     }),
     ...mapActions({
       updateUser: 'auth/UPDATE_USER',
-      getUser: 'auth/GET_USER'
     }),
   },
   mounted() {
-    this.getUser();
   },
 };
 </script>

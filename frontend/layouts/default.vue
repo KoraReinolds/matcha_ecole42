@@ -16,15 +16,22 @@ export default {
     Header,
     Footer,
   },
+  computed: {
+    ...mapGetters({
+      token: 'auth/TOKEN',
+    }),
+  },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
+      getUser: 'auth/GET_USER',
     }),
   },
   mounted() {
     this.getLocation();
+    if (this.token) this.getUser();
   }
 }
 </script>

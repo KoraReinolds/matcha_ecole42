@@ -5,11 +5,6 @@ export const state = () => ({
 })
 export const getters = {
   USER: (state) => state.user,
-  MY_PAGE: (state, getters, rootState) => state.user.login === rootState.auth.login.value,
-  CHAT_AVAILABLE: (state, getters, rootState) => {
-    return state.user.likeList.includes(rootState.auth.login.value) &&
-    rootState.auth.likeList.includes(state.user.login);
-  },
 }
 export const mutations = {
   SET_USER: (state, user) => state.user = user,
@@ -23,7 +18,7 @@ export const actions = {
     })
       .then((res) => {
         if (res.type === 'ok') {
-          console.log(res.data);
+          console.log(login, res.data);
           commit('SET_USER', res.data);
         } else if (type === 'error') {
         }

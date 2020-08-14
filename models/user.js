@@ -175,12 +175,14 @@ schema.statics.registration = function(body, callback) {
           ...body,
           filledInformation: false,
           age: null,
-          avatar: -1,
-          biography: '',
-          tags: [],
+          fameRaiting: 0,
           gender: '',
           preferences: [],
-          images: []
+          biography: '',
+          tags: [],
+          images: [],
+          avatar: -1,
+          likeList: [],
         });
         console.log(user);
         user.save((err) => {

@@ -130,7 +130,8 @@ export const state = () => ({
 export const getters = {
   INFO_FILLED: (state) => state.filledInformation,
   GET_USER: (state) => Object.entries(state).reduce((sum, [key, val]) => {
-    if (val && val.value) sum[key] = val.value;
+    if (val) sum[key] = val.value;
+    // if (val && val.value) sum[key] = val.value;
     return sum;
   }, {}),
   CUR_LOCATION: (state) => state.curLocation,
@@ -167,7 +168,6 @@ export const mutations = {
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
   SET_TOKEN: (state, token) => state.token = token,
   SET_VALUE: (state, { key, value }) => {
-    console.log(key, value);
     state[key].value = value;
     if (state[key].rules) {
       let msg = null;
@@ -201,9 +201,7 @@ export const mutations = {
     state.filledInformation = user.filledInformation;
     state.location.value =    user.location;
     state.curLocation =       user.curLocation;
-    // if (user.location) {
-    //   state.location.value =  user.location;
-    // }
+    state.login.value =       user.login;
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
   CLEAR_FIELDS: (state) => {
@@ -224,8 +222,8 @@ export const mutations = {
 }
 export const actions = {
 
-  async UPDATE_USER ({ commit, state }) {
-    await API.updateUser({
+  UPDATE_USER ({ commit, state }) {
+    API.updateUser({
       activationCode: state.token,
       avatar:         state.images.main,
       login:          state.login.value,
@@ -264,12 +262,8 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  async GET_USER ({ commit, state }, login) {
-    console.log({
-      activationCode: state.token,
-      login,
-    })
-    await API.getUser({
+  GET_USER ({ commit, state }, login) {
+    API.getUser({
       activationCode: state.token,
       login: state.login.value,
     })
@@ -282,8 +276,8 @@ export const actions = {
       .catch((e) => {});
   },
 
-  async REGISTRATION ({ commit, dispatch, state }) {
-    await API.registration({
+  REGISTRATION ({ commit, dispatch, state }) {
+    API.registration({
       login:    state.login.value,
       password: state.password.value,
       fname:    state.firstName.value,
@@ -300,8 +294,8 @@ export const actions = {
     .catch((e) => {});
   },
   
-  async SIGN_IN ({ commit, state }) {
-    await API.login({
+  SIGN_IN ({ commit, state }) {
+    API.login({
       login:    state.login.value,
       password: state.password.value,
       location: state.curLocation,
@@ -310,7 +304,22 @@ export const actions = {
         if (type === 'ok') {
           Cookie.set('token', token);
           commit('SET_TOKEN', token);
-          this.$router.push({ path: '/settings' });
+          API.getUser({
+            activationCode: token,
+            login,
+          })
+            .then((res) => {
+              if (res.type === 'ok') {
+                if (res.data.filledInformation) {
+                  this.$router.push({ path: '/main' });
+                } else {
+                  this.$router.push({ path: '/settings' });
+                }
+                commit('SET_USER', res.data);
+              } else if (type === 'error') {
+              }
+            })
+            .catch((e) => {});
         } else if (type === 'error') {
         }
       })
@@ -345,7 +354,7 @@ export const actions = {
     }
   },
 
-  async LIKE ({ commit, state }, login) {
+  LIKE ({ commit, state }, login) {
     let index = state.likeList.indexOf(login);
     // debugger;
     let newLikeList = [...state.likeList];
@@ -354,7 +363,7 @@ export const actions = {
     } else {
       newLikeList.splice(index, 1);
     }
-    await API.likeUser({
+    API.likeUser({
       login,
       likeList: newLikeList,
       activationCode: state.token,

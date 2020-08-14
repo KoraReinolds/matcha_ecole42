@@ -40,14 +40,10 @@ export default {
       }),
     ...mapActions({
       getUsers: 'users/GET_USERS',
-      getUser: 'auth/GET_USER',
     }),
   },
   mounted() {
-    if (!this.users) {
-      this.getUsers();
-      this.getUser();
-    }
+    this.getUsers();
   },
 };
 </script>

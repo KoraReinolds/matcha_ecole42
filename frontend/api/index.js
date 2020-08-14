@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-  // baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
-  baseURL: 'http://localhost:4000',
+  baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
+  // baseURL: 'http://localhost:4000',
   headers: {
     Authorization: 'Bearer {token}',
   },
@@ -61,7 +61,7 @@ export default {
   registration(data) {
     return HTTP.post('register/', data)
       .then((response) => {
-        console.log(response.data);
+        console.log(data, response.data);
         return response.data;
       })
   },
@@ -69,7 +69,7 @@ export default {
   getUser(data) {
     return HTTP.post('profile-get/', data)
       .then((response) => {
-        console.log(response.data);
+        console.log(data, response.data);
         return response.data;
       })
   },
@@ -77,7 +77,7 @@ export default {
   getUsers(data) {
     return HTTP.post('get-users/', data)
       .then((response) => {
-        console.log(response.data);
+        console.log(data, response.data);
         return response.data;
       })
   },

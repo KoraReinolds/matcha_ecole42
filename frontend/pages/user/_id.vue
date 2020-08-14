@@ -42,6 +42,7 @@
             :size="1"
           )
           Distance.dist(
+            v-if="!myPage"
             :value="user.location || user.curLocation"
             :size="1"
           )
@@ -115,7 +116,6 @@ export default {
     ...mapGetters({
       me: 'auth/GET_USER',
       user: 'user/USER',
-      myPage: 'úser/MY_PAGE',
       myLikeList: 'auth/MY_LIKES',
       chatAvailable: 'user/CHAT_AVAILABLE',
 
@@ -124,6 +124,13 @@ export default {
       location: 'user/LOCATION',
       mobile: 'IS_MOBILE',
     }),
+    myPage: function() {
+      return this.me.login === this.user.login
+    },
+    chatAvailable: function() {
+      return this.user.likeList.includes(this.me.login) &&
+        this.myLikeList.includes(this.user.login);
+    }
   },
   methods: {
     ...mapMutations({
