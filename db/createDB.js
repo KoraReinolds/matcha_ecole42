@@ -33,11 +33,12 @@ function createUsers(callback) {
 
   let users = dataGenerator.generateUsers(10);
   users.push({
-    login:    "mskiles",
-    password: "123",
-    lname:    "skiles",
-    fname:    "maslyn",
-    email:    "reinokdskora@gmail.com"
+    filledInformation:  false,
+    login:              "mskiles",
+    password:           "123",
+    lname:              "skiles",
+    fname:              "maslyn",
+    email:              "reinokdskora@gmail.com"
   });
 
   a.each(users, (userData, callback) => {

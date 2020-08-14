@@ -125,12 +125,10 @@ export const state = () => ({
   },
   curLocation: null,
   likeList: [],
+  filledInformation: false,
 })
 export const getters = {
-  INFO_FILLED: (state) => !Object.values(state)
-    .filter(el => el && el.value !== undefined && el.title !== 'Location')
-    .map(val => val.value)
-    .some(val => val === '' || val === [] || val === null),
+  INFO_FILLED: (state) => state.filledInformation,
   GET_USER: (state) => Object.entries(state).reduce((sum, [key, val]) => {
     if (val && val.value) sum[key] = val.value;
     return sum;
@@ -164,6 +162,7 @@ export const getters = {
   MY_LIKES: (state) => state.likeList,
 }
 export const mutations = {
+  SET_INFO_AS_FILLED: (state) => state.filledInformation = true,
   TOGGLE_LIKE_USER: (state, likeList) => state.likeList = likeList,
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
   SET_TOKEN: (state, token) => state.token = token,
@@ -197,11 +196,12 @@ export const mutations = {
     state.preferences.value = user.preference || [],
     state.tags.value =        user.tags,
     state.images.value =      user.images || [];
+    state.images.main =       user.avatar;
+    state.likeList =          user.likeList;
+    state.filledInformation = user.filledInformation;
     if (user.location) {
       state.location.value =  user.location;
     }
-    state.images.main =       user.avatar;
-    state.likeList =          user.likeList;
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
   CLEAR_FIELDS: (state) => {
@@ -241,6 +241,7 @@ export const actions = {
     })
     .then(({ type }) => {
       if (type === 'ok') {
+        commit('SET_INFO_AS_FILLED');
       } else if (type === 'error') {
       }
     })

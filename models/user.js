@@ -64,20 +64,23 @@ let schema = new mongo.Schema({
   },
   likeList: {
     type: Array,
+  },
+  filledInformation: {
+    type: Boolean,
   }
 })
 
 schema.statics.getUsers = function(options, callback) {
-  this.find({ login: { $ne: options.login } },
-    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0, likeList: 0 },
-    (err, users) => {
-    if (err) return callback(err);
-    let res = {
-      users: users.slice(options.skip, options.skip + options.limit),
-      length: users.length,
-    }
-    callback(null, { type: "ok", message: "", data: res });
-  })
+  this.find({ login: { $ne: options.login } }, { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0, likeList: 0 })
+    .where('filledInformation').equals(true)
+    .exec((err, users) => {
+      if (err) return callback(err);
+      let res = {
+        users: users.slice(options.skip, options.skip + options.limit),
+        length: users.length,
+      }
+      callback(null, { type: "ok", message: "", data: res });
+    })
 };
 
 schema.statics.login = function(body, callback) {
@@ -107,7 +110,7 @@ schema.statics.login = function(body, callback) {
 schema.statics.updateUser = async function(req, callback) {
   console.log(req.user);
   if (req.user) {
-    await this.findOneAndUpdate({ login: req.user.login }, req.body);
+    await this.findOneAndUpdate({ login: req.user.login }, { ...req.body, filledInformation: true });
     callback(null, { type: "ok", message: "Данные успешно обновленны" });
   } else {
     callback(403)
@@ -163,6 +166,7 @@ schema.statics.registration = function(body, callback) {
       } else {
         let user = new User({
           ...body,
+          filledInformation: false,
           age: null,
           avatar: -1,
           biography: '',

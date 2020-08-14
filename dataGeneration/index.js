@@ -50,6 +50,7 @@ const generateUser = () => {
   ];
   const avatar = getRandomValue(0, images.length - 1);
   return {
+    filledInformation: true,
     location,
     login: `${fname}-${getRandomValue(0, 1000)}`,
     fname,
