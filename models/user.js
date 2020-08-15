@@ -73,9 +73,11 @@ let schema = new mongo.Schema({
   },
 })
 
-schema.statics.getUsers = function(options, callback) {
+schema.statics.getUsers = function(req, callback) {
+  const options = req.body;
   this.find({ login: { $ne: options.login } }, { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0, email: 0, likeList: 0 })
     .where('filledInformation').equals(true)
+    .where('gender').in(options.preference)
     .exec((err, users) => {
       if (err) return callback(err);
       let res = {

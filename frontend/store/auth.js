@@ -223,7 +223,7 @@ export const mutations = {
 export const actions = {
 
   UPDATE_USER ({ commit, state }) {
-    API.updateUser({
+    const userNew = {
       activationCode: state.token,
       avatar:         state.images.main,
       login:          state.login.value,
@@ -238,10 +238,12 @@ export const actions = {
       tags:           state.tags.value,
       images:         state.images.value,
       location:       state.location.value,
-    })
+    };
+    API.updateUser(userNew)
     .then(({ type }) => {
       if (type === 'ok') {
         commit('SET_INFO_AS_FILLED');
+        commit('users/SET_INIT_TOOLS', userNew, { root: true });
       } else if (type === 'error') {
       }
     })
@@ -262,7 +264,7 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  GET_USER ({ commit, state }, login) {
+  GET_USER ({ commit, state, dispatch }, login) {
     API.getUser({
       activationCode: state.token,
       login: state.login.value,
@@ -270,6 +272,10 @@ export const actions = {
       .then((res) => {
         if (res.type === 'ok') {
           commit('SET_USER', res.data);
+          commit('users/SET_INIT_TOOLS', res.data, { root: true });
+          if (this.$router.currentRoute.name === 'main') {
+            dispatch('users/GET_USERS', null, { root: true });
+          }
         } else if (type === 'error') {
         }
       })
@@ -356,7 +362,6 @@ export const actions = {
 
   LIKE ({ commit, state }, login) {
     let index = state.likeList.indexOf(login);
-    // debugger;
     let newLikeList = [...state.likeList];
     if (index === -1) {
       newLikeList.push(login);

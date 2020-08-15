@@ -11,7 +11,7 @@ router.post('/like-user', (req, res, next) => {
 
 router.post('/get-users', (req, res, next) => {
   req.body.login = req.user.login;
-  User.getUsers(req.body, (err, params) => {
+  User.getUsers(req, (err, params) => {
     if (err) next(err)
     else res.send(JSON.stringify(params));
   })

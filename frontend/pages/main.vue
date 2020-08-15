@@ -11,7 +11,7 @@
       template(v-else)
         div.else Search returned no results
       Paginator.paginator
-    //- Tools.tools
+    Tools.tools
 
   </div>
 </template>
@@ -20,12 +20,14 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import User from '@/components/User.vue';
 import Paginator from '@/components/Paginator.vue';
+import Tools from '@/components/Tools.vue';
 
 export default {
   name: 'mainPage',
   components: {
     User,
     Paginator,
+    Tools,
   },
   data: () => ({
   }),

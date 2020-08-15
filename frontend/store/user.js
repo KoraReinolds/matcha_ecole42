@@ -11,8 +11,8 @@ export const mutations = {
 }
 export const actions = {
 
-  async GET_USER ({ commit, state, rootState }, login) {
-    await API.getUser({
+  GET_USER ({ commit, state, rootState }, login) {
+    API.getUser({
       activationCode: rootState.auth.token,
       login,
     })

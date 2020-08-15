@@ -84,6 +84,8 @@ module.exports = {
             'faHeart',
             'faUserSlash',
             'faCircle',
+            'faCog',
+            'faTimes',
           ]
         }
       ]
