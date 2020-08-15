@@ -7,7 +7,7 @@ const womanLNames = JSON.parse('["Самсонова","Виноградова","
 const genderArray = ['male', 'female', 'bisexual'];
 const myLocation = { x: 53.41193590379258, y: -2.8372686058044363 };
 const tagsArray = ['football', 'TV', 'computer_games', 'poker', 'fishing', 'comics', 'work', 'food', 'rest', 'sex', 'films', 'pizza', 'talk', 'travel'];
-
+let imageId = 1;
 // get random value from min to max
 const getRandomValue = (min, max) => Math.round(min - 0.5 + Math.random() * (max - min + 1));
 
@@ -45,8 +45,8 @@ const generateUser = () => {
   const preference = randomArray(1, genderArray.length, genderArray);
   const biography = randomText(1, 5, sentences);
   const images = [
-    { index: 0, src: `https://picsum.photos/200/301` },
-    { index: 1, src: `https://picsum.photos/200/300` },
+    { index: 0, src: `https://picsum.photos/id/${imageId++}/200/300` },
+    { index: 1, src: `https://picsum.photos/id/${imageId++}/200/300` },
   ];
   const avatar = getRandomValue(0, images.length - 1);
   return {
