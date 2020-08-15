@@ -16,7 +16,7 @@
         type="text"
         @focus="onFocus"
         @blur="onBlur"
-        @input="$emit('input', $event.target.value);"
+        @input="inputValue"
         :value="value"
       )
       input(
@@ -25,7 +25,7 @@
         type="text"
         @focus="onFocus"
         @blur="onBlur"
-        @input="$emit('input', $event.target.value)"
+        @input="inputValue"
         :value="value"
       )
       label(ref="label") {{ data.title }}
@@ -42,6 +42,7 @@ export default {
     rounded: Boolean,
     data: Object,
     many: Boolean,
+    onlyDigit: Boolean,
   },
   data: () => ({
     filledMode: null,
@@ -64,6 +65,13 @@ export default {
     }
   },
   methods: {
+    inputValue(event) {
+      let newValue = this.onlyDigit
+        ? event.target.value.replace(/[^0-9]/g, '')
+        : event.target.value;
+      event.target.value = newValue;
+      this.$emit('input', newValue);
+    },
     onFocus(event) {
       this.focus = true;
       this.$emit('focus', event);

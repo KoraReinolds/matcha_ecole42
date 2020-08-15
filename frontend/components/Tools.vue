@@ -20,11 +20,13 @@
       TextField.form-field(
         :data="tools.minAge"
         v-model="minAge"
+        onlyDigit
       )
         //- @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
       TextField.form-field(
         :data="tools.maxAge"
         v-model="maxAge"
+        onlyDigit
       )
         //- @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
 

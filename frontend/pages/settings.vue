@@ -14,6 +14,7 @@
       outlined
       :data="getAge"
       v-model.trim="age"
+      onlyDigit
     )
     TextField.form-field(
       outlined

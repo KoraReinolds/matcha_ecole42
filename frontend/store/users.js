@@ -36,8 +36,8 @@ export const getters = {
 export const mutations = {
   SET_INIT_TOOLS: (state, user) => {
     state.tools.pref.value = user.preference;
-    state.tools.minAge.value = user.age - 5 || 18;
-    state.tools.maxAge.value = user.age + 5 || 99;
+    state.tools.minAge.value = Math.max(+user.age - 5, 18);
+    state.tools.maxAge.value = Math.min(+user.age + 5, 99);
   },
   SET_USERS: (state, { users, length }) => {
     state.users = users;
