@@ -36,6 +36,8 @@ export const getters = {
 export const mutations = {
   SET_INIT_TOOLS: (state, user) => {
     state.tools.pref.value = user.preference;
+    state.tools.minAge.value = user.age - 5 || 18;
+    state.tools.maxAge.value = user.age + 5 || 99;
   },
   SET_USERS: (state, { users, length }) => {
     state.users = users;
@@ -46,21 +48,9 @@ export const mutations = {
   GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
 }
 export const actions = {
-  FILTER_PREF ({ commit, dispatch }, opt) {
+  CHANGE_TOOLS ({ commit, dispatch }, opt) {
     commit('CHANGE_TOOLS', opt);
     dispatch('GET_USERS', state.curPage);
-    // API.getUsers({
-    //   activationCode: rootState.auth.token,
-    //   limit: state.limit,
-    //   skip: (state.curPage - 1) * state.limit,
-    // })
-    // .then(({ type, data }) => {
-    //   if (type === 'ok') {
-    //       commit('SET_USERS', data);
-    //   } else if (type === 'error') {
-    //   }
-    // })
-    // .catch((e) => {});
   },
   GET_USERS ({ commit, state, rootState }, page) {
     commit('CHANGE_PAGE', page || 1);
@@ -69,6 +59,8 @@ export const actions = {
       limit: state.limit,
       skip: (state.curPage - 1) * state.limit,
       preference: state.tools.pref.value,
+      minAge: state.tools.minAge.value,
+      maxAge: state.tools.maxAge.value,
     })
     .then(({ type, data }) => {
       if (type === 'ok') {

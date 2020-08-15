@@ -17,16 +17,18 @@
         :icons="prefIcons"
         v-model.trim="pref"
       )
-      //- TextField.form-field(
-      //-   :data="tools.minAge"
-      //-   @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
-      //-   v-model="minAge"
-      //- )
-      //- TextField.form-field(
-      //-   :data="tools.maxAge"
-      //-   @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
-      //-   v-model="maxAge"
-      //- )
+      TextField.form-field(
+        :data="tools.minAge"
+        v-model="minAge"
+      )
+        //- @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
+      TextField.form-field(
+        :data="tools.maxAge"
+        v-model="maxAge"
+      )
+        //- @blur="setFilter({ val: $event.target.value, key: 'minAge' })"
+
+
       //- TextField.form-field(
       //-   label="Min_dist"
       //-   @blur="setFilter({ val: $event.target.value, key: 'minDist' })"
@@ -176,15 +178,15 @@ export default {
   },
   computed: {
     pref: {
-      set(value) { this.filterPref({ val: value, key: 'pref' }); },
+      set(value) { this.changeTools({ val: value, key: 'pref' }); },
       get() { return this.tools.pref.value; },
     },
     minAge: {
-      set(value) { this.filterPref({ val: value, key: 'pref' }); },
+      set(value) { this.changeTools({ val: value, key: 'minAge' }); },
       get() { return this.tools.minAge.value; },
     },
     maxAge: {
-      set(value) { this.filterPref({ val: value, key: 'pref' }); },
+      set(value) { this.changeTools({ val: value, key: 'maxAge' }); },
       get() { return this.tools.maxAge.value; },
     },
     sortList: {
@@ -209,7 +211,7 @@ export default {
     ...mapActions({
       addTag: 'users/ADD_TAG',
       setFilter: 'users/SET_FILTER',
-      filterPref: 'users/FILTER_PREF',
+      changeTools: 'users/CHANGE_TOOLS',
     }),
   },
 };

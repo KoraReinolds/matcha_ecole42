@@ -26,7 +26,8 @@
         span.fio
           NameLink.age(
             :user="user"
-          ) {{ `${user.age} y.o.` }}
+          )
+          span {{ `${user.age} y.o.` }}
         div.only_laptop.biography
           div.text {{ `${user.biography}` }}
         div.only_laptop.tags
