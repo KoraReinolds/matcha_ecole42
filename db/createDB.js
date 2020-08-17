@@ -31,10 +31,10 @@ function requireModels(callback) {
 
 function createUsers(callback) {
 
-  let users = dataGenerator.generateUsers(10);
+  let users = dataGenerator.generateUsers(1000);
   users.push({
     filledInformation:  true,
-    location:           null,
+    location:           { x: 55.751640, y: 37.616565 },
     login:              "mskiles",
     fname:              "first",
     lname:              "last",

@@ -44,7 +44,7 @@
         :size="2"
       )
       Distance.icon.only_laptop(
-        :value="user.location || user.curLocation"
+        :value="user.curLocation || user.location"
         :size="2"
       )
       div.icon.pref

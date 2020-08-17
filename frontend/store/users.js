@@ -19,11 +19,17 @@ export const state = () => ({
       value: null,
       title: "Max_age",
     },
+    minDist: {
+      value: '0',
+      title: "Min_dist",
+    },
+    maxDist: {
+      value: 10,
+      title: "Max_dist",
+    },
     gender: '',
     minRate: '0',
     maxRate: 1000,
-    minDist: '0',
-    maxDist: 100,
     tags: [],
   },
 })
@@ -61,6 +67,8 @@ export const actions = {
       preference: state.tools.pref.value,
       minAge: state.tools.minAge.value,
       maxAge: state.tools.maxAge.value,
+      minDist: state.tools.minDist.value,
+      maxDist: state.tools.maxDist.value,
     })
     .then(({ type, data }) => {
       if (type === 'ok') {

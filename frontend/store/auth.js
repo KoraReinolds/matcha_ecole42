@@ -159,7 +159,7 @@ export const getters = {
   TAGS: (state) => state.tags,
   IMAGES: (state) => state.images,
   LOCATION: (state) => state.location,
-  MY_LOCATION: (state) => state.location.value || state.curLocation,
+  MY_LOCATION: (state) => state.curLocation || state.location.value,
   MY_LIKES: (state) => state.likeList,
 }
 export const mutations = {

@@ -73,23 +73,31 @@ let schema = new mongo.Schema({
   },
 })
 
-schema.statics.getUsers = function(req, callback) {
+schema.statics.getUsers = async function(req, callback) {
   const options = req.body;
-  this.find({
+  const distance = function (point1, point2) {
+    const diffX = Math.abs(point1.x - point2.x);
+    const diffY = Math.abs(point1.y - point2.y);
+    return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3);
+  };
+  const docs = await this.find({
       login: { $ne: options.login },
       gender: { $in: options.preference },
       filledInformation: true,
       age: { $gt: options.minAge, $lt: options.maxAge },
+      age: { $gt: options.minAge, $lt: options.maxAge },
     })
     .select('-_id -salt -token -hashedPassword -__v -email -likeList')
-    .exec((err, users) => {
-      if (err) return callback(err);
-      let res = {
-        users: users.slice(options.skip, options.skip + options.limit),
-        length: users.length,
-      }
-      callback(null, { type: "ok", message: "", data: res });
-    })
+  const newDocs = docs.filter((user) => {
+    const dist = distance(user.curLocation || user.location,
+      req.user.curLocation || req.user.location);
+    return options.minDist <= dist && dist <= options.maxDist;
+  })
+  let res = {
+    users: newDocs.slice(options.skip, options.skip + options.limit),
+    length: newDocs.length,
+  }
+  callback(null, { type: "ok", message: "", data: res });
 };
 
 schema.statics.login = function(body, callback) {
