@@ -44,16 +44,17 @@
         onlyDigit
       )
 
-      //- TextField.form-field(
-      //-   label="Max_rate"
-      //-   @blur="setFilter({ val: $event.target.value, key: 'maxRate' })"
-      //-   v-model="tools.maxRate"
-      //- )
-      //- TextField.form-field(
-      //-   label="Min_rate"
-      //-   @blur="setFilter({ val: $event.target.value, key: 'minRate' })"
-      //-   v-model="tools.minRate"
-      //- )
+      TextField.form-field(
+        :data="tools.minRate"
+        @blur="changeTools({ val: $event.target.value, key: 'minRate' })"
+        v-model="minRate"
+      )
+      TextField.form-field(
+        :data="tools.maxRate"
+        @blur="changeTools({ val: $event.target.value, key: 'maxRate' })"
+        v-model="maxRate"
+      )
+
       //- TagsField.tags.form-field(
       //-   label="Tags"
       //-   v-model="tools.tags"
@@ -201,6 +202,14 @@ export default {
     minDist: {
       set(value) { this.changeToolsValue({ val: value, key: 'minDist' }); },
       get() { return this.tools.minDist.value; },
+    },
+    maxRate: {
+      set(value) { this.changeToolsValue({ val: value, key: 'maxRate' }); },
+      get() { return this.tools.maxRate.value; },
+    },
+    minRate: {
+      set(value) { this.changeToolsValue({ val: value, key: 'minRate' }); },
+      get() { return this.tools.minRate.value; },
     },
     sortList: {
       set(value) { this.sort(value); },

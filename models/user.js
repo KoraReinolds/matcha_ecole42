@@ -85,7 +85,7 @@ schema.statics.getUsers = async function(req, callback) {
       gender: { $in: options.preference },
       filledInformation: true,
       age: { $gt: options.minAge, $lt: options.maxAge },
-      age: { $gt: options.minAge, $lt: options.maxAge },
+      fameRaiting: { $gt: options.minRate, $lt: options.maxRate },
     })
     .select('-_id -salt -token -hashedPassword -__v -email -likeList')
   const newDocs = docs.filter((user) => {

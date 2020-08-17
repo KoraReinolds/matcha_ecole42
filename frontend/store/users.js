@@ -27,9 +27,15 @@ export const state = () => ({
       value: 10,
       title: "Max_dist",
     },
+    minRate: {
+      value: '0',
+      title: "Min_rate",
+    },
+    maxRate: {
+      value: 500,
+      title: "Max_rate",
+    },
     gender: '',
-    minRate: '0',
-    maxRate: 1000,
     tags: [],
   },
 })
@@ -69,6 +75,8 @@ export const actions = {
       maxAge: state.tools.maxAge.value,
       minDist: state.tools.minDist.value,
       maxDist: state.tools.maxDist.value,
+      minRate: state.tools.minRate.value,
+      maxRate: state.tools.maxRate.value,
     })
     .then(({ type, data }) => {
       if (type === 'ok') {
