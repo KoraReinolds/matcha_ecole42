@@ -19,7 +19,7 @@ const randomArray = (min, max, arr) => {
   let val;
   let newArray = [];
   while (newArray.length < getRandomValue(min, max)) {
-    val = getRandomValue(min, max) - 1;
+    val = getRandomValue(1, arr.length) - 1;
     if (newArray.indexOf(arr[val]) == -1) newArray.push(arr[val]);
   }
   return newArray;

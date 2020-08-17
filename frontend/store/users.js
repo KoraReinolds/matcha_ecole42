@@ -35,8 +35,11 @@ export const state = () => ({
       value: 500,
       title: "Max_rate",
     },
+    tags: {
+      value: ['poker'],
+      title: 'Tags',
+    },
     gender: '',
-    tags: [],
   },
 })
 export const getters = {
@@ -50,6 +53,7 @@ export const mutations = {
     state.tools.pref.value = user.preference;
     state.tools.minAge.value = Math.max(+user.age - 5, 18);
     state.tools.maxAge.value = Math.min(+user.age + 5, 99);
+    state.tools.tags.value = user.tags;
   },
   SET_USERS: (state, { users, length }) => {
     state.users = users;
@@ -61,6 +65,7 @@ export const mutations = {
 }
 export const actions = {
   CHANGE_TOOLS ({ commit, dispatch }, opt) {
+    console.log(opt)
     commit('CHANGE_TOOLS', opt);
     dispatch('GET_USERS', state.curPage);
   },
@@ -68,15 +73,16 @@ export const actions = {
     commit('CHANGE_PAGE', page || 1);
     API.getUsers({
       activationCode: rootState.auth.token,
-      limit: state.limit,
-      skip: (state.curPage - 1) * state.limit,
-      preference: state.tools.pref.value,
-      minAge: state.tools.minAge.value,
-      maxAge: state.tools.maxAge.value,
-      minDist: state.tools.minDist.value,
-      maxDist: state.tools.maxDist.value,
-      minRate: state.tools.minRate.value,
-      maxRate: state.tools.maxRate.value,
+      limit:          state.limit,
+      skip:           (state.curPage - 1) * state.limit,
+      preference:     state.tools.pref.value,
+      minAge:         state.tools.minAge.value,
+      maxAge:         state.tools.maxAge.value,
+      minDist:        state.tools.minDist.value,
+      maxDist:        state.tools.maxDist.value,
+      minRate:        state.tools.minRate.value,
+      maxRate:        state.tools.maxRate.value,
+      tags:           state.tools.tags.value,
     })
     .then(({ type, data }) => {
       if (type === 'ok') {

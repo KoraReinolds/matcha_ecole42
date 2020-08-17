@@ -55,13 +55,13 @@
         v-model="maxRate"
       )
 
-      //- TagsField.tags.form-field(
-      //-   label="Tags"
-      //-   v-model="tools.tags"
-      //-   :maxTags="5"
-      //-   @blur="addTag(newTag)"
-      //- )
-
+      TagsField.tags.form-field(
+        :data="tools.tags"
+        v-model="tags"
+        :maxTags="5"
+        @delete="changeTools({ val: $event, key: 'tags' })"
+        @add="changeTools({ val: $event, key: 'tags' })"
+      )
       //- //- <!-- <div class="field">
       //- //-   <span class="title" for="maxRate">Tags</span>
       //- //-   <input class="value tags" @blur="addTag(newTag); newTag=''" v-model.trim="newTag"
@@ -211,10 +211,14 @@ export default {
       set(value) { this.changeToolsValue({ val: value, key: 'minRate' }); },
       get() { return this.tools.minRate.value; },
     },
-    sortList: {
-      set(value) { this.sort(value); },
-      get() { return this.$store.getters['users/SORT_LIST']; },
+    tags: {
+      set(value) { this.changeToolsValue({ val: value, key: 'tags' }); },
+      get() { return this.tools.tags.value; },
     },
+    // sortList: {
+    //   set(value) { this.sort(value); },
+    //   get() { return this.$store.getters['users/SORT_LIST']; },
+    // },
     ...mapGetters({
       tools: 'users/TOOLS',
     }),
@@ -232,7 +236,7 @@ export default {
       changeToolsValue: 'users/CHANGE_TOOLS',
     }),
     ...mapActions({
-      // addTag: 'users/ADD_TAG',
+      addTag: 'users/ADD_TAG',
       // setFilter: 'users/SET_FILTER',
       changeTools: 'users/CHANGE_TOOLS',
     }),

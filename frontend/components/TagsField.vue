@@ -39,11 +39,15 @@ export default {
   },
   methods: {
     deleteTag(tag) {
-      this.$emit('input', this.data.value.filter(val => val !== tag));
+      const newVal = this.data.value.filter(val => val !== tag);
+      this.$emit('input', newVal);
+      this.$emit('delete', newVal);
     },
     addTag() {
       if (this.newTag && !this.data.value.includes(this.newTag)) {
-        this.$emit('input', [...this.data.value, this.newTag])
+        const newVal = [...this.data.value, this.newTag];
+        this.$emit('input', newVal);
+        this.$emit('add', newVal);
       }
       this.newTag = null;
     },

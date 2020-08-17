@@ -45,7 +45,7 @@ function createUsers(callback) {
     gender:             "male",
     preference:         ["male"],
     biography:          "my name is Jack my name is Jack my name is Jack my name is Jack my name is Jack",
-    tags:               ["aaa", "bbb", "bbsb" ],
+    tags:               ["poker", "work"],
     images: [{
         "index": 0,
         "src": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"

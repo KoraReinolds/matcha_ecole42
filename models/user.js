@@ -88,15 +88,26 @@ schema.statics.getUsers = async function(req, callback) {
       fameRaiting: { $gt: options.minRate, $lt: options.maxRate },
     })
     .select('-_id -salt -token -hashedPassword -__v -email -likeList')
-  const newDocs = docs.filter((user) => {
-    const dist = distance(user.curLocation || user.location,
-      req.user.curLocation || req.user.location);
-    return options.minDist <= dist && dist <= options.maxDist;
-  })
-  let res = {
-    users: newDocs.slice(options.skip, options.skip + options.limit),
-    length: newDocs.length,
+    
+  let filteredDocs = docs
+    .filter((user) => {
+      const dist = distance(user.curLocation || user.location,
+        req.user.curLocation || req.user.location);
+        return options.minDist <= dist && dist <= options.maxDist;
+      })
+  if (options.tags.length) {
+    filteredDocs = filteredDocs.filter(
+      (user) => {
+        console.log(options.tags.some((tag) => user.tags.includes(tag)));
+        return options.tags.some((tag) => user.tags.includes(tag))
+      }
+    )
   }
+  let res = {
+    users: filteredDocs.slice(options.skip, options.skip + options.limit),
+    length: filteredDocs.length,
+  }
+  console.log(options.tags)
   callback(null, { type: "ok", message: "", data: res });
 };
 
