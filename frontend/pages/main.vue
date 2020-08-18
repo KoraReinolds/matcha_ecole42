@@ -55,7 +55,9 @@ export default {
   padding: 50px 20px;
   display: flex;
   .user-list {
-    
+    .else {
+      width: 800px;
+    }
   }
 }
 </style>

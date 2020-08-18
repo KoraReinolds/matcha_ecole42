@@ -5,6 +5,7 @@ export const state = () => ({
   curPage: 1,
   maxLength: null,
   limit: 3,
+  sortOrder: ['countTags', 'fameRaiting', 'dist'],
   tools: {
     pref: {
       value: [],
@@ -39,7 +40,27 @@ export const state = () => ({
       value: ['poker'],
       title: 'Tags',
     },
-    gender: '',
+    
+    sortDist: {
+      value: ['dist'],
+      title: 'Dist',
+      options: ['dist', 'dist_rev'],
+    },
+    sortAge: {
+      value: [],
+      title: 'Age',
+      options: ['age', 'age_rev'],
+    },
+    sortRate: {
+      value: ['fameRaiting_rev'],
+      title: 'Rate',
+      options: ['fameRaiting', 'fameRaiting_rev'],
+    },
+    sortTags: {
+      value: ['countTags_rev'],
+      title: 'Tags',
+      options: ['countTags', 'countTags_rev'],
+    },
   },
 })
 export const getters = {
@@ -47,6 +68,7 @@ export const getters = {
   CUR_PAGE: (state) => state.curPage,
   LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
   TOOLS: (state) => state.tools,
+  SORT_LIST: (state) => state.sortOrder,
 }
 export const mutations = {
   SET_INIT_TOOLS: (state, user) => {
@@ -62,15 +84,42 @@ export const mutations = {
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
   GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
+  CHANGE_SORT_ORDER: (state, { key, val }) => {
+    if (val.length) {
+      const prefix = val[0].split('_')[0];
+      if (!state.sortOrder.includes(prefix)) {
+        state.sortOrder.push(prefix);
+      }
+    } else {
+      const index = state.sortOrder.indexOf(state.tools[key].options[0]);
+      state.sortOrder.splice(index, 1);
+    }
+  },
 }
 export const actions = {
-  CHANGE_TOOLS ({ commit, dispatch }, opt) {
-    console.log(opt)
+  SORT: ({ commit, dispatch }, opt) => {
+    if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]];
+    commit('CHANGE_TOOLS', opt);
+    commit('CHANGE_SORT_ORDER', opt);
+    dispatch('GET_USERS', state.curPage);
+  },
+  FILTER_LIST ({ commit, dispatch }, opt) {
     commit('CHANGE_TOOLS', opt);
     dispatch('GET_USERS', state.curPage);
   },
   GET_USERS ({ commit, state, rootState }, page) {
     commit('CHANGE_PAGE', page || 1);
+    const sortOrder = state.sortOrder.reduce((sum, cur) => {
+      let val;
+      if (cur === 'dist') val = state.tools.sortDist.value
+      else if (cur === 'age') val = state.tools.sortAge.value
+      else if (cur === 'fameRaiting') val = state.tools.sortRate.value
+      else if (cur === 'countTags') val = state.tools.sortTags.value
+      if (val.length) {
+        sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1);
+      }
+      return sum;
+    }, {});
     API.getUsers({
       activationCode: rootState.auth.token,
       limit:          state.limit,
@@ -83,6 +132,7 @@ export const actions = {
       minRate:        state.tools.minRate.value,
       maxRate:        state.tools.maxRate.value,
       tags:           state.tools.tags.value,
+      sortOrder:      sortOrder,
     })
     .then(({ type, data }) => {
       if (type === 'ok') {
@@ -92,5 +142,4 @@ export const actions = {
     })
     .catch((e) => {});
   },
-
 }

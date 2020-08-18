@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const mongo = require('../db/mongo');
 const a = require('async');
+const { forEach } = require('../dataGeneration/sentences');
 
 let schema = new mongo.Schema({
   login: {
@@ -87,27 +88,49 @@ schema.statics.getUsers = async function(req, callback) {
       age: { $gt: options.minAge, $lt: options.maxAge },
       fameRaiting: { $gt: options.minRate, $lt: options.maxRate },
     })
+    .sort(options.sortOrder)
     .select('-_id -salt -token -hashedPassword -__v -email -likeList')
     
   let filteredDocs = docs
     .filter((user) => {
       const dist = distance(user.curLocation || user.location,
         req.user.curLocation || req.user.location);
-        return options.minDist <= dist && dist <= options.maxDist;
-      })
+      user.dist = dist;
+      return options.minDist <= dist && dist <= options.maxDist;
+    })
   if (options.tags.length) {
     filteredDocs = filteredDocs.filter(
-      (user) => {
-        console.log(options.tags.some((tag) => user.tags.includes(tag)));
-        return options.tags.some((tag) => user.tags.includes(tag))
-      }
+      (user) => options.tags.some((tag) => user.tags.includes(tag))
     )
   }
+  filteredDocs.forEach((user) => {
+    user.countTags = user.tags.reduce((sum, tag) => {
+      console.log(+options.tags.includes(tag))
+      return sum += +options.tags.includes(tag);
+    }, 0)
+  })
+  filteredDocs.forEach((user) => {
+    console.log(user.tags, user.countTags)
+  })
+  console.log(options.sortOrder)
+  const sortFields = Object.keys(options.sortOrder);
+  const sortLen = sortFields.length;
+  let i = 0;
+  const compare = function(a, b, i) {
+    const field = sortFields[i];
+    return (i === sortLen)
+      ? 0 : (
+        options.sortOrder[field] * (a[field] - b[field]) ||
+        compare(a, b, i + 1)
+      );
+  };
+  filteredDocs = filteredDocs.sort((a, b) => compare(a, b, 0))
+  // filteredDocs.forEach((e) => console.log(e.dist))
   let res = {
     users: filteredDocs.slice(options.skip, options.skip + options.limit),
     length: filteredDocs.length,
   }
-  console.log(options.tags)
+  // console.log(options.tags)
   callback(null, { type: "ok", message: "", data: res });
 };
 

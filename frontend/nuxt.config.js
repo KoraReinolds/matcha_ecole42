@@ -86,6 +86,8 @@ module.exports = {
             'faCircle',
             'faCog',
             'faTimes',
+            'faSortAmountDown',
+            'faSortAmountDownAlt',
           ]
         }
       ]

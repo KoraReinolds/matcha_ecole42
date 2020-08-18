@@ -3,11 +3,11 @@
     v-if="tools"
     :class="{ hide: !show }"
   )
-    RoundedIcon.icon.close(
-      :icon="show ? 'times' : 'cog'"
-      @click="show=!show"
-      :size="3"
-    )
+    //- RoundedIcon.icon.close(
+    //-   :icon="show ? 'times' : 'cog'"
+    //-   @click="show=!show"
+    //-   :size="3"
+    //- )
     div.tools(
       v-if="show"
     )
@@ -22,36 +22,36 @@
         :data="tools.minAge"
         v-model="minAge"
         onlyDigit
-        @blur="changeTools({ val: $event.target.value, key: 'minAge' })"
+        @blur="filterList({ val: $event.target.value, key: 'minAge' })"
       )
       TextField.form-field(
         :data="tools.maxAge"
         v-model="maxAge"
         onlyDigit
-        @blur="changeTools({ val: $event.target.value, key: 'maxAge' })"
+        @blur="filterList({ val: $event.target.value, key: 'maxAge' })"
       )
 
       TextField.form-field(
         :data="tools.minDist"
-        @blur="changeTools({ val: $event.target.value, key: 'minDist' })"
+        @blur="filterList({ val: $event.target.value, key: 'minDist' })"
         v-model="minDist"
         onlyDigit
       )
       TextField.form-field(
         :data="tools.maxDist"
-        @blur="changeTools({ val: $event.target.value, key: 'maxDist' })"
+        @blur="filterList({ val: $event.target.value, key: 'maxDist' })"
         v-model="maxDist"
         onlyDigit
       )
 
       TextField.form-field(
         :data="tools.minRate"
-        @blur="changeTools({ val: $event.target.value, key: 'minRate' })"
+        @blur="filterList({ val: $event.target.value, key: 'minRate' })"
         v-model="minRate"
       )
       TextField.form-field(
         :data="tools.maxRate"
-        @blur="changeTools({ val: $event.target.value, key: 'maxRate' })"
+        @blur="filterList({ val: $event.target.value, key: 'maxRate' })"
         v-model="maxRate"
       )
 
@@ -59,102 +59,35 @@
         :data="tools.tags"
         v-model="tags"
         :maxTags="5"
-        @delete="changeTools({ val: $event, key: 'tags' })"
-        @add="changeTools({ val: $event, key: 'tags' })"
+        @delete="filterList({ val: $event, key: 'tags' })"
+        @add="filterList({ val: $event, key: 'tags' })"
       )
-      //- //- <!-- <div class="field">
-      //- //-   <span class="title" for="maxRate">Tags</span>
-      //- //-   <input class="value tags" @blur="addTag(newTag); newTag=''" v-model.trim="newTag"
-      //- //-     placeholder="Input new tag"/>
-      //- //- </div>
-      //- //- <div class="tag_list">
-      //- //-   <span v-for="(tag, index) in tools.tags" :key="tag"
-      //- //-     @click="deleteTag(index)" class="tag">#{{ tag }}
-      //- //-   </span>
-      //- //- </div> -->
 
-      //- Options.form-field(
-      //-   :icons="{ dist: 'sort-amount-down-alt', dist_rev: 'sort-amount-down' }"
-      //-   label="Dist"
-      //-   v-model="sortList"
-      //-   many
-      //-   :options="['dist', 'dist_rev']"
-      //- )
-
-      //- //- <!-- <div class="section_title">Sort by</div><hr>
-
-      //- //- <div class="field sort">
-      //- //-   <span class="title">Distance</span>
-      //- //-   <label for="dist"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('dist')
-      //- //-     }]" icon="sort-amount-down-alt" /></label>
-      //- //-   <input id="dist" class="value" type="checkbox" value="dist" v-model="sortList">
-      //- //-   <label for="dist_rev"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('dist_rev')
-      //- //-     }]" icon="sort-amount-down" /></label>
-      //- //-   <input id="dist_rev" class="value" type="checkbox" value="dist_rev" v-model="sortList">
-      //- //- </div> -->
-
-      //- Options.form-field(
-      //-   :icons="{ age: 'sort-amount-down-alt', age_rev: 'sort-amount-down' }"
-      //-   label="Age"
-      //-   v-model="sortList"
-      //-   many
-      //-   :options="['age', 'age_rev']"
-      //- )
-
-      //- //- <!-- <div class="field sort">
-      //- //-   <span class="title">Age</span>
-      //- //-   <label for="age"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('age')
-      //- //-     }]" icon="sort-amount-down-alt" /></label>
-      //- //-   <input id="age" class="value" type="checkbox" value="age" v-model="sortList">
-      //- //-   <label for="age_rev"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('age_rev')
-      //- //-     }]" icon="sort-amount-down" /></label>
-      //- //-   <input id="age_rev" class="value" type="checkbox" value="age_rev" v-model="sortList">
-      //- //- </div> -->
-
-      //- Options.form-field(
-      //-   :icons="{ rate: 'sort-amount-down-alt', rate_rev: 'sort-amount-down' }"
-      //-   label="Rate"
-      //-   v-model="sortList"
-      //-   many
-      //-   :options="['rate', 'rate_rev']"
-      //- )
-
-      //- //- <!-- <div class="field sort">
-      //- //-   <span class="title">Raiting</span>
-      //- //-   <label for="rate"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('rate')
-      //- //-     }]" icon="sort-amount-down-alt" /></label>
-      //- //-   <input id="rate" class="value" type="checkbox" value="rate" v-model="sortList">
-      //- //-   <label for="rate_rev"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('rate_rev')
-      //- //-     }]" icon="sort-amount-down" /></label>
-      //- //-   <input id="rate_rev" class="value" type="checkbox" value="rate_rev" v-model="sortList">
-      //- //- </div> -->
-
-      //- Options.form-field(
-      //-   v-if="tools.tags.length > 1"
-      //-   :icons="{ tags: 'sort-amount-down-alt', tags_rev: 'sort-amount-down' }"
-      //-   label="Tags"
-      //-   v-model="sortList"
-      //-   many
-      //-   :options="['tags', 'tags_rev']"
-      //- )
-
-      //- //- <!-- <div class="field sort" v-if="tools.tags.length > 1">
-      //- //-   <span class="title">Tags</span>
-      //- //-   <label for="tags"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('tags')
-      //- //-     }]" icon="sort-amount-down-alt" /></label>
-      //- //-   <input id="tags" class="value" type="checkbox" value="tags" v-model="sortList">
-      //- //-   <label for="tags_rev"><font-awesome-icon :class="['icon', {
-      //- //-       active: sortList.includes('tags_rev')
-      //- //-     }]" icon="sort-amount-down" /></label>
-      //- //-   <input id="tags_rev" class="value" type="checkbox" value="tags_rev" v-model="sortList">
-      //- //- </div> -->
+      Options.form-field(
+        :data="tools.sortDist"
+        v-model="sortDist"
+        :icons="{ dist: 'sort-amount-down-alt', dist_rev: 'sort-amount-down' }"
+        many
+      )
+      Options.form-field(
+        :data="tools.sortAge"
+        :icons="{ age: 'sort-amount-down-alt', age_rev: 'sort-amount-down' }"
+        v-model="sortAge"
+        many
+      )
+      Options.form-field(
+        :data="tools.sortRate"
+        :icons="{ fameRaiting: 'sort-amount-down-alt', fameRaiting_rev: 'sort-amount-down' }"
+        v-model="sortRate"
+        many
+      )
+      Options.form-field(
+        v-if="tools.tags.value.length > 1"
+        :data="tools.sortTags"
+        :icons="{ countTags: 'sort-amount-down-alt', countTags_rev: 'sort-amount-down' }"
+        v-model="sortTags"
+        many
+      )
 
 </template>
 
@@ -184,7 +117,7 @@ export default {
   },
   computed: {
     pref: {
-      set(value) { this.changeTools({ val: value, key: 'pref' }); },
+      set(value) { this.filterList({ val: value, key: 'pref' }); },
       get() { return this.tools.pref.value; },
     },
     minAge: {
@@ -215,10 +148,26 @@ export default {
       set(value) { this.changeToolsValue({ val: value, key: 'tags' }); },
       get() { return this.tools.tags.value; },
     },
-    // sortList: {
-    //   set(value) { this.sort(value); },
-    //   get() { return this.$store.getters['users/SORT_LIST']; },
-    // },
+    sortDist: {
+      set(value) { this.sort({ val: value, key: 'sortDist' }); },
+      get() { return this.tools.sortDist.value; },
+    },
+    sortAge: {
+      set(value) { this.sort({ val: value, key: 'sortAge' }); },
+      get() { return this.tools.sortAge.value; },
+    },
+    sortRate: {
+      set(value) { this.sort({ val: value, key: 'sortRate' }); },
+      get() { return this.tools.sortRate.value; },
+    },
+    sortTags: {
+      set(value) { this.sort({ val: value, key: 'sortTags' }); },
+      get() { return this.tools.sortTags.value; },
+    },
+    sortList: {
+      set(value) { this.sort(value); },
+      get() { return this.$store.getters['users/SORT_LIST']; },
+    },
     ...mapGetters({
       tools: 'users/TOOLS',
     }),
@@ -229,16 +178,12 @@ export default {
       this.filterUsers();
     },
     ...mapMutations({
-      // sort: 'users/SORT',
-      // setValue: 'SET_VALUE',
-      // toggleSortOrder: 'users/TOGGLE_SORT_ORDER',
-      // filterUsers: 'users/FILTER_USERS',
       changeToolsValue: 'users/CHANGE_TOOLS',
     }),
     ...mapActions({
       addTag: 'users/ADD_TAG',
-      // setFilter: 'users/SET_FILTER',
-      changeTools: 'users/CHANGE_TOOLS',
+      filterList: 'users/FILTER_LIST',
+      sort: 'users/SORT',
     }),
   },
 };
@@ -247,8 +192,9 @@ export default {
 <style scoped lang="scss">
 .tools_box {
   position: relative;
-  // background-color: rgba($color: $main-color-light, $alpha: 0.9);
+  // background-color: rgba($color: lighten($main-color, 20%), $alpha: 0.9);
   border-radius: 30px;
+  // border: 2px solid $main-color;
   width: 260px;
   margin: 0 auto;
   height: calc(100% - 120px);
@@ -270,9 +216,10 @@ export default {
       overflow: auto;
     }
     @media (min-width: 480px) {
+      position: fixed;
       width: 260px;
     }
-    margin-top: 70px;
+    // margin-top: 70px;
     padding: 30px;
     display: flex;
     flex-wrap: wrap;
