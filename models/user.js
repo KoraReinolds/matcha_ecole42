@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const mongo = require('../db/mongo');
 const a = require('async');
+require('./actions');
 const { forEach } = require('../dataGeneration/sentences');
 
 let schema = new mongo.Schema({
@@ -200,10 +201,21 @@ schema.statics.likeUser = function(req, callback) {
           { likeList: req.body.likeList },
           function(err, doc) {
             if (err) callback(404)
-            callback(null, { type: "ok", message: "Данные успешно обновленны" })
+            callback(null, user)
           }
         );
       }
+    },
+    (user, callback) => {
+      new mongo.models.Actions({
+        who: req.user._id,
+        action: req.body.action,
+        target: user._id,
+      }).save((err, action) => {
+        mongo.models.Actions.getMyLikes(req, function() {callback})
+        if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+        callback(null, { type: "ok", message: "Данные успешно обновленны" })
+      })
     }
   ], callback);
 };

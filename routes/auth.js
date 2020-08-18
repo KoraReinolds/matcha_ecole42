@@ -1,6 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user').User;
+const Actions = require('../models/actions').Actions;
+
+router.post('/my-like-list', (req, res, next) => {
+  Actions.getMyLikes(req, (err, params) => {
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
+  })
+})
+
+router.post('/like-me-list', (req, res, next) => {
+  Actions.getUsersWhoLikeMe(req, (err, params) => {
+    if (err) next(err)
+    else res.send(JSON.stringify(params));
+  })
+})
 
 router.post('/like-user', (req, res, next) => {
   User.likeUser(req, (err, params) => {

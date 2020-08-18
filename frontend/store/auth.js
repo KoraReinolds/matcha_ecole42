@@ -371,6 +371,8 @@ export const actions = {
     API.likeUser({
       login,
       likeList: newLikeList,
+      target: login,
+      action: index === -1 ? 'like' : 'dislike',
       activationCode: state.token,
     })
       .then(({ type, message }) => {

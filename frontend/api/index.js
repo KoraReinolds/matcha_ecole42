@@ -89,5 +89,24 @@ export default {
         return response.data;
       })
   },
+  
+
+  getMyLikeList(data) {
+    return HTTP.post('my-like-list/', data)
+    .then((response) => {
+        console.log(data, response.data);
+        return response.data;
+      })
+  },
+
+  getListWhoLikeMe(data) {
+    return HTTP.post('like-me-list/', data)
+    .then((response) => {
+        console.log(data, response.data);
+        return response.data;
+      })
+  },
+
+
 
 };
