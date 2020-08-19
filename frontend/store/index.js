@@ -23,7 +23,6 @@ export const actions = {
         return obj;
       }, {})
       commit('auth/SET_TOKEN', cookie.token);
-      commit('auth/SET_VALUE', { key: 'login', value: cookie.login });
     }
   },
 }

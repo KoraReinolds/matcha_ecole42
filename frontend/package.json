@@ -19,6 +19,7 @@
     "js-cookie": "^2.2.1",
     "nuxt": "^2.0.0",
     "nuxt-fontawesome": "^0.4.0",
+    "nuxt-socket-io": "^1.1.8",
     "vue-yandex-maps": "^0.10.9"
   },
   "devDependencies": {

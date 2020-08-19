@@ -18,9 +18,6 @@
           to=`/history`
         ) History
         nuxt-link.link(
-          to=`/visitors`
-        ) Visitors
-        nuxt-link.link(
           to=`/chat`
         ) Chat
       nuxt-link.link.notif(

@@ -22,7 +22,7 @@ function dropDatabase(callback) {
 }
 
 function requireModels(callback) {
-  require('../models/user');
+  require('../models/user')();
   
   a.each(Object.keys(mongo.models), (modelName, callback) => {
     mongo.models[modelName].ensureIndexes(callback);

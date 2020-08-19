@@ -55,6 +55,7 @@ module.exports = {
     '~assets/css/main.scss'
   ],
   modules: [
+    'nuxt-socket-io',
     '@nuxtjs/style-resources',
     '@nuxtjs/axios',
     ['nuxt-fontawesome', {
@@ -93,6 +94,12 @@ module.exports = {
       ]
     }]
   ],
+  io: {
+    // module options
+    sockets: [{
+      url: 'http://localhost:4000'
+    }]
+  },
   styleResources: {
     scss: ['./assets/css/*.scss']
   },

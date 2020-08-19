@@ -1,12 +1,18 @@
 <template lang="pug">
   div.short-list
-    UserShort(
-      v-for="(userData, index) in notifList"
-      :key="'notif'+index+userData.login"
-      :user="userData.who"
-      :action="userData.action"
-      :time="userData.created"
+    template(
+      v-if="notifList.length"
     )
+      UserShort(
+        v-for="(userData, index) in notifList"
+        :key="'notif'+index+userData.login"
+        :user="userData.who"
+        :action="userData.action"
+        :time="userData.created"
+      )
+    template(
+      v-else
+    ) Notifications list is empty
 </template>
 
 <script>

@@ -1,12 +1,18 @@
 <template lang="pug">
   div.short-list
-    UserShort(
-      v-for="(userData, index) in historyList"
-      :key="'history'+index+userData.login"
-      :user="userData.target"
-      :action="userData.action"
-      :time="userData.created"
+    template(
+      v-if="historyList.length"
     )
+      UserShort(
+        v-for="(userData, index) in historyList"
+        :key="'history'+index+userData.login"
+        :user="userData.target"
+        :action="userData.action"
+        :time="userData.created"
+      )
+    template(
+      v-else
+    ) History list is empty
 </template>
 
 <script>

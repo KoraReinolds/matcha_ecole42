@@ -7,7 +7,7 @@ export const state = () => ({
     value: 'mskiles',
     errorMsg: '',
     title: 'Login',
-    valid: false,
+    valid: true,
     rules: [
       "!!value || 'Required'",
     ],
@@ -16,7 +16,7 @@ export const state = () => ({
     value: '123',
     errorMsg: '',
     title: 'Password',
-    valid: false,
+    valid: true,
     rules: [
       "!!value || 'Required'",
     ],
@@ -316,12 +316,13 @@ export const actions = {
           })
             .then((res) => {
               if (res.type === 'ok') {
+                commit('SET_USER', res.data);
+                commit('users/SET_INIT_TOOLS', res.data, { root: true });
                 if (res.data.filledInformation) {
                   this.$router.push({ path: '/main' });
                 } else {
                   this.$router.push({ path: '/settings' });
                 }
-                commit('SET_USER', res.data);
               } else if (type === 'error') {
               }
             })
