@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-  // baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
-  baseURL: 'http://localhost:4000',
+  baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
+  // baseURL: 'http://localhost:4000',
   headers: {
     Authorization: 'Bearer {token}',
   },
@@ -91,16 +91,16 @@ export default {
   },
   
 
-  getMyLikeList(data) {
-    return HTTP.post('my-like-list/', data)
+  getHistory(data) {
+    return HTTP.post('history/', data)
     .then((response) => {
         console.log(data, response.data);
         return response.data;
       })
   },
 
-  getListWhoLikeMe(data) {
-    return HTTP.post('like-me-list/', data)
+  getNotifications(data) {
+    return HTTP.post('notifications/', data)
     .then((response) => {
         console.log(data, response.data);
         return response.data;
