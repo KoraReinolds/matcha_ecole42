@@ -26,13 +26,13 @@
       nuxt-link.link.notif(
         to=`/notifications`
       )
-      font-awesome-icon-layers.link
-        font-awesome-icon.icon(
-          icon="bell"
-        )
-          //- v-if="curLen(notifications, 'notifications')"
-        span.fa-layers-counter.counter.fa-3x 1
-        //- ) {{ curLen(notifications, 'notifications') }}
+        font-awesome-icon-layers
+          font-awesome-icon.icon(
+            icon="bell"
+          )
+            //- v-if="curLen(notifications, 'notifications')"
+          span.fa-layers-counter.counter.fa-3x 1
+          //- ) {{ curLen(notifications, 'notifications') }}
       nuxt-link.link(
         to=`settings`
       )
@@ -118,6 +118,9 @@ header {
       margin-right: 20px;
       &.notif {
         margin-left: auto;
+        .counter {
+          top: 0px;
+        }
       }
       &:last-child {
         margin: 0;

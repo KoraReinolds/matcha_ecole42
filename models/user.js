@@ -175,14 +175,30 @@ schema.statics.updateUser = async function(req, callback) {
 
 schema.statics.getUserByName = function(req, callback) {
   const User = this;
-  const name = req.body.login === undefined ? req.user.login : req.body.login;
+  const login = req.body.login === undefined ? req.user.login : req.body.login;
 
-  User.findOne({login: name},
-    { _id: 0, salt: 0, token: 0, hashedPassword: 0, __v: 0 },
-    (err, data) => {
-      if (err) return callback(err);
-      callback(null, { type: "ok", message: "", data });
-    })
+  a.waterfall([
+    (callback) => {
+      User.findOne({ login }, callback);
+    },
+    (user, callback) => {
+      if (!user) {
+        callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+      }
+      if (req.user.login !== login) {
+        new mongo.models.Actions({
+          who: req.user._id,
+          action: 'visit',
+          target: user._id,
+        }).save((err, action) => {
+          if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+          callback(null, { type: "ok", message: "", data: user });
+        })
+      } else {
+        callback(null, { type: "ok", message: "", data: user });
+      }
+    },
+  ], callback);
 }
 
 schema.statics.likeUser = function(req, callback) {
@@ -212,7 +228,6 @@ schema.statics.likeUser = function(req, callback) {
         action: req.body.action,
         target: user._id,
       }).save((err, action) => {
-        mongo.models.Actions.getMyLikes(req, function() {callback})
         if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
         callback(null, { type: "ok", message: "Данные успешно обновленны" })
       })

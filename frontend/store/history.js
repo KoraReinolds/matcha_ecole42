@@ -9,8 +9,8 @@ export const getters = {
   NOTIFICATIONS: (state) => state.notifications,
 }
 export const mutations = {
-  SET_HISTORY: (state, list) => state.history = list,
-  SET_NOTIFICATIONS: (state, list) => state.notifications = list,
+  SET_HISTORY: (state, list) => state.history = list.reverse(),
+  SET_NOTIFICATIONS: (state, list) => state.notifications = list.reverse(),
 }
 export const actions = {
 

@@ -3,7 +3,7 @@
     UserShort(
       v-for="(userData, index) in notifList"
       :key="'notif'+index+userData.login"
-      :user="userData.target"
+      :user="userData.who"
       :action="userData.action"
       :time="userData.created"
     )

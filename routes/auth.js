@@ -3,15 +3,16 @@ const router = express.Router();
 const User = require('../models/user').User;
 const Actions = require('../models/actions').Actions;
 
-router.post('/my-like-list', (req, res, next) => {
-  Actions.getMyLikes(req, (err, params) => {
+
+router.post('/history', (req, res, next) => {
+  Actions.getHistory(req, (err, params) => {
     if (err) next(err)
     else res.send(JSON.stringify(params));
   })
 })
 
-router.post('/like-me-list', (req, res, next) => {
-  Actions.getUsersWhoLikeMe(req, (err, params) => {
+router.post('/notifications', (req, res, next) => {
+  Actions.getNotifications(req, (err, params) => {
     if (err) next(err)
     else res.send(JSON.stringify(params));
   })

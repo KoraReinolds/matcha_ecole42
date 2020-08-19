@@ -135,22 +135,14 @@ export default {
   methods: {
     ...mapMutations({
       chatWIthUser: 'users/SET_CUR_CHAT_USER_ID',
-      setCurUserId: 'users/SET_CUR_USER_ID',
     }),
     ...mapActions({
-      visitUser: 'users/VISIT_USER',
+      visitUser: 'user/VISIT_USER',
       getUser: 'user/GET_USER',
     }),
   },
-  // watch: {
-  //   $route() {
-  //     this.setCurUserId(this.$route.params.id);
-  //   },
-  // },
   mounted() {
     this.getUser(this.$route.params.id);
-    // this.setCurUserId(+this.$route.params.id);
-    // this.visitUser(+this.$route.params.id);
   },
 };
 </script>

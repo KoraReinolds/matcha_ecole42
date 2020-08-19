@@ -122,6 +122,8 @@ $colors: (
   block: #2c3e50,
   ban: #B71C1C,
   like: #E53935,
+  dislike: #ce93d8,
+  visit: #A5D6A7,
 );
  
 @each $name, $value in $colors {

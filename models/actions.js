@@ -22,10 +22,10 @@ let schema = new mongo.Schema({
   },
 })
 
-schema.statics.getUsersWhoLikeMe = function(req, callback) {
+schema.statics.getNotifications = function(req, callback) {
   this.find({ target: req.user._id})
     .populate('who', '-__v, -salt -token -_id -filledInformation -hashedPassword -email')
-    .select('who created -_id')
+    .select('who action created -_id')
     .exec((err, users) => {
       console.log(users)
       if (err) return callback(err);
@@ -33,10 +33,10 @@ schema.statics.getUsersWhoLikeMe = function(req, callback) {
     })
 };
 
-schema.statics.getMyLikes = function(req, callback) {
+schema.statics.getHistory = function(req, callback) {
   this.find({ who: req.user._id})
     .populate('target', '-__v, -salt -token -_id -filledInformation -hashedPassword -email')
-    .select('target created -_id')
+    .select('target action created -_id')
     .exec((err, users) => {
       console.log(users)
       if (err) return callback(err);

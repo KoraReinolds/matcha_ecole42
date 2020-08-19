@@ -21,8 +21,8 @@
     )
       div.info-line
         font-awesome-icon.icon.fa-2x(
-          :class="[`like_color`, action]"
-          :icon="icons['like']"
+          :class="[`${action}_color`, action]"
+          :icon="icons[action]"
         )
         NameLink(
           :user="user"
