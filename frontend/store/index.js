@@ -10,9 +10,7 @@ export const getters = {
   IS_MOBILE: (state) => state.mobile,
 }
 export const mutations = {
-  RESIZE: (state) => {
-    state.mobile = window.innerWidth <= 480;
-  },
+  RESIZE: (state) => state.mobile = window.innerWidth <= 480,
 }
 export const actions = {
   nuxtServerInit ({ commit, dispatch }, { req }) {

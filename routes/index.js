@@ -17,6 +17,33 @@ module.exports = function(io) {
     });
   });
   
+  router.post('/send-message', (req, res, next) => {
+    if (req.user) {
+      Actions.sendMessage(req, (err, params) => {
+        if (err) next(err)
+        else res.send(JSON.stringify(params));
+      })
+    } else next();
+  })
+  
+  router.post('/get-messages', (req, res, next) => {
+    if (req.user) {
+      Actions.getMessages(req, (err, params) => {
+        if (err) next(err)
+        else res.send(JSON.stringify(params));
+      })
+    } else next();
+  })
+  
+  router.post('/chat-list', (req, res, next) => {
+    if (req.user) {
+      User.getUsersForChat(req, (err, params) => {
+        if (err) next(err)
+        else res.send(JSON.stringify(params));
+      })
+    } else next();
+  })
+
   router.post('/history', (req, res, next) => {
     if (req.user) {
       Actions.getHistory(req, (err, params) => {

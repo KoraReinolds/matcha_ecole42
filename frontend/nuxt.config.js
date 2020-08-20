@@ -37,13 +37,13 @@ module.exports = {
     */
     extend (config, { isDev, isClient }) {
       config.module.rules.push({
-        // test: /\.pug$/,
-        // loader: 'pug-plain-loader'
+        test: /\.pug$/,
+        loader: 'pug-plain-loader'
       })
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
-          test: /\.(js|vue)$/,
+          test: /\.(vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
@@ -89,6 +89,9 @@ module.exports = {
             'faTimes',
             'faSortAmountDown',
             'faSortAmountDownAlt',
+            'faPaperPlane',
+            'faCaretDown',
+            'faCaretLeft',
           ]
         }
       ]

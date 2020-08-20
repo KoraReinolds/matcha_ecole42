@@ -107,4 +107,28 @@ export default {
       })
   },
 
+  getChatList(data) {
+    return HTTP.post('chat-list/', data)
+    .then((response) => {
+        console.log('chat-list', data, response.data);
+        return response.data;
+      })
+  },
+
+  getMessages(data) {
+    return HTTP.post('get-messages/', data)
+    .then((response) => {
+        console.log('get-messages', data, response.data);
+        return response.data;
+      })
+  },
+
+  sendMessage(data) {
+    return HTTP.post('send-message/', data)
+    .then((response) => {
+        console.log('send-message', data, response.data);
+        return response.data;
+      })
+  },
+
 };

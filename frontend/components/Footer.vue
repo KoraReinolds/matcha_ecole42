@@ -3,7 +3,7 @@
     v-if="user"
   )
     div.footer_content
-      div.only_laptop Make by mskiles (s.shurn94@gmail.com)
+      div.only_laptop Made by mskiles (s.shurn94@gmail.com)
       div.only_mobile
         nuxt-link.link(
           :to="`/user/${user.login}`"
@@ -22,12 +22,6 @@
         )
           font-awesome-icon.icon(
             icon="search"
-          )
-        nuxt-link.link(
-          to='visitors'
-        )
-          font-awesome-icon.icon(
-            icon="eye"
           )
         nuxt-link.link(
           to='chat'

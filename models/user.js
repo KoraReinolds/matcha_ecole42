@@ -74,6 +74,17 @@ module.exports = function(io) {
     },
   })
   
+  schema.statics.getUsersForChat = async function(req, callback) {
+    const docs = await this.find({
+      login: { $in: req.user.likeList },
+    })
+      .select('-_id -salt -token -hashedPassword -__v -email')
+    // console.log(docs);
+    let filteredDocs = docs
+      .filter((user) => user.likeList.includes(req.user.login))
+    callback(null, { type: "ok", message: "", data: filteredDocs });
+  }
+
   schema.statics.getUsers = async function(req, callback) {
     const options = req.body;
     const distance = function (point1, point2) {

@@ -24,19 +24,33 @@ export default {
   },
   methods: {
     ...mapMutations({
-      pushNotification: 'history/PUSH_NOTIFICATION'
+      resize: 'RESIZE',
+      pushNotification: 'history/PUSH_NOTIFICATION',
+      pushMessage: 'chat/PUSH_MESSAGE',
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
       getUser: 'auth/GET_USER',
     }),
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resize);
+  },
   mounted() {
+    this.resize();
+    window.addEventListener('resize', this.resize);
     this.getLocation();
     if (this.token) this.getUser();
     this.socket = this.$nuxtSocket({});
     this.socket
-      .on(this.token, (notif, cb) => this.pushNotification(notif))
+      .on(this.token, (notif, cb) => {
+        if (notif.action === 'messages') {
+          if (notif.who.login === this.$route.params.id) {
+            this.pushMessage(notif);
+          }
+        }
+        this.pushNotification(notif);
+      })
   }
 }
 </script>
