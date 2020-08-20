@@ -183,6 +183,27 @@ module.exports = function(io) {
             target: user._id,
           }).save((err, action) => {
             if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+            io.emit(user.token, {
+              action:         action.action,
+              created:        action.created, 
+              who: {
+                age:          req.user.age,
+                avatar:       req.user.avatar,
+                biography:    req.user.biography,
+                created:      req.user.created,
+                curLocation:  req.user.curLocation,
+                fameRaiting:  req.user.fameRaiting,
+                fname:        req.user.fname,
+                gender:       req.user.gender,
+                images:       req.user.images,
+                likeList:     req.user.likeList,
+                lname:        req.user.lname,
+                location:     req.user.location,
+                login:        req.user.login,
+                preference:   req.user.preference,
+                tags:         req.user.tags,
+              }
+            });
             callback(null, { type: "ok", message: "", data: user });
           })
         } else {
@@ -207,7 +228,7 @@ module.exports = function(io) {
             { login: req.user.login },
             { likeList: req.body.likeList },
             function(err, doc) {
-              if (err) callback(404)
+              if (err) callback(404);
               callback(null, user)
             }
           );
@@ -220,6 +241,27 @@ module.exports = function(io) {
           target: user._id,
         }).save((err, action) => {
           if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+          io.emit(user.token, {
+            action:         action.action,
+            created:        action.created, 
+            who: {
+              age:          req.user.age,
+              avatar:       req.user.avatar,
+              biography:    req.user.biography,
+              created:      req.user.created,
+              curLocation:  req.user.curLocation,
+              fameRaiting:  req.user.fameRaiting,
+              fname:        req.user.fname,
+              gender:       req.user.gender,
+              images:       req.user.images,
+              likeList:     req.user.likeList,
+              lname:        req.user.lname,
+              location:     req.user.location,
+              login:        req.user.login,
+              preference:   req.user.preference,
+              tags:         req.user.tags,
+            }
+          });
           callback(null, { type: "ok", message: "Данные успешно обновленны" })
         })
       }

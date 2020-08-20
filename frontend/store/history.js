@@ -11,6 +11,7 @@ export const getters = {
 export const mutations = {
   SET_HISTORY: (state, list) => state.history = list.reverse(),
   SET_NOTIFICATIONS: (state, list) => state.notifications = list.reverse(),
+  PUSH_NOTIFICATION: (state, notif) => state.notifications.unshift(notif),
 }
 export const actions = {
 

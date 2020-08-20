@@ -45,7 +45,7 @@ export default {
   updateUser(data) {
     return HTTP.post('profile-update/', data)
       .then((response) => {
-        console.log(data, response.data);
+        console.log('updateUser', data, response.data);
         return response.data;
       })
   },
@@ -53,7 +53,7 @@ export default {
   login(data) {
     return HTTP.post('login/', data)
       .then((response) => {
-        console.log(data, response.data);
+        console.log('login', data, response.data);
         return response.data;
       })
   },
@@ -61,7 +61,7 @@ export default {
   registration(data) {
     return HTTP.post('register/', data)
       .then((response) => {
-        console.log(data, response.data);
+        console.log('registration', data, response.data);
         return response.data;
       })
   },
@@ -69,7 +69,7 @@ export default {
   getUser(data) {
     return HTTP.post('profile-get/', data)
       .then((response) => {
-        console.log(data, response.data);
+        console.log('getUser', data, response.data);
         return response.data;
       })
   },
@@ -77,7 +77,7 @@ export default {
   getUsers(data) {
     return HTTP.post('get-users/', data)
       .then((response) => {
-        console.log(data, response.data);
+        console.log('getUsers', data, response.data);
         return response.data;
       })
   },
@@ -85,7 +85,7 @@ export default {
   likeUser(data) {
     return HTTP.post('like-user/', data)
     .then((response) => {
-        console.log(data, response.data);
+        console.log('likeUser', data, response.data);
         return response.data;
       })
   },
@@ -94,7 +94,7 @@ export default {
   getHistory(data) {
     return HTTP.post('history/', data)
     .then((response) => {
-        console.log(data, response.data);
+        console.log('getHistory', data, response.data);
         return response.data;
       })
   },
@@ -102,7 +102,7 @@ export default {
   getNotifications(data) {
     return HTTP.post('notifications/', data)
     .then((response) => {
-        console.log(data, response.data);
+        console.log('getNotifications', data, response.data);
         return response.data;
       })
   },

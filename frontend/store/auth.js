@@ -267,7 +267,7 @@ export const actions = {
   GET_USER ({ commit, state, dispatch }, login) {
     API.getUser({
       activationCode: state.token,
-      login: state.login.value,
+      login,
     })
       .then((res) => {
         if (res.type === 'ok') {

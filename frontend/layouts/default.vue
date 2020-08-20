@@ -19,10 +19,12 @@ export default {
   computed: {
     ...mapGetters({
       token: 'auth/TOKEN',
+      login: 'auth/LOGIN',
     }),
   },
   methods: {
     ...mapMutations({
+      pushNotification: 'history/PUSH_NOTIFICATION'
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
@@ -32,6 +34,9 @@ export default {
   mounted() {
     this.getLocation();
     if (this.token) this.getUser();
+    this.socket = this.$nuxtSocket({});
+    this.socket
+      .on(this.token, (notif, cb) => this.pushNotification(notif))
   }
 }
 </script>
