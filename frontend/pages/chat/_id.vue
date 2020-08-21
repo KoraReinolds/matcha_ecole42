@@ -76,6 +76,10 @@
           )
           div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
+  div#chat(
+    v-else
+  ) Chat is empty now. Like other users and you can chat with them if you will match each other.
+
 </template>
 
 <script>

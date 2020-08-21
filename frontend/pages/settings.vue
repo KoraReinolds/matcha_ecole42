@@ -14,12 +14,15 @@
       outlined
       :data="getAge"
       v-model.trim="age"
-      onlyDigit
+      type="number"
+      min="18"
+      max="99"
     )
     TextField.form-field(
       outlined
       :data="getMail"
       v-model.trim="mail"
+      name="email"
     )
     TextField.form-field.textarea(
       outlined
@@ -51,7 +54,8 @@
       v-model="location"
     )
     div.btn(
-      @click="updateUser"
+      :class="{ disabled: !updateValid }"
+      @click="updateValid && updateUser"
     ) Save Changes
 </template>
 
@@ -78,6 +82,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      updateValid: 'auth/UPDATE_VALID',
     }),
   },
   methods: {

@@ -7,7 +7,7 @@ export const state = () => ({
     value: 'mskiles',
     errorMsg: '',
     title: 'Login',
-    valid: true,
+    valid: false,
     rules: [
       "!!value || 'Required'",
     ],
@@ -16,7 +16,7 @@ export const state = () => ({
     value: '123',
     errorMsg: '',
     title: 'Password',
-    valid: true,
+    valid: false,
     rules: [
       "!!value || 'Required'",
     ],
@@ -147,6 +147,17 @@ export const getters = {
       state.lastName.valid,
       state.mail.valid,
     ].every((valid) => valid === true),
+  UPDATE_VALID: (state) => [
+      state.firstName.valid,
+      state.lastName.valid,
+      state.age.valid,
+      state.mail.valid,
+      state.biography.valid,
+      state.gender.valid,
+      state.preferences.valid,
+      state.tags.valid,
+      state.images.valid,
+    ].every((valid) => valid === true),
   LOGIN: (state) => state.login,
   PASSWORD: (state) => state.password,
   FIRST_NAME: (state) => state.firstName,
@@ -265,21 +276,25 @@ export const actions = {
   },
 
   GET_USER ({ commit, state, dispatch }, login) {
-    API.getUser({
-      activationCode: state.token,
-      login,
-    })
-      .then((res) => {
-        if (res.type === 'ok') {
-          commit('SET_USER', res.data);
-          commit('users/SET_INIT_TOOLS', res.data, { root: true });
-          if (this.$router.currentRoute.name === 'main') {
-            dispatch('users/GET_USERS', null, { root: true });
-          }
-        } else if (type === 'error') {
-        }
+    return new Promise((resolve, reject) => {
+      API.getUser({
+        activationCode: state.token,
+        login,
       })
-      .catch((e) => {});
+        .then((res) => {
+          if (res.type === 'ok') {
+            commit('users/SET_INIT_TOOLS', res.data, { root: true });
+            commit('SET_USER', res.data);
+            resolve(res.data);
+            if (this.$router.currentRoute.name === 'main') {
+              dispatch('users/GET_USERS', null, { root: true });
+            }
+          } else if (type === 'error') {
+            reject();
+          }
+        })
+        .catch((e) => {});
+      })
   },
 
   REGISTRATION ({ commit, dispatch, state }) {

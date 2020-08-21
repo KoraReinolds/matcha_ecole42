@@ -1,17 +1,20 @@
 <template lang="pug">
-  div.form
+  form.form
     h2.title Login
     TextField(
       :data="getLogin"
       v-model="login"
       rounded
       filled
+      name="login"
     )
     TextField(
       :data="getPassword"
       v-model="password"
+      type='password'
       rounded
       filled
+      name="password"
     )
     div.form-actions
       nuxt-link.link(
@@ -54,4 +57,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.form {
+  .title {
+    font-size: 24px;
+  }
+}
 </style>

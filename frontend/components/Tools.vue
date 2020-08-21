@@ -21,13 +21,17 @@
       TextField.form-field(
         :data="tools.minAge"
         v-model="minAge"
-        onlyDigit
+        type="number"
+        min="18"
+        max="99"
         @blur="filterList({ val: $event.target.value, key: 'minAge' })"
       )
       TextField.form-field(
         :data="tools.maxAge"
         v-model="maxAge"
-        onlyDigit
+        type="number"
+        min="18"
+        max="99"
         @blur="filterList({ val: $event.target.value, key: 'maxAge' })"
       )
 
@@ -35,24 +39,29 @@
         :data="tools.minDist"
         @blur="filterList({ val: $event.target.value, key: 'minDist' })"
         v-model="minDist"
-        onlyDigit
+        type="number"
       )
       TextField.form-field(
         :data="tools.maxDist"
         @blur="filterList({ val: $event.target.value, key: 'maxDist' })"
         v-model="maxDist"
-        onlyDigit
+        type="number"
       )
 
       TextField.form-field(
         :data="tools.minRate"
         @blur="filterList({ val: $event.target.value, key: 'minRate' })"
         v-model="minRate"
+        type="number"
+        step="10"
       )
       TextField.form-field(
         :data="tools.maxRate"
         @blur="filterList({ val: $event.target.value, key: 'maxRate' })"
         v-model="maxRate"
+        type="number"
+        step="10"
+        max="1000"
       )
 
       TagsField.tags.form-field(

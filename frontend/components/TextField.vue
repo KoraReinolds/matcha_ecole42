@@ -13,20 +13,28 @@
       textarea(
         v-if="textarea"
         ref="textarea"
-        type="text"
+        :type="type || 'text'"
         @focus="onFocus"
         @blur="onBlur"
         @input="inputValue"
         :value="value"
+        :name="name"
+        :step="step || 1"
+        :min="min || 0"
+        :max="max || ''"
       )
       input(
         v-else
         ref="input"
-        type="text"
+        :type="type || 'text'"
         @focus="onFocus"
         @blur="onBlur"
         @input="inputValue"
         :value="value"
+        :name="name"
+        :step="step || 1"
+        :min="min || 0"
+        :max="max || ''"
       )
       label(ref="label") {{ data.title }}
     div.tooltip-field {{ data.errorMsg }}
@@ -36,13 +44,17 @@
 export default {
   name: 'TextField',
   props: {
+    min: String,
+    max: String,
+    step: String,
+    name: String,
+    type: String,
     value: [String, Number],
     outlined: Boolean,
     filled: Boolean,
     rounded: Boolean,
     data: Object,
     many: Boolean,
-    onlyDigit: Boolean,
   },
   data: () => ({
     filledMode: null,
@@ -66,11 +78,7 @@ export default {
   },
   methods: {
     inputValue(event) {
-      let newValue = this.onlyDigit
-        ? event.target.value.replace(/[^0-9]/g, '')
-        : event.target.value;
-      event.target.value = newValue;
-      this.$emit('input', newValue);
+      this.$emit('input', event.target.value);
     },
     onFocus(event) {
       this.focus = true;

@@ -1,9 +1,10 @@
 <template lang="pug">
-  div.form
+  form.form
       h2.title Registration
       TextField(
         :data="getLogin"
         v-model="login"
+        name="login"
       )
       TextField(
         :data="getPassword"
@@ -20,10 +21,15 @@
       TextField(
         :data="getMail"
         v-model="mail"
+        type="email"
+        name="email"
       )
       div.form-actions
         nuxt-link.link(to="/login") Back
-        span.btn(:class="{ disabled: !formValid }" @click.prevent="register") SignUp
+        span.btn(
+          :class="{ disabled: !formValid }"
+          @click.prevent="register"
+        ) SignUp
 
 </template>
 
@@ -60,4 +66,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.form {
+  .title {
+    font-size: 24px;
+  }
+}
 </style>
