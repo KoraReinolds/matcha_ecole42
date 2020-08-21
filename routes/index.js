@@ -101,6 +101,13 @@ module.exports = function(io) {
       else res.send(JSON.stringify(params));
     })
   })
+
+  router.post('/logout', (req, res, next) => {
+    User.logout(req, (err, params) => {
+      if (err) next(err)
+      else res.send(JSON.stringify(params));
+    })
+  })
   
   router.post('/profile-get', (req, res, next) => {
     if (req.user) {

@@ -79,7 +79,6 @@ module.exports = function(io) {
       login: { $in: req.user.likeList },
     })
       .select('-_id -salt -token -hashedPassword -__v -email')
-    // console.log(docs);
     let filteredDocs = docs
       .filter((user) => user.likeList.includes(req.user.login))
     callback(null, { type: "ok", message: "", data: filteredDocs });
@@ -165,6 +164,15 @@ module.exports = function(io) {
       }
     ], callback);
   };
+  
+  schema.statics.logout = async function(req, callback) {
+    if (req.user) {
+      await this.findOneAndUpdate({ login: req.user.login }, { token: '' });
+      callback(null, { type: "ok", message: "" });
+    } else {
+      callback(403)
+    }
+  }
   
   schema.statics.updateUser = async function(req, callback) {
     if (req.user) {

@@ -55,7 +55,7 @@
     )
     div.btn(
       :class="{ disabled: !updateValid }"
-      @click="updateValid && updateUser"
+      @click="updateValid && updateUser()"
     ) Save Changes
 </template>
 

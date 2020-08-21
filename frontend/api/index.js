@@ -58,6 +58,14 @@ export default {
       })
   },
 
+  logout(data) {
+    return HTTP.post('logout/', data)
+      .then((response) => {
+        console.log('logout', data, response.data);
+        return response.data;
+      })
+  },
+
   registration(data) {
     return HTTP.post('register/', data)
       .then((response) => {
@@ -90,7 +98,6 @@ export default {
       })
   },
   
-
   getHistory(data) {
     return HTTP.post('history/', data)
     .then((response) => {

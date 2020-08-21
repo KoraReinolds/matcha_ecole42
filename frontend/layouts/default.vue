@@ -27,6 +27,7 @@ export default {
       resize: 'RESIZE',
       pushNotification: 'history/PUSH_NOTIFICATION',
       pushMessage: 'chat/PUSH_MESSAGE',
+      setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
@@ -50,6 +51,9 @@ export default {
           }
         }
         this.pushNotification(notif);
+        if (this.$router.currentRoute.name === 'notifications') {
+          this.setAllNotifAsChecked();
+        }
       })
   }
 }

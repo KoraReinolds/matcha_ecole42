@@ -20,28 +20,31 @@
         nuxt-link.link(
           to=`/chat`
         ) Chat
-      nuxt-link.link.notif(
-        to=`/notifications`
-      )
-        font-awesome-icon-layers
+      
+      div.right-panel
+        nuxt-link.link(
+          v-if="informationFilled"
+          to=`/notifications`
+        )
+          font-awesome-icon-layers
+            font-awesome-icon.icon(
+              icon="bell"
+            )
+            span.fa-layers-counter.counter.fa-3x(
+              v-if="notificationCount"
+            ) {{ notificationCount }}
+        nuxt-link.link(
+          to=`settings`
+        )
           font-awesome-icon.icon(
-            icon="bell"
+            icon="cogs"
           )
-            //- v-if="curLen(notifications, 'notifications')"
-          span.fa-layers-counter.counter.fa-3x 1
-          //- ) {{ curLen(notifications, 'notifications') }}
-      nuxt-link.link(
-        to=`settings`
-      )
-        font-awesome-icon.icon(
-          icon="cogs"
+        a.link(
+          @click="logout"
         )
-      a.link(
-        @click="logout"
-      )
-        font-awesome-icon.icon(
-          icon="sign-out-alt"
-        )
+          font-awesome-icon.icon(
+            icon="sign-out-alt"
+          )
 </template>
 
 <script>
@@ -50,7 +53,6 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'header-component',
   data: () => ({
-    // startLen: 0,
   }),
   components: {
   },
@@ -59,17 +61,10 @@ export default {
       token: 'auth/TOKEN',
       user: 'auth/GET_USER',
       informationFilled: 'auth/INFO_FILLED',
-      // notifications: 'msg/GET_ALL_NOTIFICATIONS',
+      notificationCount: 'history/NOTIFICATION_COUNT',
     }),
   },
   methods: {
-    // curLen(list, path) {
-    //   const len = list.length || list.keys().length;
-    //   if (this.$route.path === `/${path}`) {
-    //     this.startLen = len;
-    //   }
-    //   return len - this.startLen;
-    // },
     ...mapMutations({
     }),
     ...mapActions({
@@ -104,6 +99,9 @@ header {
     max-width: $wrapper-width;
     margin: 0 auto;
     padding: 0 $padding_content;
+    .right-panel {
+      margin-left: auto;
+    }
     .link {
       font-weight: bold;
       text-decoration: none;
@@ -113,12 +111,6 @@ header {
       text-align: center;
       position: relative;
       margin-right: 20px;
-      &.notif {
-        margin-left: auto;
-        .counter {
-          top: 0px;
-        }
-      }
       &:last-child {
         margin: 0;
       }

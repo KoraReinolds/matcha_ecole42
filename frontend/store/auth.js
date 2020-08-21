@@ -131,7 +131,6 @@ export const getters = {
   INFO_FILLED: (state) => state.filledInformation,
   GET_USER: (state) => Object.entries(state).reduce((sum, [key, val]) => {
     if (val) sum[key] = val.value;
-    // if (val && val.value) sum[key] = val.value;
     return sum;
   }, {}),
   CUR_LOCATION: (state) => state.curLocation,
@@ -261,10 +260,16 @@ export const actions = {
     .catch((e) => {});
   },
 
-  LOGOUT ({ commit }) {
-    this.$router.push({ name: 'login' });
-    Cookie.remove('token');
-    commit('CLEAR_FIELDS');
+  LOGOUT ({ commit, state }) {
+    API.logout({
+      activationCode: state.token,
+    })
+    .then((res) => {
+      this.$router.push({ name: 'login' });
+      Cookie.remove('token');
+      commit('CLEAR_FIELDS');
+    })
+    .catch((e) => {});
   },
 
   async GET_LOCATION ({ commit }) {
@@ -276,25 +281,31 @@ export const actions = {
   },
 
   GET_USER ({ commit, state, dispatch }, login) {
-    return new Promise((resolve, reject) => {
-      API.getUser({
-        activationCode: state.token,
-        login,
-      })
-        .then((res) => {
-          if (res.type === 'ok') {
-            commit('users/SET_INIT_TOOLS', res.data, { root: true });
-            commit('SET_USER', res.data);
-            resolve(res.data);
-            if (this.$router.currentRoute.name === 'main') {
-              dispatch('users/GET_USERS', null, { root: true });
-            }
-          } else if (type === 'error') {
-            reject();
+    API.getUser({
+      activationCode: state.token,
+      login,
+    })
+      .then((res) => {
+        if (res.type === 'ok') {
+          commit('users/SET_INIT_TOOLS', res.data, { root: true });
+          commit('SET_USER', res.data);
+          commit('SET_VALUE', { key: 'age',         value: res.data.age });
+          commit('SET_VALUE', { key: 'firstName',   value: res.data.fname });
+          commit('SET_VALUE', { key: 'lastName',    value: res.data.lname });
+          commit('SET_VALUE', { key: 'mail',        value: res.data.email });
+          commit('SET_VALUE', { key: 'biography',   value: res.data.biography });
+          commit('SET_VALUE', { key: 'gender',      value: res.data.gender });
+          commit('SET_VALUE', { key: 'preferences', value: res.data.preference });
+          commit('SET_VALUE', { key: 'tags',        value: res.data.tags });
+          commit('SET_VALUE', { key: 'images',      value: res.data.images });
+          if (this.$router.currentRoute.name === 'main') {
+            dispatch('users/GET_USERS', null, { root: true });
           }
-        })
-        .catch((e) => {});
+        } else if (type === 'error') {
+          reject();
+        }
       })
+      .catch((e) => {});
   },
 
   REGISTRATION ({ commit, dispatch, state }) {
