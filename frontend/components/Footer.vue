@@ -12,19 +12,19 @@
             icon="user"
           )
         nuxt-link.link(
-          to='history'
+          to='/history'
         )
           font-awesome-icon.icon(
             icon="history"
           )
         nuxt-link.link(
-          to='main'
+          to='/main'
         )
           font-awesome-icon.icon(
             icon="search"
           )
         nuxt-link.link(
-          to='chat'
+          to='/chat'
         )
           font-awesome-icon.icon(
             icon="comment-alt"

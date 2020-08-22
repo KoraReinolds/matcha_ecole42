@@ -46,7 +46,7 @@
             :value="user.location || user.curLocation"
             :size="1"
           )
-          Online.online(
+          Online.online.only_laptop(
             :time="this.user.time"
           )
 
@@ -150,15 +150,14 @@ export default {
 <style scoped lang="scss">
 
 #user-page {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
   padding: 50px 10px;
+  @media (min-width: map-get($grid-breakpoints, sm)) {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
   @media (max-width: map-get($grid-breakpoints, sm)) { padding: 0 0 50px 0; }
   .main-images {
-    position: relative;
-    @media (max-width: map-get($grid-breakpoints, sm)) { margin-bottom: 90px; };
-    @media (max-width: map-get($grid-breakpoints, sm)) { width: 100%; }
     .icons {
       color: lightgray;
       display: flex;
@@ -168,6 +167,16 @@ export default {
     .chat-link {
       position: relative;
       top: 10px;
+    }
+    @media (max-width: map-get($grid-breakpoints, sm)) {
+      .chat-link {
+        display: block;
+        width: 90%;
+        margin: 0 auto;
+      }
+    }
+    @media (min-width: map-get($grid-breakpoints, sm)) {
+      .chat-link { width: 100%; }
     }
   }
   .info {
