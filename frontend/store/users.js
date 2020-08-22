@@ -1,7 +1,7 @@
 import API from '~/api';
 
 export const state = () => ({
-  users: null,
+  users: [],
   curPage: 1,
   maxLength: null,
   limit: 3,
@@ -64,6 +64,7 @@ export const state = () => ({
   },
 })
 export const getters = {
+  MAX_LENGTH: (state) => state.maxLength,
   USERS: (state) => state.users,
   CUR_PAGE: (state) => state.curPage,
   LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
@@ -71,6 +72,10 @@ export const getters = {
   SORT_LIST: (state) => state.sortOrder,
 }
 export const mutations = {
+  CHANGE_COUNT_PER_PAGE: (state) => {
+    state.limit = window.innerWidth <= 480 ? 1 : 3;
+    state.curPage = 1;
+  },
   SET_INIT_TOOLS: (state, user) => {
     state.tools.pref.value = user.preference;
     state.tools.minAge.value = Math.max(+user.age - 5, 18);

@@ -28,6 +28,7 @@ export default {
       pushNotification: 'history/PUSH_NOTIFICATION',
       pushMessage: 'chat/PUSH_MESSAGE',
       setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
+      rechangeCount: 'users/CHANGE_COUNT_PER_PAGE',
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
@@ -36,10 +37,13 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.resize);
+    window.removeEventListener('resize', this.rechangeCount);
   },
   mounted() {
     this.resize();
+    this.rechangeCount();
     window.addEventListener('resize', this.resize);
+    window.addEventListener('resize', this.rechangeCount);
     this.getLocation();
     if (this.token) this.getUser();
     this.socket = this.$nuxtSocket({});

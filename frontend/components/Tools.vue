@@ -3,11 +3,11 @@
     v-if="tools"
     :class="{ hide: !show }"
   )
-    //- RoundedIcon.icon.close(
-    //-   :icon="show ? 'times' : 'cog'"
-    //-   @click="show=!show"
-    //-   :size="3"
-    //- )
+    RoundedIcon.icon.close.only_mobile(
+      :icon="show ? 'times' : 'cog'"
+      @click="show=!show"
+      :size="3"
+    )
     div.tools(
       v-if="show"
     )
@@ -125,6 +125,9 @@ export default {
     TagsField,
   },
   computed: {
+    ...mapGetters({
+      mobile: 'IS_MOBILE',
+    }),
     pref: {
       set(value) { this.filterList({ val: value, key: 'pref' }); },
       get() { return this.tools.pref.value; },
@@ -195,40 +198,44 @@ export default {
       sort: 'users/SORT',
     }),
   },
+  watch: {
+    mobile(val) {
+      this.show = !val;
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
 .tools_box {
   position: relative;
-  // background-color: rgba($color: lighten($main-color, 20%), $alpha: 0.9);
-  border-radius: 30px;
-  // border: 2px solid $main-color;
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    background-color: rgba($color: lighten($main-color, 20%), $alpha: 0.9);
+  }
   width: 260px;
   margin: 0 auto;
-  height: calc(100% - 120px);
+  height: calc(100%);
   display: flex;
   flex-direction: column;
-  @media (max-width: 480px) {
-    width: calc(100% - 20px);
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    width: calc(100%);
   }
   .close {
-    position: absolute;
+    position: fixed;
     color: $main-color;
-    top: 10px;
-    left: 10px;
+    top: 40px;
+    right: 10px;
     z-index: 2;
   }
   .tools {
-    @media (max-width: 480px) {
+  @media (max-width: map-get($grid-breakpoints, sm)) {
       height: 100%;
       overflow: auto;
     }
-    @media (min-width: 480px) {
+    @media (min-width: map-get($grid-breakpoints, sm)) {
       position: fixed;
       width: 260px;
     }
-    // margin-top: 70px;
     padding: 30px;
     display: flex;
     flex-wrap: wrap;

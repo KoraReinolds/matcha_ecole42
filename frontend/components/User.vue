@@ -10,7 +10,7 @@
           :src="user.images[user.avatar].src"
           @click="paginate"
         )
-        RoundedIcon.gender(
+        RoundedIcon.gender.only_laptop(
           :icon="user.gender"
           :size="4"
           :mask="false"
@@ -27,7 +27,7 @@
           NameLink.age(
             :user="user"
           )
-          span {{ `${user.age} y.o.` }}
+          span.age {{ `${user.age} y.o.` }}
         div.only_laptop.biography
           div.text {{ `${user.biography}` }}
         div.only_laptop.tags
@@ -38,12 +38,12 @@
             :name="tag"
           )
 
-    div.sidebar
-      Raiting.icon.only_laptop(
+    div.sidebar.only_laptop
+      Raiting.icon(
         :value="user.fameRaiting"
         :size="2"
       )
-      Distance.icon.only_laptop(
+      Distance.icon(
         :value="user.curLocation || user.location"
         :size="2"
       )
@@ -85,17 +85,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // mobile: 'IS_MOBILE',
+      mobile: 'IS_MOBILE',
       myLikeList: 'auth/MY_LIKES',
+      curPage: 'users/CUR_PAGE',
+      maxLength: 'users/MAX_LENGTH',
     }),
   },
   methods: {
     paginate(e) {
       if (this.mobile) {
         if (e.clientX > window.innerWidth * 0.8) {
-          this.moveUpPage();
+          this.getUsers((this.curPage + 1) % this.maxLength || this.maxLength);
         } else if (e.clientX < window.innerWidth * 0.2) {
-          this.moveDownPage();
+          this.getUsers((this.curPage - 1) % this.maxLength || this.maxLength);
         }
       }
     },
@@ -103,9 +105,7 @@ export default {
       }),
     ...mapActions({
       like: 'users/LIKE',
-      moveUpPage: 'tools/MOVE_UP_PAGE',
-      moveDownPage: 'tools/MOVE_DOWN_PAGE',
-      addTag: 'tools/ADD_TAG',
+      getUsers: 'users/GET_USERS',
     }),
   },
 };
@@ -113,64 +113,47 @@ export default {
 
 <style scoped lang="scss">
 
-// @media (max-width: map-get($grid-breakpoints, sm)) {
-//   .user {
-//     height: 80vh;
-//     .like-icon {
-//       z-index: 10;
-//       bottom: 1px;
-//       right: 50%;
-//       transform: translateX(50%);
-//       position: fixed;
-//       height: 50px;
-//       width: 50px;
-//       background: #fff;
-//       border-radius: 50%;
-//       .like {
-//         position: absolute;
-//         left: 50%;
-//         top: 50%;
-//         transform: translate(-50%, -50%);
-//       }
-//     }
-//     .gender {
-//       position: fixed;
-//       top: 70px;
-//       right: 10px;
-//       opacity: 0.8;
-//     }
-//     .pref_icon {
-//       position: fixed;
-//       top: 70px;
-//       opacity: 0.8;
-//     }
-//     .pref_icon:nth-child(n) {
-//       right: 180px;
-//     }
-//     .pref_icon:nth-child(2n) {
-//       right: 140px;
-//     }
-//     .pref_icon:nth-child(3n) {
-//       right: 100px;
-//     }
-//     .fio {
-//       bottom: 70px;
-//       left: 30px;
-//       font-family: 'Lobster', cursive;
-//       position: fixed;
-//       font-size: 25px;
-//     }
-//     img {
-//       opacity: 0.9;
-//       height: 80%;
-//       width: 100%;
-//       position: fixed;
-//       top: 0;
-//       left: 0;
-//       mask-image: linear-gradient(rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-//     }
-//   }
-// }
+@media (max-width: map-get($grid-breakpoints, sm)) {
+  .user {
+    .like-icon {
+      bottom: 40px;
+      right: 0;
+      right: 10%;
+      transform: translateX(50%);
+      position: fixed;
+      height: 50px;
+      width: 50px;
+      background: #fff;
+      border-radius: 50%;
+      .like {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .fio {
+      bottom: 50px;
+      left: 20px;
+      font-family: 'Lobster', cursive;
+      position: fixed;
+      font-size: 25px;
+    }
+    .age {
+      display: block;
+      font-size: 14px;
+    }
+    img {
+      opacity: 0.9;
+      height: 80%;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      mask-image: linear-gradient(rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+    }
+  }
+}
 @media (min-width: map-get($grid-breakpoints, sm)) {
 
   .user {

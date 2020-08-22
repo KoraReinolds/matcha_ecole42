@@ -52,11 +52,18 @@ export default {
 
 <style scoped lang="scss">
 #main {
-  padding: 50px 20px;
   display: flex;
+  @media (min-width: map-get($grid-breakpoints, sm)) {
+    padding: 50px 20px;
+  }
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    flex-direction: column;
+  }
   .user-list {
     .else {
-      width: 800px;
+      @media (min-width: map-get($grid-breakpoints, sm)) {
+        width: 800px;
+      }
     }
   }
 }
