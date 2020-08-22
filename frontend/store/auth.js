@@ -7,7 +7,7 @@ export const state = () => ({
     value: 'mskiles',
     errorMsg: '',
     title: 'Login',
-    valid: false,
+    valid: true,
     rules: [
       "!!value || 'Required'",
     ],
@@ -16,7 +16,7 @@ export const state = () => ({
     value: '123',
     errorMsg: '',
     title: 'Password',
-    valid: false,
+    valid: true,
     rules: [
       "!!value || 'Required'",
     ],

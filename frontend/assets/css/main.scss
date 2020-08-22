@@ -138,3 +138,10 @@ $colors: (
     background: rgba($color: $value, $alpha: 0.4);
   }
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 10000s ease-in-out 0s;
+}

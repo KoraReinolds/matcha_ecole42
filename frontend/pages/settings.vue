@@ -113,6 +113,7 @@ export default {
   .images,
   .textarea {
     width: 100%;
+    margin-bottom: 20px;
   }
   @media (max-width: map-get($grid-breakpoints, sm)) {
     .btn {

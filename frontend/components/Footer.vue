@@ -1,6 +1,6 @@
 <template lang="pug">
   footer(
-    v-if="user"
+    v-if="token"
   )
     div.footer_content
       div.only_laptop Made by mskiles (s.shurn94@gmail.com)
@@ -42,6 +42,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      token: 'auth/TOKEN',
       user: 'auth/GET_USER',
     }),
   },
@@ -61,11 +62,11 @@ footer {
   left: 0;
   z-index: 3;
   position: absolute;
-  // position: fixed;
   bottom: 0;
   margin-top: -$footer-height;
   height: $footer-height;
   @media (max-width: map-get($grid-breakpoints, sm)) {
+    position: fixed;
     margin-top: -$footer-height-mobile;
     height: $footer-height-mobile;
     .footer_content {

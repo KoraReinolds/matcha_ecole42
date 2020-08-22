@@ -21,7 +21,10 @@
         to="/registration"
       ) Registration
       a.link Forget password
-      span.btn(:class="{ disabled: !formValid }" @click.prevent="signIn()") LogIn
+      span.btn(
+        :class="{ disabled: !formValid }"
+        @click.prevent="signIn()"
+      ) LogIn
 </template>
 
 <script>
@@ -60,6 +63,15 @@ export default {
 .form {
   .title {
     font-size: 24px;
+  }
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    .form-actions {
+      display: flex;
+      flex-direction: column;
+      .link {
+        margin-bottom: 20px;
+      }
+    }
   }
 }
 </style>
