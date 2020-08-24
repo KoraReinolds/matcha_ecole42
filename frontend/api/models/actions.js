@@ -1,4 +1,4 @@
-module.exports = function(io) {
+// module.exports = function(io) {
 
   const mongo = require('../db/mongo');
   const a = require('async');
@@ -128,5 +128,5 @@ module.exports = function(io) {
       })
   };
 
-  return mongo.model('Actions', schema);
-}
+export default mongo.model('Actions', schema);
+// }

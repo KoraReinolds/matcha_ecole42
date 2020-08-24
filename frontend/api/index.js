@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const HTTP = axios.create({
   // baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
-  baseURL: 'http://localhost:4000',
+  // baseURL: 'http://localhost:4000',
+  baseURL: 'http://localhost:3000',
   headers: {
     Authorization: 'Bearer {token}',
   },
@@ -51,7 +52,7 @@ export default {
   },
 
   login(data) {
-    return HTTP.post('login/', data)
+    return HTTP.post('api/user/login/', data)
       .then((response) => {
         console.log('login', data, response.data);
         return response.data;
@@ -75,7 +76,7 @@ export default {
   },
 
   getUser(data) {
-    return HTTP.post('profile-get/', data)
+    return HTTP.post('api/user/getUserByName/', data)
       .then((response) => {
         console.log('getUser', data, response.data);
         return response.data;
