@@ -1,5 +1,5 @@
-import '../models/user';
-import '../models/actions';
+require('../models/user');
+require('../models/actions');
 const mongo = require('../db/mongo');
 
 export default async (req, res, next) => {

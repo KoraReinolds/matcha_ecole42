@@ -100,14 +100,14 @@ module.exports = {
   io: {
     // module options
     sockets: [{
-      url: 'http://localhost:4000'
+      url: 'http://localhost:3000'
     }]
   },
   styleResources: {
     scss: ['./assets/css/*.scss']
   },
   plugins: [
-    { src: '~/plugins/ymapPlugin.js',  mode: 'client' }
+    { src: '~/plugins/ymapPlugin.js',  mode: 'client' },
   ],
   serverMiddleware: [
     { path: "/api", handler: require("body-parser").json() },
