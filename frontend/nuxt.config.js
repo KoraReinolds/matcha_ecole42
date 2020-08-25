@@ -100,27 +100,14 @@ module.exports = {
   io: {
     // module options
     sockets: [{
-      url: 'http://localhost:3000'
+      url: 'http://localhost:4000'
     }]
   },
   styleResources: {
     scss: ['./assets/css/*.scss']
   },
   plugins: [
-    { src: '~/plugins/ymapPlugin.js',  mode: 'client' },
-  ],
-  serverMiddleware: [
-    { path: "/api", handler: require("body-parser").json() },
-    {
-      path: "/api",
-      handler: (req, res, next) => {
-        const url = require("url");
-        req.query = url.parse(req.url, true).query;
-        req.params = { ...req.query, ...req.body };
-        next();
-      }
-    },
-    { path: "/api", handler: "~/api/serverMiddleware/index.js" }
-  ],
+    { src: '~/plugins/ymapPlugin.js',  mode: 'client' }
+  ]
 }
 

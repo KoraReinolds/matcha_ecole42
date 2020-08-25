@@ -1,4 +1,4 @@
-// module.exports = function(io) {
+module.exports = function(io) {
   const crypto = require('crypto');
   const mongo = require('../db/mongo');
   const a = require('async');
@@ -73,82 +73,15 @@
       type: Boolean,
     },
   })
-
-  schema.statics.login = function(req, callback) {
-    const User = this;
   
-    a.waterfall([
-      (callback) => {
-        User.findOne({login: req.body.login}, callback);
-      },
-      (user, callback) => {
-        if (!user) {
-          callback(null, ["error", "Неверное имя пользователя или пароль"]);
-        } else {
-          if (user.checkPassword(req.body.password)) {
-            user.generateSessionToken(user, (err, token) => {
-              if (err) callback(err)
-              user.curLocation = req.body.location;
-              user.save((err) => {
-                if (err) return callback(err);
-                callback(null, { type: "ok", token });
-              });
-            })
-          } else {
-            callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
-          }
-        }
-      }
-    ], callback);
-  };
-    
-  schema.statics.getUserByName = function(req, callback) {
-    const User = this;
-    const login = req.body.login === undefined ? req.user.login : req.body.login;
-  
-    a.waterfall([
-      (callback) => {
-        User.findOne({ login }, callback);
-      },
-      (user, callback) => {
-        if (!user) {
-          callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-        }
-        if (req.user.login !== login) {
-          new mongo.models.Actions({
-            who: req.user._id,
-            action: 'visit',
-            target: user._id,
-          }).save((err, action) => {
-            if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-            // io.emit(user.token, {
-            //   action:         action.action,
-            //   created:        action.created, 
-            //   who: {
-            //     age:          req.user.age,
-            //     avatar:       req.user.avatar,
-            //     biography:    req.user.biography,
-            //     created:      req.user.created,
-            //     curLocation:  req.user.curLocation,
-            //     fameRaiting:  req.user.fameRaiting,
-            //     fname:        req.user.fname,
-            //     gender:       req.user.gender,
-            //     images:       req.user.images,
-            //     likeList:     req.user.likeList,
-            //     lname:        req.user.lname,
-            //     location:     req.user.location,
-            //     login:        req.user.login,
-            //     preference:   req.user.preference,
-            //     tags:         req.user.tags,
-            //   }
-            // });
-            callback(null, { type: "ok", message: "", data: user });
-          })
-        } else {
-          callback(null, { type: "ok", message: "", data: user });
-        }
-      },
-    ], callback);
+  schema.statics.getUsersForChat = async function(req, callback) {
+    const docs = await this.find({
+      login: { $in: req.user.likeList },
+    })
+      .select('-_id -salt -token -hashedPassword -__v -email')
+    let filteredDocs = docs
+      .filter((user) => user.likeList.includes(req.user.login))
+    callback(null, { type: "ok", message: "", data: filteredDocs });
   }
 
   schema.statics.getUsers = async function(req, callback) {
@@ -203,7 +136,35 @@
     }
     callback(null, { type: "ok", message: "", data: res });
   };
-
+  
+  schema.statics.login = function(body, callback) {
+    const User = this;
+  
+    a.waterfall([
+      (callback) => {
+        User.findOne({login: body.login}, callback);
+      },
+      (user, callback) => {
+        if (!user) {
+          callback(null, ["error", "Неверное имя пользователя или пароль"]);
+        } else {
+          if (user.checkPassword(body.password)) {
+            user.generateSessionToken(user, (err, token) => {
+              if (err) callback(err)
+              user.curLocation = body.location;
+              user.save((err) => {
+                if (err) return callback(err);
+                callback(null, { type: "ok", token });
+              });
+            })
+          } else {
+            callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
+          }
+        }
+      }
+    ], callback);
+  };
+  
   schema.statics.logout = async function(req, callback) {
     if (req.user) {
       await this.findOneAndUpdate({ login: req.user.login }, { token: '' });
@@ -221,40 +182,56 @@
       callback(403)
     }
   }
-
-   schema.statics.registration = function(req, callback) {
+  
+  schema.statics.getUserByName = function(req, callback) {
     const User = this;
+    const login = req.body.login === undefined ? req.user.login : req.body.login;
   
     a.waterfall([
       (callback) => {
-        User.findOne({login: req.body.login}, callback);
+        User.findOne({ login }, callback);
       },
       (user, callback) => {
-        if (user) {
-          callback(null, { type: "error", message: "Пользователь с таким логином уже существует" });
-        } else {
-          let user = new User({
-            ...req.body,
-            filledInformation: false,
-            age: null,
-            fameRaiting: 0,
-            gender: '',
-            preferences: [],
-            biography: '',
-            tags: [],
-            images: [],
-            avatar: -1,
-            likeList: [],
-          });
-          user.save((err) => {
-            if (err) return callback(err);
-            callback(null, { type: "ok", message: user.login });
-          });
+        if (!user) {
+          callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
         }
-      }
+        if (req.user.login !== login) {
+          new mongo.models.Actions({
+            who: req.user._id,
+            action: 'visit',
+            target: user._id,
+          }).save((err, action) => {
+            if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+            io.emit(user.token, {
+              action:         action.action,
+              created:        action.created, 
+              who: {
+                age:          req.user.age,
+                avatar:       req.user.avatar,
+                biography:    req.user.biography,
+                created:      req.user.created,
+                curLocation:  req.user.curLocation,
+                fameRaiting:  req.user.fameRaiting,
+                fname:        req.user.fname,
+                gender:       req.user.gender,
+                images:       req.user.images,
+                likeList:     req.user.likeList,
+                lname:        req.user.lname,
+                location:     req.user.location,
+                login:        req.user.login,
+                preference:   req.user.preference,
+                tags:         req.user.tags,
+              }
+            });
+            callback(null, { type: "ok", message: "", data: user });
+          })
+        } else {
+          callback(null, { type: "ok", message: "", data: user });
+        }
+      },
     ], callback);
-  };
-
+  }
+  
   schema.statics.likeUser = function(req, callback) {
     const User = this;
   
@@ -283,43 +260,65 @@
           target: user._id,
         }).save((err, action) => {
           if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-          // io.emit(user.token, {
-          //   action:         action.action,
-          //   created:        action.created, 
-          //   who: {
-          //     age:          req.user.age,
-          //     avatar:       req.user.avatar,
-          //     biography:    req.user.biography,
-          //     created:      req.user.created,
-          //     curLocation:  req.user.curLocation,
-          //     fameRaiting:  req.user.fameRaiting,
-          //     fname:        req.user.fname,
-          //     gender:       req.user.gender,
-          //     images:       req.user.images,
-          //     likeList:     req.user.likeList,
-          //     lname:        req.user.lname,
-          //     location:     req.user.location,
-          //     login:        req.user.login,
-          //     preference:   req.user.preference,
-          //     tags:         req.user.tags,
-          //   }
-          // });
+          io.emit(user.token, {
+            action:         action.action,
+            created:        action.created, 
+            who: {
+              age:          req.user.age,
+              avatar:       req.user.avatar,
+              biography:    req.user.biography,
+              created:      req.user.created,
+              curLocation:  req.user.curLocation,
+              fameRaiting:  req.user.fameRaiting,
+              fname:        req.user.fname,
+              gender:       req.user.gender,
+              images:       req.user.images,
+              likeList:     req.user.likeList,
+              lname:        req.user.lname,
+              location:     req.user.location,
+              login:        req.user.login,
+              preference:   req.user.preference,
+              tags:         req.user.tags,
+            }
+          });
           callback(null, { type: "ok", message: "Данные успешно обновленны" })
         })
       }
     ], callback);
   };
-
-  schema.statics.getUsersForChat = async function(req, callback) {
-    const docs = await this.find({
-      login: { $in: req.user.likeList },
-    })
-      .select('-_id -salt -token -hashedPassword -__v -email')
-    let filteredDocs = docs
-      .filter((user) => user.likeList.includes(req.user.login))
-    callback(null, { type: "ok", message: "", data: filteredDocs });
-  }
   
+  schema.statics.registration = function(body, callback) {
+    const User = this;
+  
+    a.waterfall([
+      (callback) => {
+        User.findOne({login: body.login}, callback);
+      },
+      (user, callback) => {
+        if (user) {
+          callback(null, { type: "error", message: "Пользователь с таким логином уже существует" });
+        } else {
+          let user = new User({
+            ...body,
+            filledInformation: false,
+            age: null,
+            fameRaiting: 0,
+            gender: '',
+            preferences: [],
+            biography: '',
+            tags: [],
+            images: [],
+            avatar: -1,
+            likeList: [],
+          });
+          user.save((err) => {
+            if (err) return callback(err);
+            callback(null, { type: "ok", message: user.login });
+          });
+        }
+      }
+    ], callback);
+  };
   
   schema.virtual('password')
     .set(function(password) {
@@ -329,7 +328,8 @@
       this.hashedPassword = this.encryptPassword(password);
     })
     .get(function() { return this._plainPassword; });
-    
+  
+  
   schema.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
   };
@@ -347,8 +347,5 @@
   schema.methods.encryptPassword = function(password) {
     return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
   };
-
-if (!mongo.models.User) {
-  mongo.model('User', schema);
+  return mongo.model('User', schema);
 }
-// }

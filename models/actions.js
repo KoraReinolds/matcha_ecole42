@@ -1,4 +1,4 @@
-// module.exports = function(io) {
+module.exports = function(io) {
 
   const mongo = require('../db/mongo');
   const a = require('async');
@@ -69,7 +69,7 @@
                 tags:         req.user.tags,
               }
             }
-            // io.emit(user.token, resp);
+            io.emit(user.token, resp);
             callback(null, { type: "ok", message: "", data: resp });
           })
         }
@@ -92,6 +92,10 @@
             {$and: [{who: req.user._id}, {target: user._id}]},
             {$and: [{target: req.user._id}, {who: user._id}]},
           ]
+          // $and: [
+          //   { target: user._id },
+          //   { who: req.user._id },
+          // ],
         })
           .populate('who target', 'login -_id')
           .select('who target action message created -_id')
@@ -123,7 +127,6 @@
         callback(null, { type: "ok", message: "", data: users });
       })
   };
-if (!mongo.models.Actions) {
-  mongo.model('Actions', schema);
+
+  return mongo.model('Actions', schema);
 }
-// }
