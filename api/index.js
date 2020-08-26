@@ -1,13 +1,3 @@
-import axios from 'axios';
-
-const HTTP = axios.create({
-  // baseURL: 'https://matcha-mskiles-back.herokuapp.com/',
-  baseURL: 'http://localhost:4000',
-  headers: {
-    Authorization: 'Bearer {token}',
-  },
-});
-
 export default {
 
   uploadImage(fd) {

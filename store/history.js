@@ -1,5 +1,3 @@
-import API from '~/api';
-
 export const state = () => ({
   history: [],
   notifications: [],
@@ -25,30 +23,24 @@ export const mutations = {
 }
 export const actions = {
 
-  GET_NOTIFICATIONS ({ commit, state, rootState }) {
-    API.getNotifications({
+  async GET_NOTIFICATIONS ({ commit, state, rootState }) {
+    const res = await this.$axios.$post('notifications', {
       activationCode: rootState.auth.token,
     })
-      .then((res) => {
-        if (res.type === 'ok') {
-          commit('SET_NOTIFICATIONS', res.data);
-        } else if (type === 'error') {
-        }
-      })
-      .catch((e) => {});
+    if (res.type === 'ok') {
+      commit('SET_NOTIFICATIONS', res.data);
+    } else if (type === 'error') {
+    }
   },
 
-  GET_HISTORY ({ commit, state, rootState }) {
-    API.getHistory({
+  async GET_HISTORY ({ commit, state, rootState }) {
+    const res = await this.$axios.$post('history', {
       activationCode: rootState.auth.token,
     })
-      .then((res) => {
-        if (res.type === 'ok') {
-          commit('SET_HISTORY', res.data);
-        } else if (type === 'error') {
-        }
-      })
-      .catch((e) => {});
+    if (res.type === 'ok') {
+      commit('SET_HISTORY', res.data);
+    } else if (type === 'error') {
+    }
   },
 
 }

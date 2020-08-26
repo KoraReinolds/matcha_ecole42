@@ -108,6 +108,9 @@ module.exports = {
   },
   plugins: [
     { src: '~/plugins/ymapPlugin.js',  mode: 'client' }
-  ]
+  ],
+  axios: {
+    baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
+  }
 }
 

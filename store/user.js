@@ -11,19 +11,17 @@ export const mutations = {
 }
 export const actions = {
 
-  GET_USER ({ commit, state, rootState }, login) {
-    API.getUser({
+  async GET_USER ({ commit, state, rootState }, login) {
+    const res = await this.$axios.$post('profile-get', {
       activationCode: rootState.auth.token,
       login,
     })
-      .then((res) => {
-        if (res.type === 'ok') {
-          console.log(login, res.data);
-          commit('SET_USER', res.data);
-        } else if (type === 'error') {
-        }
-      })
-      .catch((e) => {});
+    console.log(123, res)
+    if (res.type === 'ok') {
+      console.log(login, res.data);
+      commit('SET_USER', res.data);
+    } else if (type === 'error') {
+    }
   },
 
 }

@@ -39,7 +39,7 @@
             v-for="(message, index) in messages"
             :key="'message'+index+curUser.login"
             :class="{ our: message.who.login !== curUser.login }"
-          )
+          )  who: {{ message.who.login }} target: {{ curUser.login }}
             span.text_block(
               v-html="message.message"
             )

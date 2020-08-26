@@ -118,10 +118,6 @@ export default {
       user: 'user/USER',
       myLikeList: 'auth/MY_LIKES',
       chatAvailable: 'user/CHAT_AVAILABLE',
-
-
-      visitorLikeList: 'users/VISITOR_LIKES',
-      location: 'user/LOCATION',
       mobile: 'IS_MOBILE',
     }),
     myPage: function() {

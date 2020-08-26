@@ -232,7 +232,7 @@ export const mutations = {
 }
 export const actions = {
 
-  UPDATE_USER ({ commit, state }) {
+  async UPDATE_USER ({ commit, state }) {
     const userNew = {
       activationCode: state.token,
       avatar:         state.images.main,
@@ -249,27 +249,21 @@ export const actions = {
       images:         state.images.value,
       location:       state.location.value,
     };
-    API.updateUser(userNew)
-    .then(({ type }) => {
-      if (type === 'ok') {
-        commit('SET_INFO_AS_FILLED');
-        commit('users/SET_INIT_TOOLS', userNew, { root: true });
-      } else if (type === 'error') {
-      }
-    })
-    .catch((e) => {});
+    const { type } = await this.$axios.$post('profile-update', userNew)
+    if (type === 'ok') {
+      commit('SET_INFO_AS_FILLED');
+      commit('users/SET_INIT_TOOLS', userNew, { root: true });
+    } else if (type === 'error') {
+    }
   },
 
-  LOGOUT ({ commit, state }) {
-    API.logout({
+  async LOGOUT ({ commit, state }) {
+    const res = await this.$axios.$post('logout', {
       activationCode: state.token,
     })
-    .then((res) => {
-      this.$router.push({ name: 'login' });
-      Cookie.remove('token');
-      commit('CLEAR_FIELDS');
-    })
-    .catch((e) => {});
+    this.$router.push({ name: 'login' });
+    Cookie.remove('token');
+    commit('CLEAR_FIELDS');
   },
 
   async GET_LOCATION ({ commit }) {
@@ -280,36 +274,32 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  GET_USER ({ commit, state, dispatch }, login) {
-    API.getUser({
+  async GET_USER ({ commit, state, dispatch }, login) {
+    const res = await this.$axios.$post('profile-get', {
       activationCode: state.token,
       login,
     })
-      .then((res) => {
-        if (res.type === 'ok') {
-          commit('users/SET_INIT_TOOLS', res.data, { root: true });
-          commit('SET_USER', res.data);
-          commit('SET_VALUE', { key: 'age',         value: res.data.age });
-          commit('SET_VALUE', { key: 'firstName',   value: res.data.fname });
-          commit('SET_VALUE', { key: 'lastName',    value: res.data.lname });
-          commit('SET_VALUE', { key: 'mail',        value: res.data.email });
-          commit('SET_VALUE', { key: 'biography',   value: res.data.biography });
-          commit('SET_VALUE', { key: 'gender',      value: res.data.gender });
-          commit('SET_VALUE', { key: 'preferences', value: res.data.preference });
-          commit('SET_VALUE', { key: 'tags',        value: res.data.tags });
-          commit('SET_VALUE', { key: 'images',      value: res.data.images });
-          if (this.$router.currentRoute.name === 'main') {
-            dispatch('users/GET_USERS', null, { root: true });
-          }
-        } else if (type === 'error') {
-          reject();
-        }
-      })
-      .catch((e) => {});
+    if (res.type === 'ok') {
+      commit('users/SET_INIT_TOOLS', res.data, { root: true });
+      commit('SET_USER', res.data);
+      commit('SET_VALUE', { key: 'age',         value: res.data.age });
+      commit('SET_VALUE', { key: 'firstName',   value: res.data.fname });
+      commit('SET_VALUE', { key: 'lastName',    value: res.data.lname });
+      commit('SET_VALUE', { key: 'mail',        value: res.data.email });
+      commit('SET_VALUE', { key: 'biography',   value: res.data.biography });
+      commit('SET_VALUE', { key: 'gender',      value: res.data.gender });
+      commit('SET_VALUE', { key: 'preferences', value: res.data.preference });
+      commit('SET_VALUE', { key: 'tags',        value: res.data.tags });
+      commit('SET_VALUE', { key: 'images',      value: res.data.images });
+      if (this.$router.currentRoute.name === 'main') {
+        dispatch('users/GET_USERS', null, { root: true });
+      }
+    } else if (res.type === 'error') {
+    }
   },
 
-  REGISTRATION ({ commit, dispatch, state }) {
-    API.registration({
+  async REGISTRATION ({ commit, dispatch, state }) {
+    const { type } = await this.$axios.$post('register', {
       login:    state.login.value,
       password: state.password.value,
       fname:    state.firstName.value,
@@ -317,46 +307,38 @@ export const actions = {
       email:    state.mail.value,
       location: state.location.value,
     })
-    .then(({ type }) => {
-      if (type === 'ok') {
-        dispatch('SIGN_IN');
-      } else if (type === 'error') {
-      }
-    })
-    .catch((e) => {});
+    if (type === 'ok') {
+      dispatch('SIGN_IN');
+    } else if (type === 'error') {
+    }
   },
   
-  SIGN_IN ({ commit, state }) {
-    API.login({
-      login:    state.login.value,
-      password: state.password.value,
-      location: state.curLocation,
-    })
-      .then(({ type, message, token, login }) => {
-        if (type === 'ok') {
-          Cookie.set('token', token);
-          commit('SET_TOKEN', token);
-          API.getUser({
-            activationCode: token,
-            login,
-          })
-            .then((res) => {
-              if (res.type === 'ok') {
-                commit('SET_USER', res.data);
-                commit('users/SET_INIT_TOOLS', res.data, { root: true });
-                if (res.data.filledInformation) {
-                  this.$router.push({ path: '/main' });
-                } else {
-                  this.$router.push({ path: '/settings' });
-                }
-              } else if (type === 'error') {
-              }
-            })
-            .catch((e) => {});
-        } else if (type === 'error') {
-        }
+  async SIGN_IN ({ commit, state }) {
+    const { type, message, token, login } =
+      await this.$axios.$post('login', {
+        login:    state.login.value,
+        password: state.password.value,
+        location: state.curLocation,
       })
-      .catch((e) => {});
+    if (type === 'ok') {
+      Cookie.set('token', token);
+      commit('SET_TOKEN', token);
+      const res = await this.$axios.$post('profile-get', {
+        activationCode: token,
+        login,
+      })
+      if (res.type === 'ok') {
+        commit('SET_USER', res.data);
+        commit('users/SET_INIT_TOOLS', res.data, { root: true });
+        this.$router.push({ path: 
+          res.data.filledInformation ?
+          '/main' :
+          '/settings'
+        });
+      } else if (res.type === 'error') {
+      }
+    } else if (type === 'error') {
+    }
   },
 
   LOAD_IMAGE ({ commit, state }, files) {
@@ -369,25 +351,24 @@ export const actions = {
       };
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
-      reader.onload = () => {
+      reader.onload = async () => {
         const fd = new FormData();
         fd.append('image', reader.result.split(',')[1]);
-        API.uploadImage(fd)
-          .then((resp) => {
-            img.src = resp.data.data.display_url;
-            commit('SET_VALUE', {
-              key: 'images',
-              value: [...state.images.value, img],
-            });
-            console.log(img);
-            if (!len) commit('SET_MAIN_IMAGE', 0);
-          })
-          .catch((e) => console.log(e));
+        const resp = await this.$axios.$post(`https://api.imgbb.com/1/upload?
+          expiration=3600&
+          key=52cdc2758163512d48d7ac9715a14c64`, fd)
+        img.src = resp.data.display_url;
+        commit('SET_VALUE', {
+          key: 'images',
+          value: [...state.images.value, img],
+        });
+        console.log(img);
+        if (!len) commit('SET_MAIN_IMAGE', 0);
       };
     }
   },
 
-  LIKE ({ commit, state }, login) {
+  async LIKE ({ commit, state }, login) {
     let index = state.likeList.indexOf(login);
     let newLikeList = [...state.likeList];
     if (index === -1) {
@@ -395,20 +376,17 @@ export const actions = {
     } else {
       newLikeList.splice(index, 1);
     }
-    API.likeUser({
+    const { type, message } = await this.$axios.$post('like-user', {
       login,
       likeList: newLikeList,
       target: login,
       action: index === -1 ? 'like' : 'dislike',
       activationCode: state.token,
     })
-      .then(({ type, message }) => {
-        if (type === 'ok') {
-          commit('TOGGLE_LIKE_USER', newLikeList);
-        } else if (type === 'error') {
-        }
-      })
-      .catch((e) => {});
+    if (type === 'ok') {
+      commit('TOGGLE_LIKE_USER', newLikeList);
+    } else if (type === 'error') {
+    }
   }
 
 }
