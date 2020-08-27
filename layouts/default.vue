@@ -3,6 +3,7 @@
     div.wrapper
       Header
       nuxt.content
+      PopWindow
     Footer
 </template>
 
@@ -10,11 +11,13 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import PopWindow from '@/components/PopWindow.vue';
 
 export default {
   components: {
     Header,
     Footer,
+    PopWindow,
   },
   computed: {
     ...mapGetters({
@@ -29,6 +32,7 @@ export default {
       pushMessage: 'chat/PUSH_MESSAGE',
       setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
       rechangeCount: 'users/CHANGE_COUNT_PER_PAGE',
+      hideMessage: 'history/HIDE_MSG',
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
@@ -54,6 +58,10 @@ export default {
             this.pushMessage(notif);
           }
         }
+        notif.visible = true;
+        setTimeout(function() {
+          this.hideMessage(notif);
+        }.bind(this), 3000)
         this.pushNotification(notif);
         if (this.$router.currentRoute.name === 'notifications') {
           this.setAllNotifAsChecked();

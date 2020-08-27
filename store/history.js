@@ -9,6 +9,9 @@ export const getters = {
   NOTIFICATION_COUNT: (state) => state.notifications.length - state.notificationsChecked,
 }
 export const mutations = {
+  CLOSE_MSG: (state, index) => {
+    state.notifications[index].visible = false;
+  },
   SET_HISTORY: (state, list) => state.history = list.reverse(),
   SET_NOTIFICATIONS: (state, list) => {
     state.notifications = list.reverse();
@@ -19,6 +22,12 @@ export const mutations = {
   },
   PUSH_NOTIFICATION: (state, notif) => {
     state.notifications.unshift(notif);
+  },
+  HIDE_MSG: (state, notif) => {
+    const index = state.notifications.findIndex(
+      mess => notif.created === mess.created 
+    );
+    state.notifications[index].visible = false;
   }
 }
 export const actions = {
