@@ -11,6 +11,7 @@ export default {
       female: 'venus',
       bisexual: 'transgender',
       error: 'ban',
+      ok: 'check',
     },
   }),
 };

@@ -5,7 +5,6 @@
       div.mess(
         v-for="(message, index) in messages"
         :key="'message'+index"
-        :class="[`${message.action}_bg`, `${message.action}_border`]"
         :style="{ display: message.visible ? 'block' : 'none' }"
       )
           font-awesome-icon.close(
@@ -16,7 +15,7 @@
             :class="[`${message.action}_color`, message.action]"
             :icon="icons[message.action]"
           )
-          span {{ getMessage(message) }}
+          span {{ message.msg || getMessage(message) }}
 </template>
 
 <script>
@@ -31,7 +30,7 @@ export default {
   mixins: [iconsMixin],
   computed: {
     ...mapGetters({
-      messages: 'history/NOTIFICATIONS',
+      messages: 'history/POP_WINDOWS',
     }),
   },
   methods: {

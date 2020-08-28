@@ -34,7 +34,7 @@
               v-if="notificationCount"
             ) {{ notificationCount }}
         nuxt-link.link(
-          to=`settings`
+          to=`/settings`
         )
           font-awesome-icon.icon(
             icon="cogs"

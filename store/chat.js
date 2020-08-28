@@ -18,7 +18,7 @@ export const mutations = {
 }
 export const actions = {
 
-  async SEND_MESSAGE ({ commit, state, rootState }, message) {
+  async SEND_MESSAGE ({ commit, state, rootState, dispatch }, message) {
     const msg = {
       target: state.curUser.login,
       message,
@@ -34,11 +34,17 @@ export const actions = {
         ...res.data,
         who: { login: rootState.auth.login.value },
       });
-    } else if (res.type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 
-  async GET_MESSAGES ({ commit, state, rootState }, user) {
+  async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
     const res = await this.$axios.$post('get-messages', {
       activationCode: rootState.auth.token,
       login: user.login
@@ -47,7 +53,13 @@ export const actions = {
       commit('SET_CUR_USER', user);
       commit('SET_MESSAGES', res.data);
       this.$router.push({ path: `/chat/${user.login}` });
-    } else if (type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 
@@ -61,7 +73,13 @@ export const actions = {
         if (user) dispatch('GET_MESSAGES', user);
       }
       commit('SET_USERS', res.data);
-    } else if (type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 

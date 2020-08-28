@@ -32,11 +32,11 @@ export default {
       pushMessage: 'chat/PUSH_MESSAGE',
       setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
       rechangeCount: 'users/CHANGE_COUNT_PER_PAGE',
-      hideMessage: 'history/HIDE_MSG',
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
       getUser: 'auth/GET_USER',
+      pushPopWindow: 'history/PUSH_POP_WINDOW',
     }),
   },
   beforeDestroy() {
@@ -58,10 +58,7 @@ export default {
             this.pushMessage(notif);
           }
         }
-        notif.visible = true;
-        setTimeout(function() {
-          this.hideMessage(notif);
-        }.bind(this), 3000)
+        this.pushPopWindow(notif);
         this.pushNotification(notif);
         if (this.$router.currentRoute.name === 'notifications') {
           this.setAllNotifAsChecked();

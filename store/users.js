@@ -112,7 +112,7 @@ export const actions = {
     commit('CHANGE_TOOLS', opt);
     dispatch('GET_USERS', state.curPage);
   },
-  async GET_USERS ({ commit, state, rootState }, page) {
+  async GET_USERS ({ commit, state, rootState, dispatch }, page) {
     commit('CHANGE_PAGE', page || 1);
     const sortOrder = state.sortOrder.reduce((sum, cur) => {
       let val;
@@ -125,7 +125,7 @@ export const actions = {
       }
       return sum;
     }, {});
-    const { type, data } = await this.$axios.$post('get-users', {
+    const res = await this.$axios.$post('get-users', {
       activationCode: rootState.auth.token,
       limit:          state.limit,
       skip:           (state.curPage - 1) * state.limit,
@@ -139,9 +139,15 @@ export const actions = {
       tags:           state.tools.tags.value,
       sortOrder:      sortOrder,
     })
-    if (type === 'ok') {
-        commit('SET_USERS', data);
-    } else if (type === 'error') {
+    if (res.type === 'ok') {
+      commit('SET_USERS', res.data);
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 }

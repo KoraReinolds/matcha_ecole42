@@ -232,7 +232,7 @@ export const mutations = {
 }
 export const actions = {
 
-  async UPDATE_USER ({ commit, state }) {
+  async UPDATE_USER ({ commit, state, dispatch }) {
     const userNew = {
       activationCode: state.token,
       avatar:         state.images.main,
@@ -249,11 +249,17 @@ export const actions = {
       images:         state.images.value,
       location:       state.location.value,
     };
-    const { type } = await this.$axios.$post('profile-update', userNew)
-    if (type === 'ok') {
+    const res = await this.$axios.$post('profile-update', userNew)
+    if (res.type === 'ok') {
       commit('SET_INFO_AS_FILLED');
       commit('users/SET_INIT_TOOLS', userNew, { root: true });
-    } else if (type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 
@@ -294,12 +300,18 @@ export const actions = {
       if (this.$router.currentRoute.name === 'main') {
         dispatch('users/GET_USERS', null, { root: true });
       }
-    } else if (res.type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
 
   async REGISTRATION ({ commit, dispatch, state }) {
-    const { type } = await this.$axios.$post('register', {
+    const res = await this.$axios.$post('register', {
       login:    state.login.value,
       password: state.password.value,
       fname:    state.firstName.value,
@@ -307,14 +319,20 @@ export const actions = {
       email:    state.mail.value,
       location: state.location.value,
     })
-    if (type === 'ok') {
+    if (res.type === 'ok') {
       dispatch('SIGN_IN');
-    } else if (type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   },
   
-  async SIGN_IN ({ commit, state }) {
-    const { type, message, token, login } =
+  async SIGN_IN ({ commit, state, dispatch }) {
+    let { type, message, token, login } =
       await this.$axios.$post('login', {
         login:    state.login.value,
         password: state.password.value,
@@ -335,9 +353,14 @@ export const actions = {
           '/main' :
           '/settings'
         });
-      } else if (res.type === 'error') {
       }
-    } else if (type === 'error') {
+    }
+    if (message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: type,
+        visible: true,
+        msg: message,
+      }, { root: true });
     }
   },
 
@@ -354,21 +377,20 @@ export const actions = {
       reader.onload = async () => {
         const fd = new FormData();
         fd.append('image', reader.result.split(',')[1]);
-        const resp = await this.$axios.$post(`https://api.imgbb.com/1/upload?
+        const res = await this.$axios.$post(`https://api.imgbb.com/1/upload?
           expiration=3600&
           key=52cdc2758163512d48d7ac9715a14c64`, fd)
-        img.src = resp.data.display_url;
+        img.src = res.data.display_url;
         commit('SET_VALUE', {
           key: 'images',
           value: [...state.images.value, img],
         });
-        console.log(img);
         if (!len) commit('SET_MAIN_IMAGE', 0);
       };
     }
   },
 
-  async LIKE ({ commit, state }, login) {
+  async LIKE ({ commit, state, dispatch }, login) {
     let index = state.likeList.indexOf(login);
     let newLikeList = [...state.likeList];
     if (index === -1) {
@@ -376,16 +398,22 @@ export const actions = {
     } else {
       newLikeList.splice(index, 1);
     }
-    const { type, message } = await this.$axios.$post('like-user', {
+    const res = await this.$axios.$post('like-user', {
       login,
       likeList: newLikeList,
       target: login,
       action: index === -1 ? 'like' : 'dislike',
       activationCode: state.token,
     })
-    if (type === 'ok') {
+    if (res.type === 'ok') {
       commit('TOGGLE_LIKE_USER', newLikeList);
-    } else if (type === 'error') {
+    }
+    if (res.message) {
+      dispatch('history/PUSH_POP_WINDOW', {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      }, { root: true });
     }
   }
 

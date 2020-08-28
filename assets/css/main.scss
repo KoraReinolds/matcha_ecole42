@@ -125,6 +125,8 @@ $colors: (
   dislike: #ce93d8,
   visit: #A5D6A7,
   messages: #90CAF9,
+  ok: #7edd82,
+  error: #f76868,
 );
  
 @each $name, $value in $colors {
