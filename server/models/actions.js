@@ -41,9 +41,9 @@ module.exports = function(io) {
         }
         if (req.user.login !== user.login) {
           new Actions({
-            target: req.user._id,
+            target: user._id,
             action: 'messages',
-            who: user._id,
+            who: req.user._id,
             message: req.body.message,
           }).save((err, action) => {
             if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
@@ -85,23 +85,17 @@ module.exports = function(io) {
         User.findOne({ login: req.body.login }, callback);
       },
       (user, callback) => {
-        console.log(user.login, req.user.login)
         this.find({
           action: 'messages',
           $or: [
             {$and: [{who: req.user._id}, {target: user._id}]},
             {$and: [{target: req.user._id}, {who: user._id}]},
           ]
-          // $and: [
-          //   { target: user._id },
-          //   { who: req.user._id },
-          // ],
         })
           .populate('who target', 'login -_id')
           .select('who target action message created -_id')
           .exec((err, users) => {
             if (err) return callback(err);
-            users.forEach(e => console.log(e.target, e.who))
             callback(null, { type: "ok", message: "", data: users });
           })
       },

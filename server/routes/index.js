@@ -6,13 +6,13 @@ module.exports = function(io) {
   const Actions = require('../models/actions')(io);
 
   router.use((req, res, next) => {
-    console.log('Time: ', Date.now());
+    // console.log('Time: ', Date.now());
     User.findOne({token: req.body.activationCode}, (err, user) => {
       if (err) {
         res.send(JSON.stringify({ type: "error", message: "Произошла ошибка. Обратитесь к администратору", err, }));
       }
       req.user = user;
-      console.log("USER", user ? user.login : 'anon');
+      // console.log("USER", user ? user.login : 'anon');
       next();
     });
   });

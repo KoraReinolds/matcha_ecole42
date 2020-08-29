@@ -23,8 +23,6 @@ export const actions = {
       target: state.curUser.login,
       message,
     };
-    console.log("target", state.curUser.login)
-    console.log("who", rootState.auth.login.value)
     const res = await this.$axios.$post('send-message', {
       activationCode: rootState.auth.token,
       ...msg,

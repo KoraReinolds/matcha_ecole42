@@ -39,7 +39,8 @@
             v-for="(message, index) in messages"
             :key="'message'+index+curUser.login"
             :class="{ our: message.who.login !== curUser.login }"
-          )  who: {{ message.who.login }} target: {{ curUser.login }}
+          ) 
+            span.time {{ getDate(message.created) }}
             span.text_block(
               v-html="message.message"
             )
@@ -97,6 +98,11 @@ export default {
     return {
       message: '',
       show: true,
+      today: new Date(Date.now()).toLocaleString('ru', {
+        day: 'numeric',
+        month: 'long',
+        timezone: 'UTC',
+      })
     };
   },
   computed: {
@@ -108,6 +114,20 @@ export default {
     }),
   },
   methods: {
+    getDate(t) {
+      let date = new Date(t).toLocaleString('ru', {
+        month: 'long',
+        day: 'numeric',
+        timezone: 'UTC',
+      });
+      let time = new Date(t).toLocaleString('ru', {
+        timezone: 'UTC',
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+      console.log(date, this.today)
+      return `${(date === this.today ? 'today' : date)} ${time}`;
+    },
     setHeight() {
       const el = this.$refs.input;
       if (el) {
@@ -133,7 +153,7 @@ export default {
       }
     },
     changeChat(user) {
-      this.show = false;
+      this.show = this.mobile ? false : true;
       this.getMessages(user);
       this.scroll();
     },
@@ -145,12 +165,19 @@ export default {
   watch: {
     messages() {
       this.scroll();
-    } 
+    },
+    mobile() {
+      this.show = this.mobile ?
+        (this.$route.params.id ? false : true) :
+        true
+      }
   },
   mounted() {
     this.scroll();
     this.getChatList(this.$route.params.id);
-    this.show = this.$route.params.id ? false : true;
+    this.show = this.mobile ?
+      (this.$route.params.id ? false : true) :
+      true
   },
 };
 </script>
@@ -197,8 +224,17 @@ export default {
           max-height: 100%;
 
           .message {
-            margin: 6px 10px 6px 15%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin: 6px 10px;
             text-align: right;
+            .time {
+              font-size: 0.8em;
+              color:gray;
+              margin-right: 10px;
+              transform: translateY(-5px);
+            }
             .text_block {
               padding: 20px;
               display: inline-block;
@@ -213,25 +249,14 @@ export default {
             }
           }
           @media (max-width: map-get($grid-breakpoints, sm)) {
-            .message.our {
-              margin: 4px 8px 4px 15%;
-              text-align: right;
+            .message {
+              margin: 4px 8px;
               .text_block {
                 padding: 15px;
                 display: inline-block;
                 line-height: 20px;
                 border-radius: 30px 0 0 30px;
                 background: $main-color;
-              }
-            }
-            .message {
-              margin: 4px 15% 4px 8px;
-              text-align: left;
-              .text_block {
-                text-align: left;
-                margin-left: auto;
-                border-radius: 0 30px 30px 0;
-                background: $chat-color;
               }
             }
           }
