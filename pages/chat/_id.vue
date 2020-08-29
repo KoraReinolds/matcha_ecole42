@@ -125,7 +125,6 @@ export default {
         hour: 'numeric',
         minute: 'numeric',
       });
-      console.log(date, this.today)
       return `${(date === this.today ? 'today' : date)} ${time}`;
     },
     setHeight() {

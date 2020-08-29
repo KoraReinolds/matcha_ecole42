@@ -14,6 +14,7 @@ import Footer from '@/components/Footer.vue';
 import PopWindow from '@/components/PopWindow.vue';
 
 export default {
+  middleware: ['auth'],
   components: {
     Header,
     Footer,
@@ -35,7 +36,6 @@ export default {
     }),
     ...mapActions({
       getLocation: 'auth/GET_LOCATION',
-      getUser: 'auth/GET_USER',
       pushPopWindow: 'history/PUSH_POP_WINDOW',
     }),
   },
@@ -49,7 +49,6 @@ export default {
     window.addEventListener('resize', this.resize);
     window.addEventListener('resize', this.rechangeCount);
     this.getLocation();
-    if (this.token) this.getUser();
     this.socket = this.$nuxtSocket({});
     this.socket
       .on(this.token, (notif, cb) => {

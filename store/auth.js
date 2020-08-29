@@ -280,36 +280,6 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  async GET_USER ({ commit, state, dispatch }, login) {
-    const res = await this.$axios.$post('profile-get', {
-      activationCode: state.token,
-      login,
-    })
-    if (res.type === 'ok') {
-      commit('users/SET_INIT_TOOLS', res.data, { root: true });
-      commit('SET_USER', res.data);
-      commit('SET_VALUE', { key: 'age',         value: res.data.age });
-      commit('SET_VALUE', { key: 'firstName',   value: res.data.fname });
-      commit('SET_VALUE', { key: 'lastName',    value: res.data.lname });
-      commit('SET_VALUE', { key: 'mail',        value: res.data.email });
-      commit('SET_VALUE', { key: 'biography',   value: res.data.biography });
-      commit('SET_VALUE', { key: 'gender',      value: res.data.gender });
-      commit('SET_VALUE', { key: 'preferences', value: res.data.preference });
-      commit('SET_VALUE', { key: 'tags',        value: res.data.tags });
-      commit('SET_VALUE', { key: 'images',      value: res.data.images });
-      if (this.$router.currentRoute.name === 'main') {
-        dispatch('users/GET_USERS', null, { root: true });
-      }
-    }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
-  },
-
   async REGISTRATION ({ commit, dispatch, state }) {
     const res = await this.$axios.$post('register', {
       login:    state.login.value,
