@@ -42,7 +42,6 @@ export const actions = {
   async PUSH_POP_WINDOW ({ commit, state, rootState }, msg) {
     msg.visible = true;
     commit('PUSH_POP_WINDOW', msg);
-    console.log(state.popWindows.length);
     setTimeout(function() {
       commit('HIDE_MSG', msg);
     }.bind(this), 3000)

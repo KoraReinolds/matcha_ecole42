@@ -186,47 +186,48 @@ module.exports = function(io) {
   schema.statics.getUserByName = function(req, callback) {
     const User = this;
     const login = req.body.login === undefined ? req.user.login : req.body.login;
-  
     a.waterfall([
       (callback) => {
         User.findOne({ login }, callback);
       },
       (user, callback) => {
+        console.log(req.user.login, login, req.user.login !== login, user, !user);
         if (!user) {
-          callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-        }
-        if (req.user.login !== login) {
-          new mongo.models.Actions({
-            who: req.user._id,
-            action: 'visit',
-            target: user._id,
-          }).save((err, action) => {
-            if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-            io.emit(user.token, {
-              action:         action.action,
-              created:        action.created, 
-              who: {
-                age:          req.user.age,
-                avatar:       req.user.avatar,
-                biography:    req.user.biography,
-                created:      req.user.created,
-                curLocation:  req.user.curLocation,
-                fameRaiting:  req.user.fameRaiting,
-                fname:        req.user.fname,
-                gender:       req.user.gender,
-                images:       req.user.images,
-                likeList:     req.user.likeList,
-                lname:        req.user.lname,
-                location:     req.user.location,
-                login:        req.user.login,
-                preference:   req.user.preference,
-                tags:         req.user.tags,
-              }
-            });
-            callback(null, { type: "ok", message: "", data: user });
-          })
+          callback(null, { type: "error", message: "User not found" });
         } else {
-          callback(null, { type: "ok", message: "", data: user });
+          if (req.user.login !== login) {
+            new mongo.models.Actions({
+              who: req.user._id,
+              action: 'visit',
+              target: user._id,
+            }).save((err, action) => {
+              if (err) callback(null, { type: "error", message: "Error occurred on the server" });
+              io.emit(user.token, {
+                action:         action.action,
+                created:        action.created, 
+                who: {
+                  age:          req.user.age,
+                  avatar:       req.user.avatar,
+                  biography:    req.user.biography,
+                  created:      req.user.created,
+                  curLocation:  req.user.curLocation,
+                  fameRaiting:  req.user.fameRaiting,
+                  fname:        req.user.fname,
+                  gender:       req.user.gender,
+                  images:       req.user.images,
+                  likeList:     req.user.likeList,
+                  lname:        req.user.lname,
+                  location:     req.user.location,
+                  login:        req.user.login,
+                  preference:   req.user.preference,
+                  tags:         req.user.tags,
+                }
+              });
+              callback(null, { type: "ok", message: "", data: user });
+            })
+          } else {
+            callback(null, { type: "ok", message: "", data: user });
+          }
         }
       },
     ], callback);

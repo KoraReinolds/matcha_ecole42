@@ -98,6 +98,11 @@ import Online from '@/components/Online.vue';
 
 export default {
   name: 'UserPage',
+  async validate({ route, store }) {
+    let res = await 
+      store.dispatch('user/GET_USER', route.params.id)
+    return res.type === "ok" ? true : false;
+  },
   components: {
     CustomImage,
     NameLink,
@@ -134,11 +139,9 @@ export default {
     }),
     ...mapActions({
       visitUser: 'user/VISIT_USER',
-      getUser: 'user/GET_USER',
     }),
   },
   mounted() {
-    this.getUser(this.$route.params.id);
   },
 };
 </script>

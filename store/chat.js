@@ -50,7 +50,7 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_CUR_USER', user);
       commit('SET_MESSAGES', res.data);
-      this.$router.push({ path: `/chat/${user.login}` });
+      // console.log(this.$router.cur)
     }
     if (res.message) {
       dispatch('history/PUSH_POP_WINDOW', {
@@ -59,17 +59,14 @@ export const actions = {
         msg: res.message,
       }, { root: true });
     }
+    return res;
   },
 
-  async GET_CHAT_LIST ({ commit, dispatch, state, rootState }, curUserLogin) {
+  async GET_CHAT_LIST ({ commit, dispatch, state, rootState }) {
     const res = await this.$axios.$post('chat-list', {
       activationCode: rootState.auth.token,
     })
     if (res.type === 'ok') {
-      if (curUserLogin) {
-        const user = res.data.find((user) => user.login === curUserLogin);
-        if (user) dispatch('GET_MESSAGES', user);
-      }
       commit('SET_USERS', res.data);
     }
     if (res.message) {
@@ -79,6 +76,7 @@ export const actions = {
         msg: res.message,
       }, { root: true });
     }
+    return res;
   },
 
 }

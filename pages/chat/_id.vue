@@ -33,7 +33,7 @@
         ref="messageBox"
       )
         div.messages(
-          v-if="messages"
+          v-if="messages.length"
         )
           div.message(
             v-for="(message, index) in messages"
@@ -44,6 +44,11 @@
             span.text_block(
               v-html="message.message"
             )
+        div.messages(
+          v-else
+        )
+          div.else Send first message
+
 
       div.input_field(
         v-if="curUser"
@@ -68,14 +73,17 @@
           v-for="user in chatList"
           :key="'chat'+user.login"
           @click="changeChat(user)"
-        ) 
-          CustomImage.image(
-            :height="`${mobile ? 48 : 70}px`"
-            :width="`${mobile ? 48 : 70}px`"
-            rounded
-            :src="user.images[user.avatar].src"
+        )
+          nuxt-link.link(
+            :to="`/chat/${user.login}`"
           )
-          div.only_mobile {{ `${user.fname} ${user.lname}` }}
+            CustomImage.image(
+              :height="`${mobile ? 48 : 70}px`"
+              :width="`${mobile ? 48 : 70}px`"
+              rounded
+              :src="user.images[user.avatar].src"
+            )
+            div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
   div#chat(
     v-else
@@ -90,6 +98,21 @@ import NameLink from '@/components/NameLink.vue';
 
 export default {
   name: 'chat',
+  async validate({ route, store }) {
+    let res = {};
+    let chatList = store.getters['chat/CHAT_LIST'];
+    let user;
+    if (!chatList.length) {
+      chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data;
+    }
+    user = chatList.find((user) => user.login === route.params.id);
+    if (route.params.id) {
+      if (!user) return false;
+      res = await store.dispatch('chat/GET_MESSAGES', user);
+      return res.type === "ok" ? true : false;
+    }
+    return true;
+  },
   components: {
     CustomImage,
     NameLink,
@@ -141,7 +164,6 @@ export default {
       });
     },
     ...mapMutations({
-      chatWith: 'chat/SET_CUR_CHAT_USER_ID',
     }),
     sendMessage() {
       if (this.message.trim()) {
@@ -153,12 +175,9 @@ export default {
     },
     changeChat(user) {
       this.show = this.mobile ? false : true;
-      this.getMessages(user);
       this.scroll();
     },
     ...mapActions({
-      getChatList: 'chat/GET_CHAT_LIST',
-      getMessages: 'chat/GET_MESSAGES',
     }),
   },
   watch: {
@@ -173,7 +192,6 @@ export default {
   },
   mounted() {
     this.scroll();
-    this.getChatList(this.$route.params.id);
     this.show = this.mobile ?
       (this.$route.params.id ? false : true) :
       true
@@ -221,6 +239,12 @@ export default {
           bottom: 0;
           padding: 20px 0;
           max-height: 100%;
+
+          .else {
+            text-align: center;
+            color: gray;
+            font-size: 0.8em;
+          }
 
           .message {
             display: flex;
@@ -315,7 +339,7 @@ export default {
         .side-bar_item:not(:last-child) {
           border-bottom: 1px solid $font-color;
         }
-        .side-bar_item {
+        .side-bar_item .link {
           position: relative;
           width: 100%;
           background: #fff;

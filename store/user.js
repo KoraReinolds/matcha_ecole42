@@ -17,7 +17,6 @@ export const actions = {
       login,
     })
     if (res.type === 'ok') {
-      console.log(login, res.data);
       commit('SET_USER', res.data);
     }
     if (res.message) {
@@ -27,6 +26,7 @@ export const actions = {
         msg: res.message,
       }, { root: true });
     }
+    return res;
   },
 
 }

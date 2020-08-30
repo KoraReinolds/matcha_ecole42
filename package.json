@@ -5,6 +5,7 @@
   "author": "mskiles",
   "private": true,
   "scripts": {
+    "serverdev": "cd ./server; supervisor ./index.js;",
     "server": "node ./server/db/createDB.js; node ./server/index.js;",
     "dev": "nuxt",
     "build": "nuxt build",
@@ -23,6 +24,7 @@
     "nuxt": "^2.0.0",
     "nuxt-fontawesome": "^0.4.0",
     "nuxt-socket-io": "^1.1.8",
+    "supervisor": "^0.12.0",
     "vue-yandex-maps": "^0.10.9"
   },
   "devDependencies": {
