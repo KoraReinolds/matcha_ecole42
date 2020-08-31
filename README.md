@@ -52,7 +52,7 @@ Every user notified in real time of the following events:
 • The user received a “like”.  
 • The user’s profile has been visited.  
 • The user received a message.  
-• A “liked” user “disliked” you.
+• A “liked” user “disliked” you.                                      
 ![Alt Text](https://media.giphy.com/media/XFufpQXMPz0cpSQesc/giphy.gif)
 
 #### Other
