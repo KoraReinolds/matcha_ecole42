@@ -44,7 +44,7 @@ The list is sortable and filterable by age, location, “fame rating”, common 
 ![N|Solid](https://res.cloudinary.com/difjb9bq0/image/upload/v1598884987/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA_%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2020-08-31_%D0%B2_17.12.10_xqldsp.png)
 
 #### Chat
-When two people “like” each other, they are able to chat.
+When two people “like” each other, they are able to chat.                    
 ![Alt Text](https://media.giphy.com/media/Ib0AItRpVTDjPWTDU8/giphy.gif)
 
 #### Notifications
