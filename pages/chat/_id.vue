@@ -45,7 +45,7 @@
               v-html="message.message"
             )
         div.messages(
-          v-else
+          v-else-if="curUser"
         )
           div.else Send first message
 
@@ -167,9 +167,10 @@ export default {
     }),
     sendMessage() {
       if (this.message.trim()) {
+        console.log(this.message)
         this.$store.dispatch('chat/SEND_MESSAGE', this.message);
         this.message = '';
-        this.$refs.input.style.cssText = 'height:30px';
+        this.$refs.input.style.cssText = 'height:36px';
         this.$refs.input.focus();
       }
     },
@@ -208,6 +209,8 @@ export default {
 ) {
   #chat {
     position: relative;
+    max-width: 600px;
+    margin: 0 auto;
     .window {
       height: 100%;
       width: 100%;
@@ -216,7 +219,7 @@ export default {
       .info {
         background: $chat-color-light;
         padding-left: 20px;
-        height: $info-height;
+        min-height: $info-height;
         width: 100%;
         display: flex;
         align-items: center;
@@ -251,7 +254,7 @@ export default {
             justify-content: flex-end;
             align-items: flex-end;
             margin: 6px 10px;
-            text-align: right;
+            text-align: left;
             .time {
               font-size: 0.8em;
               color:gray;
@@ -259,6 +262,8 @@ export default {
               transform: translateY(-5px);
             }
             .text_block {
+              max-width: 100%;
+              overflow: scroll;
               padding: 20px;
               display: inline-block;
               line-height: 20px;
@@ -279,7 +284,6 @@ export default {
                 display: inline-block;
                 line-height: 20px;
                 border-radius: 30px 0 0 30px;
-                background: $main-color;
               }
             }
           }
@@ -293,9 +297,9 @@ export default {
         display: flex;
         align-items: center;
         .text_field {
-          height: 30px;
-          font-size: 14px;
-          line-height: 14px;
+          height: 36px;
+          font-size: 20px;
+          line-height: 20px;
           padding: 8px;
           width: 100%;
           border: none;
@@ -349,6 +353,8 @@ export default {
           display: flex;
           padding-left: 30px;
           align-items: center;
+          text-decoration: none;
+          color: $font-color;
           .image {
             margin-right: 20px;
           }

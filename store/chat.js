@@ -21,7 +21,7 @@ export const actions = {
   async SEND_MESSAGE ({ commit, state, rootState, dispatch }, message) {
     const msg = {
       target: state.curUser.login,
-      message,
+      message: message.replace(/\n/g, '<br />'),
     };
     const res = await this.$axios.$post('send-message', {
       activationCode: rootState.auth.token,
