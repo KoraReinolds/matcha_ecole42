@@ -15,6 +15,11 @@ export const mutations = {
   SET_CUR_USER: (state, user) => state.curUser = user,
   PUSH_MESSAGE: (state, message) => state.messages.push(message),
   SET_MESSAGES: (state, messages) => state.messages = messages,
+  CLEAR_DATA: (state) => {
+    state.users = [];
+    state.curUser = null;
+    state.messages = [];
+  },
 }
 export const actions = {
 

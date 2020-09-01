@@ -270,6 +270,7 @@ export const actions = {
     this.$router.push({ name: 'login' });
     Cookie.remove('token');
     commit('CLEAR_FIELDS');
+    commit('chat/CLEAR_DATA', null, { root: true });
   },
 
   async GET_LOCATION ({ commit }) {

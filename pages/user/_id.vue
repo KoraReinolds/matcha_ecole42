@@ -150,13 +150,13 @@ export default {
 
 #user-page {
   padding: 50px 10px;
-  @media (min-width: map-get($grid-breakpoints, sm)) {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+  display: flex;
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    flex-direction: column;
+    padding: 0 0 50px 0;
   }
-  @media (max-width: map-get($grid-breakpoints, sm)) { padding: 0 0 50px 0; }
   .main-images {
+    margin-bottom: 20px;
     .icons {
       color: lightgray;
       display: flex;
@@ -180,9 +180,7 @@ export default {
   }
   .info {
     @media (min-width: map-get($grid-breakpoints, sm)) { width: 600px; };
-    @media (max-width: map-get($grid-breakpoints, sm)) { width: 100%; };
-    margin: 0 30px;
-    @media (max-width: map-get($grid-breakpoints, sm)) { margin: 0; }
+    @media (min-width: map-get($grid-breakpoints, sm)) { margin-left: 30px; }
     .field {
       position: relative;
       width: 100%;
