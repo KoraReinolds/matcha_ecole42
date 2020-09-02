@@ -35,6 +35,7 @@ export const mutations = {
       }
     );
     state.popWindows[index].visible = false;
+    state.popWindows = [...state.popWindows];
   }
 }
 export const actions = {

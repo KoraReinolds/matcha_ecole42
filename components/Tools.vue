@@ -202,6 +202,9 @@ export default {
     mobile(val) {
       this.show = !val;
     }
+  },
+  mounted() {
+    this.show = !this.mobile;
   }
 };
 </script>

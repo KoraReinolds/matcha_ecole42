@@ -65,7 +65,7 @@ export const state = () => ({
 })
 export const getters = {
   MAX_LENGTH: (state) => state.maxLength,
-  USERS: (state) => state.users,
+  USERS: (state) => state.users.slice(0, state.limit),
   CUR_PAGE: (state) => state.curPage,
   LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
   TOOLS: (state) => state.tools,
@@ -74,6 +74,7 @@ export const getters = {
 export const mutations = {
   CHANGE_COUNT_PER_PAGE: (state) => {
     state.limit = window.innerWidth <= 480 ? 1 : 3;
+    console.log(state.limit)
     state.curPage = 1;
   },
   SET_INIT_TOOLS: (state, user) => {
