@@ -1,20 +1,18 @@
 <template lang="pug">
   div#user-page(
-    v-if="user && me"
   )
     div.main-images
       CustomImage(
         :width="mobile ? '100%' : '200px'"
         :height="mobile ? '100%' : '300px'"
-        :src="user.images[user.avatar].src"
-        :key="'user_image'+user.login"
+        :src="user ? user.images[user.avatar].src : ''"
       )
       div.icons(
         v-if="!myPage"
       )
         Like(
           :size="2"
-          :active="myLikeList.includes(user.login)"
+          :active="user ? myLikeList.includes(user.login) : false"
           :user="user"
         )
         Ban(
@@ -38,48 +36,58 @@
             :user="user"
           )
           Raiting.rate(
-            :value="user.fameRaiting"
+            :value="user ? user.fameRaiting : undefined"
             :size="1"
           )
           Distance.dist(
-            v-if="!myPage"
-            :value="user.location || user.curLocation"
+            v-if="myPage"
+            :value="user ? (user.location || user.curLocation) : undefined"
             :size="1"
           )
           Online.online.only_laptop(
+            v-if="user"
             :time="this.user.time"
           )
 
       div.title.left Gender
-      div.field.gender {{ user.gender }}
+      div.field.gender {{ user ? user.gender : '...' }}
 
       div.title.left Preferences
       div.field.preferences
-        span(
-          v-for="pref in user.preference"
-          :key="`user_pref_${pref}`"
-        ) {{ pref }}
+        template(v-if="user")
+          span(
+            v-for="pref in user.preference"
+            :key="`user_pref_${pref}`"
+          ) {{ pref }}
+        template(v-else)
+          span ...
 
       div.title.left Biography
-      div.field.biography {{ user.biography }}
+      div.field.biography {{ user ? user.biography : '...' }}
 
       div.title.left Tags
       div.field.tags
-        Tag(
-          v-for="tag in user.tags"
-          :key="`user_tag_${tag}`"
-          :name="tag"
-        )
+        template(v-if="user")
+          Tag(
+            v-for="tag in user.tags"
+            :key="`user_tag_${tag}`"
+            :name="tag"
+          )
+        template(v-else)
+          span ...
 
       div.title.left Images
       div.field.images
-        CustomImage.image(
-          height="100px"
-          width="100px"
-          v-for="img in user.images"
-          :src="img.src"
-          :key="'img'+img.index"
-        )
+        template(v-if="user")
+          CustomImage.image(
+            height="100px"
+            width="100px"
+            v-for="img in user.images"
+            :src="img.src"
+            :key="'img'+img.index"
+          )
+        template(v-else)
+          span ...
 
 </template>
 
@@ -126,11 +134,11 @@ export default {
       mobile: 'IS_MOBILE',
     }),
     myPage: function() {
-      return this.me.login === this.user.login
+      return this.user ? this.me.login === this.user.login : true;
     },
     chatAvailable: function() {
-      return this.user.likeList.includes(this.me.login) &&
-        this.myLikeList.includes(this.user.login);
+      return this.user ? this.user.likeList.includes(this.me.login) &&
+        this.myLikeList.includes(this.user.login) : false;
     }
   },
   methods: {

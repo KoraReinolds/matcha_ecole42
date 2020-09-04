@@ -1,8 +1,12 @@
 <template lang="pug">
   span.name
     nuxt-link.link(
+      v-if="user"
       :to="`/user/${user.login}`"
     ) {{`${user.fname} ${user.lname} `}}
+    span.link(
+      v-else
+    ) ...
 </template>
 
 <script>

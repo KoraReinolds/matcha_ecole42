@@ -6,7 +6,7 @@
     )
     span(
       :style="{ fontSize: `${size * 10}px` }"
-    ) {{ myLocation ? distance() : '' }} km
+    ) {{ (myLocation && value) ? `${distance()} km` : '...' }}
 </template>
 
 <script>
