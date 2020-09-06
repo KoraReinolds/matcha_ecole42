@@ -38,13 +38,7 @@ export const actions = {
         who: { login: rootState.auth.login.value },
       });
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
@@ -55,15 +49,8 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_CUR_USER', user);
       commit('SET_MESSAGES', res.data);
-      // console.log(this.$router.cur)
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
     return res;
   },
 
@@ -74,14 +61,7 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_USERS', res.data);
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
     return res;
   },
-
 }

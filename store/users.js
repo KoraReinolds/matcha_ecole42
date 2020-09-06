@@ -143,12 +143,6 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_USERS', res.data);
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 }

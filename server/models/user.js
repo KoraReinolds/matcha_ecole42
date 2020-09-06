@@ -146,7 +146,7 @@ module.exports = function(io) {
       },
       (user, callback) => {
         if (!user) {
-          callback(null, ["error", "Неверное имя пользователя или пароль"]);
+          callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
         } else {
           if (user.checkPassword(body.password)) {
             user.generateSessionToken(user, (err, token) => {

@@ -97,6 +97,7 @@ module.exports = function(io) {
   
   router.post('/login', (req, res, next) => {
     User.login(req.body, (err, params) => {
+      console.log(err, params)
       if (err) next(err)
       else res.send(JSON.stringify(params));
     })

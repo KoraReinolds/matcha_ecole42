@@ -40,12 +40,18 @@ export const mutations = {
 }
 export const actions = {
 
-  async PUSH_POP_WINDOW ({ commit, state, rootState }, msg) {
-    msg.visible = true;
-    commit('PUSH_POP_WINDOW', msg);
-    setTimeout(function() {
-      commit('HIDE_MSG', msg);
-    }.bind(this), 3000)
+  PUSH_POP_WINDOW ({ commit, state, rootState }, res) {
+    if (res.message) {
+      const msg= {
+        action: res.type,
+        visible: true,
+        msg: res.message,
+      };
+      commit('PUSH_POP_WINDOW', msg);
+      setTimeout(function() {
+        commit('HIDE_MSG', msg);
+      }.bind(this), 3000)
+    }
   },
 
   async GET_NOTIFICATIONS ({ commit, state, rootState, dispatch }) {

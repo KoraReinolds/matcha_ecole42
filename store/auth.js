@@ -254,13 +254,7 @@ export const actions = {
       commit('SET_INFO_AS_FILLED');
       commit('users/SET_INIT_TOOLS', userNew, { root: true });
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 
   async LOGOUT ({ commit, state }) {
@@ -271,6 +265,7 @@ export const actions = {
     Cookie.remove('token');
     commit('CLEAR_FIELDS');
     commit('chat/CLEAR_DATA', null, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 
   async GET_LOCATION ({ commit }) {
@@ -293,46 +288,46 @@ export const actions = {
     if (res.type === 'ok') {
       dispatch('SIGN_IN');
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+  },
+
+  SET_USER ({ commit }, user) {
+    commit('users/SET_INIT_TOOLS', user, { root: true });
+    commit('auth/SET_USER', user, { root: true });
+    commit('auth/SET_VALUE', { key: 'age',         value: user.age }, { root: true });
+    commit('auth/SET_VALUE', { key: 'firstName',   value: user.fname }, { root: true });
+    commit('auth/SET_VALUE', { key: 'lastName',    value: user.lname }, { root: true });
+    commit('auth/SET_VALUE', { key: 'mail',        value: user.email }, { root: true });
+    commit('auth/SET_VALUE', { key: 'biography',   value: user.biography }, { root: true });
+    commit('auth/SET_VALUE', { key: 'gender',      value: user.gender }, { root: true });
+    commit('auth/SET_VALUE', { key: 'preferences', value: user.preference }, { root: true });
+    commit('auth/SET_VALUE', { key: 'tags',        value: user.tags }, { root: true });
+    commit('auth/SET_VALUE', { key: 'images',      value: user.images }, { root: true });
   },
   
   async SIGN_IN ({ commit, state, dispatch }) {
-    let { type, message, token, login } =
-      await this.$axios.$post('login', {
-        login:    state.login.value,
-        password: state.password.value,
-        location: state.curLocation,
+    let res = await this.$axios.$post('login', {
+      login:    state.login.value,
+      password: state.password.value,
+      location: state.curLocation,
+    })
+    if (res.type === 'ok') {
+      Cookie.set('token', res.token);
+      commit('SET_TOKEN', res.token);
+      const { type, data } = await this.$axios.$post('profile-get', {
+        activationCode: res.token,
+        login:          res.login,
       })
-    if (type === 'ok') {
-      Cookie.set('token', token);
-      commit('SET_TOKEN', token);
-      const res = await this.$axios.$post('profile-get', {
-        activationCode: token,
-        login,
-      })
-      if (res.type === 'ok') {
-        commit('SET_USER', res.data);
-        commit('users/SET_INIT_TOOLS', res.data, { root: true });
+      if (type === 'ok') {
+        dispatch('SET_USER', data);
         this.$router.push({ path: 
-          res.data.filledInformation ?
+          data.filledInformation ?
           '/main' :
           '/settings'
         });
       }
     }
-    if (message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: type,
-        visible: true,
-        msg: message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 
   LOAD_IMAGE ({ commit, state }, files) {
@@ -379,13 +374,6 @@ export const actions = {
     if (res.type === 'ok') {
       commit('TOGGLE_LIKE_USER', newLikeList);
     }
-    if (res.message) {
-      dispatch('history/PUSH_POP_WINDOW', {
-        action: res.type,
-        visible: true,
-        msg: res.message,
-      }, { root: true });
-    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   }
-
 }
