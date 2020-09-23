@@ -1,61 +1,13 @@
 import { mount } from '@vue/test-utils'
 import axios from 'axios'
+import register from './api/register'
+import login from './api/login'
+import logout from './api/logout'
 
-const baseUrl = "http://localhost:4000";
-const randomName = Math.random().toString().slice(0, 5);
-const randomName2 = Math.random().toString().slice(0, 5);
-const pass = "12345";
-const loc = { y: 37.5420654, x: 55.808093 };
+
+// const baseUrl = "http://localhost:4000";
+const baseUrl = "https://mskiles-matcha-back.herokuapp.com";
 let token;
-
-const register = {
-  request: {
-    email: "reinoldskora@gmail.com",
-    fname: "maslyn",
-    lname: "skiles",
-    login: randomName,
-    password: pass,
-  },
-  expect: { type: 'ok', message: randomName }
-};
-
-const registerWrong = {
-  request: {
-    email: "reinoldskora@gmail.com",
-    fname: "maslyn",
-    lname: "skiles",
-    login: randomName,
-    password: pass,
-  },
-  expect: { type: 'error', message: "Пользователь с таким логином уже существует" }
-};
-
-const loginRequest = {
-  request: {
-    login: randomName,
-    password: pass,
-    location: loc,
-  },
-  expect: { type: 'ok' }
-}
-
-const loginWrongRequest = {
-  request: {
-    login: randomName2,
-    password: pass,
-    location: loc,
-  },
-  expect: { type: 'error', message: 'Неверное имя пользователя или пароль' }
-}
-
-const loginWrongRequest2 = {
-  request: {
-    login: randomName,
-    password: "pass",
-    location: loc,
-  },
-  expect: { type: 'error', message: 'Неверное имя пользователя или пароль' }
-}
 
 const profileGet = {
   request: {
@@ -135,49 +87,64 @@ const profileUpdate = {
 
 describe('API', () => {
 
-  test('/register (Корректный запрос)', async () => {
-    const { data } = await axios.post(baseUrl + "/register", register.request);
-    expect(data).toEqual(register.expect);
+  test('/register ()', async () => {
+    const { data } = await axios.post(baseUrl + "/register", register.correct.request);
+    expect(data).toEqual(register.correct.expect);
   })
 
-  test('/register (Имя пользователя занято)', async () => {
-    const { data } = await axios.post(baseUrl + "/register", registerWrong.request);
-    expect(data).toEqual(registerWrong.expect);
+  test('/register ()', async () => {
+    const { data } = await axios.post(baseUrl + "/register", register.wrong.request);
+    expect(data).toEqual(register.wrong.expect);
   })
   
-  test('/login (Валидные данные для входа)', async () => {
-    const { data } = await axios.post(baseUrl + "/login", loginRequest.request);
+  test('/login ()', async () => {
+    const { data } = await axios.post(baseUrl + "/login", login.correct.request);
     expect(data.token === undefined).toBe(false);
     token = data["token"];
     delete data["token"];
-    expect(data).toEqual(loginRequest.expect);
+    expect(data).toEqual(login.correct.expect);
   })
   
-  test('/login (Несуществующее имя', async () => {
-    const { data } = await axios.post(baseUrl + "/login", loginWrongRequest.request);
-    expect(data).toEqual(loginWrongRequest.expect);
+  test('/login (я', async () => {
+    const { data } = await axios.post(baseUrl + "/login", login.wrong.request);
+    expect(data).toEqual(login.wrong.expect);
   })
   
-  test('/login (Неправильный пароль)', async () => {
-    const { data } = await axios.post(baseUrl + "/login", loginWrongRequest2.request);
-    expect(data).toEqual(loginWrongRequest2.expect);
+  test('/login ()', async () => {
+    const { data } = await axios.post(baseUrl + "/login", login.wrong2.request);
+    expect(data).toEqual(login.wrong2.expect);
   })
 
-  test('/profile-get (Без параметров для получения текущего юзера)', async () => {
-    const { data } = await axios.post(baseUrl + "/profile-get", { activationCode: token });
-    expect(data).toEqual(profileGet.expect);
-  })
+  // test('/logout (Корректный запрос)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/logout", { activationCode: token });
+  //   expect(data).toEqual(logoutRequest.expect);
+  // })
 
-  test('/profile-get (Неправильный токен)', async () => {
-    const { data } = await axios.post(baseUrl + "/profile-get", profileGetWrong.request);
-    expect(data).toEqual(profileGetWrong.expect);
-  })
+  // test('/logout (Неправильный токен)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/logout", logoutRequestWrong.request);
+  //   expect(data).toEqual(logoutRequestWrong.expect);
+  // })
 
-  test('/profile-update (Обновление профиля + получение обновленного профиля)', async () => {
-    const { data } = await axios.post(baseUrl + "/profile-update", { activationCode: token, ...profileUpdate.request });
-    expect(data).toEqual(profileUpdate.expect);
-    const { data: newData } = await axios.post(baseUrl + "/profile-get", { activationCode: token });
-    expect(newData).toEqual(profileGet.expectAfterUpdate);
-  })
+  // test('/profile-get (Без параметров для получения текущего юзера)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/profile-get", { activationCode: token });
+  //   expect(data).toEqual(profileGet.expect);
+  // })
+
+  // test('/profile-get (Неправильный токен)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/profile-get", profileGetWrong.request);
+  //   expect(data).toEqual(profileGetWrong.expect);
+  // })
+
+  // test('/profile-update (Обновление профиля + получение обновленного профиля)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/profile-update", { activationCode: token, ...profileUpdate.request });
+  //   expect(data).toEqual(profileUpdate.expect);
+  //   const { data: newData } = await axios.post(baseUrl + "/profile-get", { activationCode: token });
+  //   expect(newData).toEqual(profileGet.expectAfterUpdate);
+  // })
+
+  // test('/profile-get (Неправильный токен)', async () => {
+  //   const { data } = await axios.post(baseUrl + "/profile-get", profileGetWrong.request);
+  //   expect(data).toEqual(profileGetWrong.expect);
+  // })
 
 })
