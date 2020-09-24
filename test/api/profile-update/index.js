@@ -1,0 +1,169 @@
+export default {
+  requests: [
+
+    {
+      path: "/profile-update",
+      desc: "User_1: Обновление информации пользователя User_1",
+      request: {
+        activationCode: 'valid token',
+        age: "22",
+        avatar: 0,
+        biography: "123",
+        firstName: "maslyn",
+        gender: "male",
+        images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+        lastName: "skiles",
+        location: {x: 55.807367943676674, y: 37.53614308249511},
+        mail: "reinoldskora@gmail.com",
+        password: "12345",
+        preference: ["male", "bisexual"],
+        tags: ["poker"],
+      },
+      expect: {
+        type: 'ok',
+        message: 'Данные успешно обновленны',
+      },
+    },
+    {
+      path: "/profile-get",
+      desc: "User_1: Получение обновленной информации о себе",
+      request: {
+        activationCode: 'valid token',
+        login: 'User_1'
+      },
+      expect: {
+        type: 'ok',
+        message: '',
+        data: {
+          tags: [ 'poker' ],
+          preference: [ 'male', 'bisexual' ],
+          likeList: [],
+          email: 'reinoldskora@gmail.com',
+          fname: 'maslyn',
+          lname: 'skiles',
+          login: 'User_1',
+          filledInformation: true,
+          age: 22,
+          fameRaiting: 0,
+          gender: 'male',
+          biography: '123',
+          images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+          avatar: 0,
+          curLocation: { y: 37.5420654, x: 55.808093 },
+          location: { x: 55.807367943676674, y: 37.53614308249511 }
+        }
+      },
+    },
+
+    {
+      path: "/profile-update",
+      desc: "User_2: Обновление информации пользователя User_2",
+      request: {
+        activationCode: 'valid token',
+        age: "23",
+        avatar: 0,
+        biography: "123",
+        firstName: "maslyn",
+        gender: "bisexual",
+        images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+        lastName: "skiles",
+        location: {x: 54.807367943676674, y: 37.53614308249511},
+        mail: "reinoldskora@gmail.com",
+        password: "12345",
+        preference: ["male", "bisexual"],
+        tags: ["poker", "food"],
+      },
+      expect: {
+        type: 'ok',
+        message: 'Данные успешно обновленны',
+      },
+    },
+    {
+      path: "/profile-get",
+      desc: "User_1: Получение обновленной информации о User_2",
+      request: {
+        activationCode: 'valid token',
+        login: 'User_2'
+      },
+      expect: {
+        type: 'ok',
+        message: '',
+        data: {
+          tags: [ 'poker', 'food' ],
+          preference: [ 'male', 'bisexual' ],
+          likeList: [],
+          email: 'reinoldskora@gmail.com',
+          fname: 'maslyn',
+          lname: 'skiles',
+          login: 'User_2',
+          filledInformation: true,
+          age: 23,
+          fameRaiting: 0,
+          gender: 'bisexual',
+          biography: '123',
+          images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+          avatar: 0,
+          curLocation: { y: 37.5420654, x: 55.808093 },
+          location: { x: 54.807367943676674, y: 37.53614308249511 }
+        }
+      },
+    },
+
+    {
+      path: "/profile-update",
+      desc: "User_3: Обновление информации пользователя User_3",
+      request: {
+        activationCode: 'valid token',
+        age: "23",
+        avatar: 0,
+        biography: "123",
+        firstName: "maslyn",
+        gender: "bisexual",
+        images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+        lastName: "skiles",
+        location: {x: 54.807367943676674, y: 37.53614308249511},
+        mail: "reinoldskora@gmail.com",
+        password: "12345",
+        preference: ["male", "bisexual"],
+        tags: ["poker", "food"],
+      },
+      expect: {
+        type: 'ok',
+        message: 'Данные успешно обновленны',
+      },
+    },
+
+    {
+      path: "/profile-update",
+      desc: "User_4: Обновление информации пользователя User_4",
+      request: {
+        activationCode: 'valid token',
+        age: "23",
+        avatar: 0,
+        biography: "123",
+        firstName: "maslyn",
+        gender: "bisexual",
+        images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
+        lastName: "skiles",
+        location: {x: 54.807367943676674, y: 37.53614308249511},
+        mail: "reinoldskora@gmail.com",
+        password: "12345",
+        preference: ["male", "bisexual"],
+        tags: ["poker", "food"],
+      },
+      expect: {
+        type: 'ok',
+        message: 'Данные успешно обновленны',
+      },
+    },
+
+    {
+      path: "/profile-update",
+      desc: "User_1: Невалидный токен",
+      request: {
+        activationCode: 'invalid token'
+      },
+      expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
+    },
+  ],  
+}
