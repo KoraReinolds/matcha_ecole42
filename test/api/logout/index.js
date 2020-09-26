@@ -42,6 +42,22 @@ export default {
     },
     {
       path: "/logout",
+      desc: "User_6: Логаут",
+      request: {
+        activationCode: 'valid token'
+      },
+      expect: { type: 'ok', message: '' }
+    },
+    {
+      path: "/logout",
+      desc: "User_7: Логаут",
+      request: {
+        activationCode: 'valid token'
+      },
+      expect: { type: 'ok', message: '' }
+    },
+    {
+      path: "/logout",
       desc: "User_1: Невалидный токен",
       request: {
         activationCode: 'invalid token'

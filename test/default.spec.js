@@ -90,27 +90,6 @@ describe('API', () => {
       else if (error) expect(error.status).toEqual(401);
     })
   })
-  
-  // test(`${getUsers.correct.path}, (${getUsers.correct.desc})`, async () => {
-  //   reqData = getUsers.correct;
-  //   reqData.request.activationCode = token;
-  //   const { data } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(data).toEqual(reqData.expect);
-    
-  //   reqData = profileGet.correct;
-  //   reqData.request.activationCode = token;
-  //   const { data: newData } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(newData).toEqual(reqData.expectAfterUpdate);
-  // })
-  
-  // test(`${getUsers.wrong.path}, (${getUsers.wrong.desc})`, async () => {
-  //   reqData = getUsers.wrong;
-  //   const { data } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(data).toEqual(reqData.expect);
-  // })
-
-
-
 
   // // logout
   // logout.requests.forEach(req => {

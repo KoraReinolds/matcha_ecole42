@@ -62,6 +62,30 @@ export default {
     },
     {
       path: "/register",
+      desc: "Регистрация User_6",
+      request: {
+        email: "reinoldskora@gmail.com",
+        fname: "maslyn",
+        lname: "skiles",
+        login: "User_6",
+        password: "123",
+      },
+      expect: { type: 'ok', message: "User_6" },
+    },
+    {
+      path: "/register",
+      desc: "Регистрация User_7",
+      request: {
+        email: "reinoldskora@gmail.com",
+        fname: "maslyn",
+        lname: "skiles",
+        login: "User_7",
+        password: "123",
+      },
+      expect: { type: 'ok', message: "User_7" },
+    },
+    {
+      path: "/register",
       desc: "Повторная регистрация User_1",
       request: {
         email: "reinoldskora@gmail.com",

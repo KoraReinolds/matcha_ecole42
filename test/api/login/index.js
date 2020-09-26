@@ -52,6 +52,26 @@ export default {
     },
     {
       path: "/login",
+      desc: "Авторизация User_6",
+      request: {
+        login: 'User_6',
+        password: '123',
+        location: { y: 37.5420654, x: 55.808093 },
+      },
+      expect: { type: 'ok' }
+    },
+    {
+      path: "/login",
+      desc: "Авторизация User_7",
+      request: {
+        login: 'User_7',
+        password: '123',
+        location: { y: 37.5420654, x: 55.808093 },
+      },
+      expect: { type: 'ok' }
+    },
+    {
+      path: "/login",
       desc: "Авторизация c несуществующим именем",
       request: {
         login: 'fake_user',
