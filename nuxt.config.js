@@ -107,7 +107,8 @@ module.exports = {
     scss: ['./assets/css/*.scss']
   },
   plugins: [
-    { src: '~/plugins/ymapPlugin.js',  mode: 'client' }
+    { src: '~/plugins/ymapPlugin.js',  mode: 'client' },
+    '~/plugins/axios'
   ],
   axios: {
     baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided

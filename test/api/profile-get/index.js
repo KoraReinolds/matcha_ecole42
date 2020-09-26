@@ -28,24 +28,24 @@ export default {
         }
       },
     },
-    {
-      path: "/profile-get",
-      desc: "User_1: Запрос пользователя User_1 информации о самом себе)",
-      request: {
-        activationCode: 'valid token',
-        login: 'User_1'
-      },
-      expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
-    },
-    {
-      path: "/profile-get",
-      desc: "User_1: Запрос пользователя User_1 информации о User_2 (информация не заполнена, informationFilled == false)",
-      request: {
-        activationCode: 'valid token',
-        login: 'User_2'
-      },
-      expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
-    },
+    // {
+    //   path: "/profile-get",
+    //   desc: "User_1: Запрос пользователя User_1 информации о самом себе)",
+    //   request: {
+    //     activationCode: 'valid token',
+    //     login: 'User_1'
+    //   },
+    //   expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
+    // },
+    // {
+    //   path: "/profile-get",
+    //   desc: "User_1: Запрос пользователя User_1 информации о User_2 (информация не заполнена, informationFilled == false)",
+    //   request: {
+    //     activationCode: 'valid token',
+    //     login: 'User_2'
+    //   },
+    //   expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
+    // },
     {
       path: "/profile-get",
       desc: "User_2: Запрос пользователя по токену",
@@ -164,7 +164,7 @@ export default {
       request: {
         activationCode: 'invalid token'
       },
-      expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
+      // expect: 'код ответа 401'
     },
   ],  
 }

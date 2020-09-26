@@ -91,16 +91,17 @@ module.exports = function(io) {
       const diffY = Math.abs(point1.y - point2.y);
       return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3);
     };
+    console.log(options.maxAge + 1)
     const docs = await this.find({
         login: { $ne: options.login },
         gender: { $in: options.preference },
         filledInformation: true,
-        age: { $gt: options.minAge, $lt: options.maxAge },
-        fameRaiting: { $gt: options.minRate, $lt: options.maxRate },
+        age: { $gt: +options.minAge - 1, $lt: +options.maxAge + 1 },
+        fameRaiting: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
       })
       .sort(options.sortOrder)
-      .select('-_id -salt -token -hashedPassword -__v -email -likeList')
-      
+      .select('-_id -salt -token -hashedPassword -__v -email -likeList -created')
+    console.log("DOCS ", docs)
     let filteredDocs = docs
       .filter((user) => {
         const dist = distance(user.curLocation || user.location,
@@ -166,21 +167,13 @@ module.exports = function(io) {
   };
   
   schema.statics.logout = async function(req, callback) {
-    if (req.user) {
-      await this.findOneAndUpdate({ login: req.user.login }, { token: '' });
-      callback(null, { type: "ok", message: "" });
-    } else {
-      callback(403)
-    }
+    await this.findOneAndUpdate({ login: req.user.login }, { token: '' });
+    callback(null, { type: "ok", message: "" });
   }
   
   schema.statics.updateUser = async function(req, callback) {
-    if (req.user) {
-      await this.findOneAndUpdate({ login: req.user.login }, { ...req.body, filledInformation: true });
-      callback(null, { type: "ok", message: "Данные успешно обновленны" });
-    } else {
-      callback(403)
-    }
+    await this.findOneAndUpdate({ login: req.user.login }, { ...req.body, filledInformation: true });
+    callback(null, { type: "ok", message: "Данные успешно обновленны" });
   }
   
   schema.statics.getUserByName = function(req, callback) {
@@ -188,10 +181,10 @@ module.exports = function(io) {
     const login = req.body.login === undefined ? req.user.login : req.body.login;
     a.waterfall([
       (callback) => {
-        User.findOne({ login }, callback);
+        User.findOne({ login }, callback)
+          .select('-salt -token -hashedPassword -__v -created -_id')
       },
       (user, callback) => {
-        console.log(req.user.login, login, req.user.login !== login, user, !user);
         if (!user) {
           callback(null, { type: "error", message: "User not found" });
         } else {

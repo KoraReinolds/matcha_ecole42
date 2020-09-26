@@ -16,6 +16,28 @@ module.exports = function(io) {
       next();
     });
   });
+
+  router.post('/register', (req, res, next) => {
+    User.registration(req.body, (err, params) => {
+      if (err) next(err)
+      else res.send(JSON.stringify(params));
+    })
+  })
+  
+  router.post('/login', (req, res, next) => {
+    User.login(req.body, (err, params) => {
+      if (err) next(err)
+      else res.send(JSON.stringify(params));
+    })
+  })
+
+  router.use((req, res, next) => {
+    if (!req.user) {
+      res.status(401).send();
+    } else {
+      next();
+    }
+  }),
   
   router.post('/send-message', (req, res, next) => {
     if (req.user) {
@@ -86,21 +108,6 @@ module.exports = function(io) {
         else res.send(JSON.stringify(params));
       })
     } else next();
-  })
-  
-  router.post('/register', (req, res, next) => {
-    User.registration(req.body, (err, params) => {
-      if (err) next(err)
-      else res.send(JSON.stringify(params));
-    })
-  })
-  
-  router.post('/login', (req, res, next) => {
-    User.login(req.body, (err, params) => {
-      console.log(err, params)
-      if (err) next(err)
-      else res.send(JSON.stringify(params));
-    })
   })
 
   router.post('/logout', (req, res, next) => {

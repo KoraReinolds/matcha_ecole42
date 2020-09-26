@@ -46,7 +46,7 @@ export default {
       request: {
         activationCode: 'invalid token'
       },
-      expect: { type: 'error', message: 'Произошла ошибка. Обратитесь к администратору' }
+      // expect: 'код ответа 401'
     },
   ],  
 }

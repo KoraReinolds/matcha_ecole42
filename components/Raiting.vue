@@ -7,7 +7,7 @@
     )
     span(
       :style="{ fontSize: `${size * 10}px` }"
-    ) {{ value || '...' }}
+    ) {{ value.toString() || '...' }}
 </template>
 
 <script>

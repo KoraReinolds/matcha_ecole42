@@ -7,19 +7,19 @@ import profileGet from './api/profile-get'
 import profileUpdate from './api/profile-update'
 import getUsers from './api/get-users'
 
-// const baseUrl = "http://localhost:4000";
-const baseUrl = "https://mskiles-matcha-back.herokuapp.com";
+const baseUrl = "http://localhost:4000";
+// const baseUrl = "https://mskiles-matcha-back.herokuapp.com";
 const tokens = {};
 
 describe('API', () => {
 
-  // // register
-  // register.requests.forEach(req => {
-  //   test(`${req.path}, (${req.desc})`, async () => {
-  //     const { data } = await axios.post(baseUrl + req.path, req.request);
-  //     expect(data).toEqual(req.expect);
-  //   })
-  // })
+  // register
+  register.requests.forEach(req => {
+    test(`${req.path}, (${req.desc})`, async () => {
+      const { data } = await axios.post(baseUrl + req.path, req.request);
+      expect(data).toEqual(req.expect);
+    })
+  })
   
   // login
   login.requests.forEach(req => {
@@ -33,19 +33,7 @@ describe('API', () => {
       expect(data).toEqual(req.expect);
     })
   })
-  
-  // // logout
-  // logout.requests.forEach(req => {
-  //   test(`${req.path}, (${req.desc})`, async () => {
-  //     const [user,] = req.desc.split(':');
-  //     if (req.request.activationCode === 'valid token') {
-  //       req.request.activationCode = tokens[user];
-  //     }
-  //     const { data } = await axios.post(baseUrl + req.path, req.request);
-  //     expect(data).toEqual(req.expect);
-  //   })
-  // })
-  
+
   // // profile-get
   // profileGet.requests.forEach(req => {
   //   test(`${req.path}, (${req.desc})`, async () => {
@@ -53,8 +41,15 @@ describe('API', () => {
   //     if (req.request.activationCode === 'valid token') {
   //       req.request.activationCode = tokens[user];
   //     }
-  //     const { data } = await axios.post(baseUrl + req.path, req.request);
-  //     expect(data).toEqual(req.expect);
+  //     let data;
+  //     let error;
+  //     try {
+  //       data = (await axios.post(baseUrl + req.path, req.request)).data;
+  //     } catch({ response }) {
+  //       error = response;
+  //     }
+  //     if (data) expect(data).toEqual(req.expect);
+  //     else if (error) expect(error.status).toEqual(401);
   //   })
   // })
   
@@ -65,29 +60,37 @@ describe('API', () => {
       if (req.request.activationCode === 'valid token') {
         req.request.activationCode = tokens[user];
       }
-      const { data } = await axios.post(baseUrl + req.path, req.request);
-      expect(data).toEqual(req.expect);
+      let data;
+      let error;
+      try {
+        data = (await axios.post(baseUrl + req.path, req.request)).data;
+      } catch({ response }) {
+        error = response;
+      }
+      if (data) expect(data).toEqual(req.expect);
+      else if (error) expect(error.status).toEqual(401);
     })
   })
-  // test(`${profileUpdate.correct.path}, (${profileUpdate.correct.desc})`, async () => {
-  //   reqData = profileUpdate.correct;
-  //   reqData.request.activationCode = token;
-  //   const { data } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(data).toEqual(reqData.expect);
-    
-  //   reqData = profileGet.correct;
-  //   reqData.request.activationCode = token;
-  //   const { data: newData } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(newData).toEqual(reqData.expectAfterUpdate);
-  // })
   
-  // test(`${profileUpdate.wrong.path}, (${profileUpdate.wrong.desc})`, async () => {
-  //   reqData = profileUpdate.wrong;
-  //   const { data } = await axios.post(baseUrl + `${reqData.path}`, reqData.request);
-  //   expect(data).toEqual(reqData.expect);
-  // })
+  // get-users
+  getUsers.requests.forEach(req => {
+    test(`${req.path}, (${req.desc})`, async () => {
+      const [user,] = req.desc.split(':');
+      if (req.request.activationCode === 'valid token') {
+        req.request.activationCode = tokens[user];
+      }
+      let data;
+      let error;
+      try {
+        data = (await axios.post(baseUrl + req.path, req.request)).data;
+      } catch({ response }) {
+        error = response;
+      }
+      if (data) expect(data).toEqual(req.expect);
+      else if (error) expect(error.status).toEqual(401);
+    })
+  })
   
-  // // get-users
   // test(`${getUsers.correct.path}, (${getUsers.correct.desc})`, async () => {
   //   reqData = getUsers.correct;
   //   reqData.request.activationCode = token;
@@ -106,4 +109,23 @@ describe('API', () => {
   //   expect(data).toEqual(reqData.expect);
   // })
 
+
+
+
+  // // logout
+  // logout.requests.forEach(req => {
+  //   test(`${req.path}, (${req.desc})`, async () => {
+  //     const [user,] = req.desc.split(':');
+  //     if (req.request.activationCode === 'valid token') {
+  //       req.request.activationCode = tokens[user];
+  //     }
+  //     try {
+  //       const { data } = await axios.post(baseUrl + req.path, req.request);
+  //       expect(data).toEqual(req.expect);
+  //     } catch({ response }) {
+  //       expect(response.status).toEqual(401);
+  //     }
+  //   })
+  // })
+  
 })
