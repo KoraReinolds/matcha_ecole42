@@ -80,7 +80,7 @@ export default {
     },
     {
       path: "/profile-get",
-      desc: "User_1: Получение обновленной информации о User_2",
+      desc: "User_2: Получение обновленной информации о User_2",
       request: {
         activationCode: 'valid token',
         login: 'User_2'

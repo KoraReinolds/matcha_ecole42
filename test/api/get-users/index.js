@@ -1,100 +1,4 @@
-
-let User_1 = {
-  tags: [ 'poker' ],
-  preference: [ 'male', 'bisexual' ],
-  fname: 'User_1',
-  lname: 'skiles',
-  login: 'User_1',
-  filledInformation: true,
-  age: 22,
-  fameRaiting: 0,
-  gender: 'male',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5420654, x: 55.808093 },
-  location: { y: 37.5420654, x: 55.808093 },
-};
-let User_2 = {
-  tags: [ 'poker', 'food' ],
-  preference: [ 'male', 'bisexual' ],
-  fname: 'User_2',
-  lname: 'skiles',
-  login: 'User_2',
-  filledInformation: true,
-  age: 22,
-  fameRaiting: 0,
-  gender: 'bisexual',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5420654, x: 55.808093 },
-  location: { y: 37.5420654, x: 55.808093 },
-};
-let User_3 = {
-  tags: [ 'poker', 'food', 'sex' ],
-  preference: [ 'male', 'bisexual' ],
-  fname: 'User_3',
-  lname: 'skiles',
-  login: 'User_3',
-  filledInformation: true,
-  age: 22,
-  fameRaiting: 0,
-  gender: 'bisexual',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5420654, x: 55.808093 },
-  location: { y: 37.5420654, x: 55.808093 },
-};
-let User_5 = {
-  tags: [ 'poker', 'food' ],
-  preference: [ 'male', 'bisexual' ],
-  fname: 'User_5',
-  lname: 'skiles',
-  login: 'User_5',
-  filledInformation: true,
-  age: 22,
-  fameRaiting: 0,
-  gender: 'bisexual',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5999959, x: 55.808099 },
-  location: { y: 37.5420654, x: 55.808093 },
-}
-let User_6 = {
-  tags: [ 'poker', 'food' ],
-  preference: [ 'male', 'bisexual' ],
-  fname: 'User_6',
-  lname: 'skiles',
-  login: 'User_6',
-  filledInformation: true,
-  age: 22,
-  fameRaiting: 0,
-  gender: 'bisexual',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5999959, x: 55.808099 },
-  location: { y: 37.5420654, x: 55.808093 },
-}
-let User_7 = {
-  tags: [ 'poker', 'food' ],
-  preference: [ 'male' ],
-  fname: 'User_7',
-  lname: 'skiles',
-  login: 'User_7',
-  filledInformation: true,
-  age: 23,
-  fameRaiting: 0,
-  gender: 'bisexual',
-  biography: '123',
-  images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
-  avatar: 0,
-  curLocation: { y: 37.5420654, x: 55.808093 },
-  location: { y: 37.5420654, x: 55.808093 },
-}
+import users from '../users'
 
 export default {
   requests: [
@@ -110,16 +14,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_2, User_3, User_5],
+            users: [users.User_2, users.User_3, users.User_5],
             length: 5
         }
       }
@@ -136,16 +40,16 @@ export default {
         minAge: 23,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_7],
+            users: [users.User_7],
             length: 1
         }
       }
@@ -162,16 +66,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_2, User_3, User_5],
+            users: [users.User_2, users.User_3, users.User_5],
             length: 4
         }
       }
@@ -188,10 +92,10 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
@@ -214,16 +118,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_2, User_3, User_7],
+            users: [users.User_2, users.User_3, users.User_7],
             length: 3
         }
       }
@@ -240,10 +144,10 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "100",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
@@ -266,7 +170,7 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
         tags: ['sex'],
@@ -275,7 +179,7 @@ export default {
         type: "ok",
         message: "",
         data: {
-            users: [User_3],
+            users: [users.User_3],
             length: 1
         }
       }
@@ -292,7 +196,7 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
         tags: ['code'],
@@ -318,16 +222,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_1, User_3, User_5],
+            users: [users.User_1, users.User_3, users.User_5],
             length: 5
         }
       }
@@ -344,16 +248,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_3.preference,
+        preference: users.User_3.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_3.tags,
+        tags: users.User_3.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_1, User_2, User_5],
+            users: [users.User_1, users.User_2, users.User_5],
             length: 5
         }
       }
@@ -370,16 +274,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_5.preference,
+        preference: users.User_5.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_5.tags,
+        tags: users.User_5.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_1],
+            users: [users.User_1],
             length: 5
         }
       }
@@ -396,16 +300,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_5.preference,
+        preference: users.User_5.preference,
         skip: 3,
         sortOrder: {},
-        tags: User_5.tags,
+        tags: users.User_5.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_6],
+            users: [users.User_6],
             length: 5
         }
       }
@@ -422,16 +326,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_6.preference,
+        preference: users.User_6.preference,
         skip: 3,
         sortOrder: {},
-        tags: User_6.tags,
+        tags: users.User_6.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_5, User_7],
+            users: [users.User_5, users.User_7],
             length: 5
         }
       }
@@ -448,16 +352,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_7.preference,
+        preference: users.User_7.preference,
         skip: 0,
         sortOrder: {},
-        tags: User_7.tags,
+        tags: users.User_7.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_1],
+            users: [users.User_1],
             length: 1
         }
       }
@@ -474,16 +378,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {age: -1},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_7, User_2, User_3],
+            users: [users.User_7, users.User_2, users.User_3],
             length: 5
         }
       }
@@ -500,16 +404,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_1.preference,
+        preference: users.User_1.preference,
         skip: 0,
         sortOrder: {age: 1},
-        tags: User_1.tags,
+        tags: users.User_1.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_2, User_3, User_5],
+            users: [users.User_2, users.User_3, users.User_5],
             length: 5
         }
       }
@@ -526,16 +430,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_2.preference,
+        preference: users.User_2.preference,
         skip: 0,
         sortOrder: {age: 1, countTags: 1},
-        tags: User_2.tags,
+        tags: users.User_2.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_1, User_3, User_5],
+            users: [users.User_1, users.User_3, users.User_5],
             length: 5
         }
       }
@@ -552,16 +456,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_2.preference,
+        preference: users.User_2.preference,
         skip: 0,
         sortOrder: {age: 1, countTags: -1},
-        tags: User_2.tags,
+        tags: users.User_2.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_3, User_5, User_6],
+            users: [users.User_3, users.User_5, users.User_6],
             length: 5
         }
       }
@@ -578,16 +482,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_2.preference,
+        preference: users.User_2.preference,
         skip: 0,
         sortOrder: {age: 1, countTags: -1, dist: 1},
-        tags: User_2.tags,
+        tags: users.User_2.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_3, User_5, User_6],
+            users: [users.User_3, users.User_5, users.User_6],
             length: 5
         }
       }
@@ -604,16 +508,16 @@ export default {
         minAge: 18,
         minDist: "0",
         minRate: "0",
-        preference: User_2.preference,
+        preference: users.User_2.preference,
         skip: 0,
         sortOrder: {age: 1, countTags: -1, dist: -1},
-        tags: User_2.tags,
+        tags: users.User_2.tags,
       },
       expect: {
         type: "ok",
         message: "",
         data: {
-            users: [User_5, User_6, User_3],
+            users: [users.User_5, users.User_6, users.User_3],
             length: 5
         }
       }

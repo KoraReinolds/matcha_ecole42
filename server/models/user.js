@@ -78,7 +78,7 @@ module.exports = function(io) {
     const docs = await this.find({
       login: { $in: req.user.likeList },
     })
-      .select('-_id -salt -token -hashedPassword -__v -email')
+      .select('-_id -salt -token -hashedPassword -__v -email -created')
     let filteredDocs = docs
       .filter((user) => user.likeList.includes(req.user.login))
     callback(null, { type: "ok", message: "", data: filteredDocs });
@@ -182,7 +182,7 @@ module.exports = function(io) {
     a.waterfall([
       (callback) => {
         User.findOne({ login }, callback)
-          .select('-salt -token -hashedPassword -__v -created -_id')
+          .select('-salt -token -hashedPassword -__v -created')
       },
       (user, callback) => {
         if (!user) {
@@ -216,9 +216,13 @@ module.exports = function(io) {
                   tags:         req.user.tags,
                 }
               });
+              user = JSON.parse(JSON.stringify(user));
+              delete user._id;
               callback(null, { type: "ok", message: "", data: user });
             })
           } else {
+            user = JSON.parse(JSON.stringify(user));
+            delete user._id;
             callback(null, { type: "ok", message: "", data: user });
           }
         }

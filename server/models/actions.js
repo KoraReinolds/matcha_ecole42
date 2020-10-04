@@ -33,7 +33,8 @@ module.exports = function(io) {
   
     a.waterfall([
       (callback) => {
-        User.findOne({ login: req.body.target }, callback);
+        User.findOne({ login: req.body.target }, callback)
+          .select('-salt -token -hashedPassword -__v -created')
       },
       (user, callback) => {
         if (!user) {
@@ -52,21 +53,22 @@ module.exports = function(io) {
               created:        action.created,
               message:        action.message,
               who: {
-                age:          req.user.age,
-                avatar:       req.user.avatar,
-                biography:    req.user.biography,
-                created:      req.user.created,
-                curLocation:  req.user.curLocation,
-                fameRaiting:  req.user.fameRaiting,
-                fname:        req.user.fname,
-                gender:       req.user.gender,
-                images:       req.user.images,
-                likeList:     req.user.likeList,
-                lname:        req.user.lname,
-                location:     req.user.location,
-                login:        req.user.login,
-                preference:   req.user.preference,
-                tags:         req.user.tags,
+                age:                req.user.age,
+                avatar:             req.user.avatar,
+                biography:          req.user.biography,
+                // created:            req.user.created,
+                curLocation:        req.user.curLocation,
+                fameRaiting:        req.user.fameRaiting,
+                fname:              req.user.fname,
+                gender:             req.user.gender,
+                images:             req.user.images,
+                likeList:           req.user.likeList,
+                lname:              req.user.lname,
+                location:           req.user.location,
+                login:              req.user.login,
+                preference:         req.user.preference,
+                tags:               req.user.tags,
+                filledInformation:  req.user.filledInformation,
               }
             }
             io.emit(user.token, resp);
@@ -108,7 +110,7 @@ module.exports = function(io) {
 
   schema.statics.getNotifications = function(req, callback) {
     this.find({ target: req.user._id })
-      .populate('who', '-__v, -salt -token -_id -filledInformation -hashedPassword -email')
+      .populate('who', '-__v -salt -created -__v -token -_id -hashedPassword -email -likeList')
       .select('who action created -_id')
       .exec((err, users) => {
         if (err) return callback(err);
@@ -118,8 +120,9 @@ module.exports = function(io) {
 
   schema.statics.getHistory = function(req, callback) {
     this.find({ who: req.user._id})
-      .populate('target', '-__v, -salt -token -_id -filledInformation -hashedPassword -email')
+      .populate('target', '-__v -salt -created -__v -token -_id -hashedPassword -email -likeList')
       .select('target action created -_id')
+
       .exec((err, users) => {
         if (err) return callback(err);
         callback(null, { type: "ok", message: "", data: users });
