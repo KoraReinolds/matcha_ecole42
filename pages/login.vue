@@ -42,7 +42,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      formValid: 'auth/LOGIN_VALID',
+      formValid: 'forms/LOGIN_VALID',
     }),
   },
   methods: {
@@ -51,7 +51,7 @@ export default {
     ...mapActions({
     }),
     signIn() {
-      if (this.formValid) this.$store.dispatch('auth/SIGN_IN');
+      if (this.formValid) this.$store.dispatch('forms/SIGN_IN');
     }
   },
   mounted() {

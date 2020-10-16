@@ -14,32 +14,32 @@ export const mutations = {
 }
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { req }) {
-    if (req.headers.cookie) {
-      let cookie = req.headers.cookie.split("; ").reduce((obj, el) => {
-        let [key, val] = el.split("=");
-        obj[key] = val;
-        return obj;
-      }, {})
-      commit('auth/SET_TOKEN', cookie.token);
-      if (cookie.token) {
-        const res = await this.$axios.$post('profile-get', {
-          activationCode: cookie.token,
-        })
-        if (res.type === 'ok') {
-          dispatch('auth/SET_USER', res.data, { root: true });
-          if (this.$router.currentRoute.name === 'main') {
-            dispatch('users/GET_USERS', null, { root: true });
-          }
-        }
-        if (res.message) {
-          dispatch('history/PUSH_POP_WINDOW', {
-            action: res.type,
-            visible: true,
-            msg: res.message,
-          }, { root: true });
-        }
-      }
+    // if (req.headers.cookie) {
+    //   let cookie = req.headers.cookie.split("; ").reduce((obj, el) => {
+    //     let [key, val] = el.split("=");
+    //     obj[key] = val;
+    //     return obj;
+    //   }, {})
+    //   commit('forms/SET_TOKEN', cookie.token);
+    //   if (cookie.token) {
+    //     const res = await this.$axios.$post('profile-get', {
+    //       activationCode: cookie.token,
+    //     })
+    //     if (res.type === 'ok') {
+    //       dispatch('forms/SET_USER', res.data, { root: true });
+    //       if (this.$router.currentRoute.name === 'main') {
+    //         dispatch('users/GET_USERS', null, { root: true });
+    //       }
+    //     }
+    //     if (res.message) {
+    //       dispatch('history/PUSH_POP_WINDOW', {
+    //         action: res.type,
+    //         visible: true,
+    //         msg: res.message,
+    //       }, { root: true });
+    //     }
+    //   }
 
-    }
+    // }
   },
 }

@@ -82,14 +82,14 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      updateValid: 'auth/UPDATE_VALID',
+      updateValid: 'forms/UPDATE_VALID',
     }),
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
-      updateUser: 'auth/UPDATE_USER',
+      updateUser: 'forms/UPDATE_USER',
     }),
   },
   mounted() {

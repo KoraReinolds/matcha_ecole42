@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      myLocation: 'auth/MY_LOCATION',
+      myLocation: 'forms/MY_LOCATION',
     }),
   },
   methods: {

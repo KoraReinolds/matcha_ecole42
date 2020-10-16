@@ -6,8 +6,11 @@ module.exports = function(io) {
   const Actions = require('../models/actions')(io);
 
   router.use((req, res, next) => {
+    let token = req.headers.authorization;
+    if (token) token = token.split(' ')[1];
+    console.log(res);
     // console.log('Time: ', Date.now());
-    User.findOne({token: req.body.activationCode}, (err, user) => {
+    User.findOne({token}, (err, user) => {
       if (err) {
         res.send(JSON.stringify({ type: "error", message: "Произошла ошибка. Обратитесь к администратору", err, }));
       }
@@ -120,6 +123,7 @@ module.exports = function(io) {
   router.post('/profile-get', (req, res, next) => {
     if (req.user) {
       User.getUserByName(req, (err, params) => {
+        console.log("RES", params)
         if (err) next(err)
         else res.send(JSON.stringify(params));
       })

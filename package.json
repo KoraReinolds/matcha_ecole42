@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.1",
     "@vue/cli-plugin-unit-jest": "^4.5.6",
     "@vue/test-utils": "^1.1.0",
@@ -25,6 +26,7 @@
     "js-cookie": "^2.2.1",
     "mongoose": "^5.10.0",
     "nuxt": "^2.0.0",
+    "nuxt-auth": "^2.0.10",
     "nuxt-fontawesome": "^0.4.0",
     "nuxt-socket-io": "^1.1.8",
     "supervisor": "^0.12.0",

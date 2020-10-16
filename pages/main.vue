@@ -34,7 +34,7 @@ export default {
   computed: {
     ...mapGetters({
       users: 'users/USERS',
-      user: 'auth/GET_USER'
+      user: 'forms/GET_USER'
     }),
   },
   methods: {

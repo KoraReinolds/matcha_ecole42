@@ -42,8 +42,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      token: 'auth/TOKEN',
-      user: 'auth/GET_USER',
+      token: 'forms/TOKEN',
+      user: 'forms/GET_USER',
     }),
   },
   methods: {

@@ -58,6 +58,7 @@ module.exports = {
     'nuxt-socket-io',
     '@nuxtjs/style-resources',
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     ['nuxt-fontawesome', {
       component: 'font-awesome-icon',
       imports: [
@@ -91,7 +92,7 @@ module.exports = {
             'faSortAmountDownAlt',
             'faPaperPlane',
             'faCaretDown',
-            'faCaretLeft',
+          'faCaretLeft',
           ]
         }
       ]
@@ -112,6 +113,22 @@ module.exports = {
   ],
   axios: {
     baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
+  },
+  auth: {
+    redirect: false,
+    strategies: {
+      local: {
+        endpoints: {
+          // login: false,
+          // user: false,
+          // logout: false
+          
+          login: { url: 'login', method: 'post', propertyName: 'token' },
+          user: { url: 'profile-get', method: 'post', propertyName: 'data' },
+          // logout: false
+        }
+      }
+    }
   }
 }
 

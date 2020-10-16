@@ -52,10 +52,10 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setMainImg: 'auth/SET_MAIN_IMAGE',
+      setMainImg: 'forms/SET_MAIN_IMAGE',
     }),
     ...mapActions({
-      loadImage: 'auth/LOAD_IMAGE',
+      loadImage: 'forms/LOAD_IMAGE',
     }),
     deleteImg(img) {
       this.$emit('input', this.data.value.filter(val => val !== img));

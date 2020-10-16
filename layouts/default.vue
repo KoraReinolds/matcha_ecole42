@@ -14,7 +14,7 @@ import Footer from '@/components/Footer.vue';
 import PopWindow from '@/components/PopWindow.vue';
 
 export default {
-  middleware: ['auth'],
+  middleware: ['customAuth'],
   components: {
     Header,
     Footer,
@@ -22,8 +22,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      token: 'auth/TOKEN',
-      login: 'auth/LOGIN',
+      token: 'forms/TOKEN',
+      login: 'forms/LOGIN',
     }),
   },
   methods: {
@@ -35,7 +35,7 @@ export default {
       rechangeCount: 'users/CHANGE_COUNT_PER_PAGE',
     }),
     ...mapActions({
-      getLocation: 'auth/GET_LOCATION',
+      getLocation: 'forms/GET_LOCATION',
       pushPopWindow: 'history/PUSH_POP_WINDOW',
     }),
   },
@@ -44,25 +44,25 @@ export default {
     window.removeEventListener('resize', this.rechangeCount);
   },
   mounted() {
-    this.resize();
-    this.rechangeCount();
-    window.addEventListener('resize', this.resize);
-    window.addEventListener('resize', this.rechangeCount);
-    this.getLocation();
-    this.socket = this.$nuxtSocket({});
-    this.socket
-      .on(this.token, (notif, cb) => {
-        if (notif.action === 'messages') {
-          if (notif.who.login === this.$route.params.id) {
-            this.pushMessage(notif);
-          }
-        }
-        this.pushPopWindow(notif);
-        this.pushNotification(notif);
-        if (this.$router.currentRoute.name === 'notifications') {
-          this.setAllNotifAsChecked();
-        }
-      })
+  //   this.resize();
+  //   this.rechangeCount();
+  //   window.addEventListener('resize', this.resize);
+  //   window.addEventListener('resize', this.rechangeCount);
+  //   this.getLocation();
+  //   this.socket = this.$nuxtSocket({});
+  //   this.socket
+  //     .on(this.token, (notif, cb) => {
+  //       if (notif.action === 'messages') {
+  //         if (notif.who.login === this.$route.params.id) {
+  //           this.pushMessage(notif);
+  //         }
+  //       }
+  //       this.pushPopWindow(notif);
+  //       this.pushNotification(notif);
+  //       if (this.$router.currentRoute.name === 'notifications') {
+  //         this.setAllNotifAsChecked();
+  //       }
+  //     })
   }
 }
 </script>

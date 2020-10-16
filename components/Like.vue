@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      like: 'auth/LIKE',
+      like: 'forms/LIKE',
     }),
   },
   mounted() {

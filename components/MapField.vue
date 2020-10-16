@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      curLocation: 'auth/CUR_LOCATION',
+      curLocation: 'forms/CUR_LOCATION',
     }),
     mark: function() {
       let loc = this.data.value || this.curLocation;

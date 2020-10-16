@@ -86,7 +86,7 @@ export default {
   computed: {
     ...mapGetters({
       mobile: 'IS_MOBILE',
-      myLikeList: 'auth/MY_LIKES',
+      myLikeList: 'forms/MY_LIKES',
       curPage: 'users/CUR_PAGE',
       maxLength: 'users/MAX_LENGTH',
     }),

@@ -1,10 +1,11 @@
 import API from '~/api';
+import redirectMiddleware from '~/middleware/customAuth';
 const Cookie = process.client ? require('js-cookie') : undefined
 
 export const state = () => ({
   token: null,
   login: {
-    value: 'mskiles',
+    value: 'User_1',
     errorMsg: '',
     title: 'Login',
     valid: true,
@@ -214,21 +215,6 @@ export const mutations = {
     state.login.value =       user.login;
   },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
-  CLEAR_FIELDS: (state) => {
-    state.token = '';
-    state.login.value = '';
-    state.password.value = '';
-    state.firstName.value = '';
-    state.lastName.value = '';
-    state.mail.value = '';
-    state.age.value = '';
-    state.biography.value = '';
-    state.gender.value = '';
-    state.preferences.value = [];
-    state.tags.value = [];
-    state.images.value = [];
-    state.location.value = null;
-  }
 }
 export const actions = {
 
@@ -257,15 +243,9 @@ export const actions = {
     dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
 
-  async LOGOUT ({ commit, state }) {
-    const res = await this.$axios.$post('logout', {
-      activationCode: state.token,
-    })
-    this.$router.push({ name: 'login' });
-    Cookie.remove('token');
-    commit('CLEAR_FIELDS');
-    commit('chat/CLEAR_DATA', null, { root: true });
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+  async LOGOUT () {
+    await this.$auth.logout();
+    location.reload();
   },
 
   async GET_LOCATION ({ commit }) {
@@ -293,41 +273,31 @@ export const actions = {
 
   SET_USER ({ commit }, user) {
     commit('users/SET_INIT_TOOLS', user, { root: true });
-    commit('auth/SET_USER', user, { root: true });
-    commit('auth/SET_VALUE', { key: 'age',         value: user.age }, { root: true });
-    commit('auth/SET_VALUE', { key: 'firstName',   value: user.fname }, { root: true });
-    commit('auth/SET_VALUE', { key: 'lastName',    value: user.lname }, { root: true });
-    commit('auth/SET_VALUE', { key: 'mail',        value: user.email }, { root: true });
-    commit('auth/SET_VALUE', { key: 'biography',   value: user.biography }, { root: true });
-    commit('auth/SET_VALUE', { key: 'gender',      value: user.gender }, { root: true });
-    commit('auth/SET_VALUE', { key: 'preferences', value: user.preference }, { root: true });
-    commit('auth/SET_VALUE', { key: 'tags',        value: user.tags }, { root: true });
-    commit('auth/SET_VALUE', { key: 'images',      value: user.images }, { root: true });
+    commit('forms/SET_USER', user, { root: true });
+    commit('forms/SET_VALUE', { key: 'age',         value: user.age }, { root: true });
+    commit('forms/SET_VALUE', { key: 'firstName',   value: user.fname }, { root: true });
+    commit('forms/SET_VALUE', { key: 'lastName',    value: user.lname }, { root: true });
+    commit('forms/SET_VALUE', { key: 'mail',        value: user.email }, { root: true });
+    commit('forms/SET_VALUE', { key: 'biography',   value: user.biography }, { root: true });
+    commit('forms/SET_VALUE', { key: 'gender',      value: user.gender }, { root: true });
+    commit('forms/SET_VALUE', { key: 'preferences', value: user.preference }, { root: true });
+    commit('forms/SET_VALUE', { key: 'tags',        value: user.tags }, { root: true });
+    commit('forms/SET_VALUE', { key: 'images',      value: user.images }, { root: true });
   },
   
   async SIGN_IN ({ commit, state, dispatch }) {
-    let res = await this.$axios.$post('login', {
-      login:    state.login.value,
-      password: state.password.value,
-      location: state.curLocation,
+    let res = await this.$auth.loginWith('local', {
+      data: {
+        login:    state.login.value,
+        password: state.password.value,
+        location: state.curLocation,
+      },
     })
-    if (res.type === 'ok') {
-      Cookie.set('token', res.token);
-      commit('SET_TOKEN', res.token);
-      const { type, data } = await this.$axios.$post('profile-get', {
-        activationCode: res.token,
-        login:          res.login,
-      })
-      if (type === 'ok') {
-        dispatch('SET_USER', data);
-        this.$router.push({ path: 
-          data.filledInformation ?
-          '/main' :
-          '/settings'
-        });
-      }
-    }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    this.$router.push({ path: 
+      res.filledInformation ?
+      '/main' :
+      '/settings'
+    });
   },
 
   LOAD_IMAGE ({ commit, state }, files) {

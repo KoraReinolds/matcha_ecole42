@@ -48,7 +48,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      formValid: 'auth/REG_VALID',
+      formValid: 'forms/REG_VALID',
     }),
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
     ...mapActions({
     }),
     register() {
-      if (this.formValid) this.$store.dispatch('auth/REGISTRATION');
+      if (this.formValid) this.$store.dispatch('forms/REGISTRATION');
     }
   },
   mounted() {

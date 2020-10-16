@@ -1,15 +1,15 @@
 <template lang="pug">
   header(
-    :class="{ fill: !token }"
+    :class="{ fill: !$auth.loggedIn }"
   )
     div.nav(
-      v-if="token"
+      v-if="$auth.loggedIn"
     )
       div.only_laptop(
-        v-if="informationFilled"
+        v-if="$auth.user.filledInformation"
       )
         nuxt-link.link(
-          :to="`/user/${user.login}`"
+          :to="`/user/${$auth.user.login}`"
         ) My page
         nuxt-link.link(
           to=`/main`
@@ -23,7 +23,7 @@
       
       div.right-panel
         nuxt-link.link(
-          v-if="informationFilled"
+          v-if="$auth.user.filledInformation"
           to=`/notifications`
         )
           font-awesome-icon-layers
@@ -58,9 +58,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      token: 'auth/TOKEN',
-      user: 'auth/GET_USER',
-      informationFilled: 'auth/INFO_FILLED',
+      // user: 'forms/GET_USER',
+      // informationFilled: 'auth/INFO_FILLED',
       notificationCount: 'history/NOTIFICATION_COUNT',
     }),
   },
@@ -68,7 +67,7 @@ export default {
     ...mapMutations({
     }),
     ...mapActions({
-      logout: 'auth/LOGOUT',
+      logout: 'forms/LOGOUT',
     }),
   },
   mounted() {
