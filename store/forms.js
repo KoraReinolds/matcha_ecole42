@@ -1,11 +1,7 @@
 import API from '~/api';
-import redirectMiddleware from '~/middleware/customAuth';
-const Cookie = process.client ? require('js-cookie') : undefined
 
 export const state = () => ({
-  token: null,
   login: {
-    value: 'User_1',
     errorMsg: '',
     title: 'Login',
     valid: true,
@@ -14,7 +10,6 @@ export const state = () => ({
     ],
   },
   password: {
-    value: '123',
     errorMsg: '',
     title: 'Password',
     valid: true,
@@ -22,8 +17,7 @@ export const state = () => ({
       "!!value || 'Required'",
     ],
   },
-  firstName: {
-    value: 'maslyn',
+  fname: {
     errorMsg: '',
     title: 'First Name',
     valid: false,
@@ -33,8 +27,7 @@ export const state = () => ({
       "(value && value.length <= 10) || 'Max 10 characters'",
     ],
   },
-  lastName: {
-    value: 'skiles',
+  lname: {
     errorMsg: '',
     title: 'Last Name',
     valid: false,
@@ -45,7 +38,6 @@ export const state = () => ({
     ],
   },
   age: {
-    value: '',
     errorMsg: '',
     title: 'Age',
     valid: false,
@@ -56,8 +48,7 @@ export const state = () => ({
       "(value && value <= 99) || 'Max 99 years old'",
     ],
   },
-  mail: {
-    value: 'reinoldskora@gmail.com',
+  email: {
     errorMsg: '',
     title: 'E-mail',
     valid: false,
@@ -67,7 +58,6 @@ export const state = () => ({
     ],
   },
   biography: {
-    value: '',
     errorMsg: '',
     title: 'Biography',
     valid: false,
@@ -78,7 +68,6 @@ export const state = () => ({
   },
   gender: {
     options: ['male', 'female', 'bisexual'],
-    value: '',
     errorMsg: '',
     title: 'Gender',
     valid: false,
@@ -86,9 +75,8 @@ export const state = () => ({
       "!!value || 'Required'",
     ],
   },
-  preferences: {
+  preference: {
     options: ['male', 'female', 'bisexual'],
-    value: [],
     errorMsg: '',
     title: 'Preferences',
     valid: false,
@@ -97,7 +85,6 @@ export const state = () => ({
     ],
   },
   tags: {
-    value: [],
     errorMsg: '',
     title: 'New tag',
     valid: false,
@@ -107,7 +94,6 @@ export const state = () => ({
   },
   images: {
     main: 0,
-    value: [],
     errorMsg: '',
     title: 'Images',
     valid: false,
@@ -116,7 +102,6 @@ export const state = () => ({
     ],
   },
   location: {
-    value: '',
     errorMsg: '',
     title: 'Location',
     valid: false,
@@ -135,7 +120,6 @@ export const getters = {
     return sum;
   }, {}),
   CUR_LOCATION: (state) => state.curLocation,
-  TOKEN: (state) => state.token,
   LOGIN_VALID: (state) => [
       state.login.valid,
       state.password.valid,
@@ -143,30 +127,30 @@ export const getters = {
   REG_VALID: (state) => [
       state.login.valid,
       state.password.valid,
-      state.firstName.valid,
-      state.lastName.valid,
-      state.mail.valid,
+      state.fname.valid,
+      state.lname.valid,
+      state.email.valid,
     ].every((valid) => valid === true),
   UPDATE_VALID: (state) => [
-      state.firstName.valid,
-      state.lastName.valid,
+      state.fname.valid,
+      state.lname.valid,
       state.age.valid,
-      state.mail.valid,
+      state.email.valid,
       state.biography.valid,
       state.gender.valid,
-      state.preferences.valid,
+      state.preference.valid,
       state.tags.valid,
       state.images.valid,
     ].every((valid) => valid === true),
   LOGIN: (state) => state.login,
   PASSWORD: (state) => state.password,
-  FIRST_NAME: (state) => state.firstName,
-  LAST_NAME: (state) => state.lastName,
+  FIRST_NAME: (state) => state.fname,
+  LAST_NAME: (state) => state.lname,
   AGE: (state) => state.age,
-  MAIL: (state) => state.mail,
+  MAIL: (state) => state.email,
   BIOGRAPHY: (state) => state.biography,
   GENDER: (state) => state.gender,
-  PREFERENCES: (state) => state.preferences,
+  PREFERENCES: (state) => state.preference,
   TAGS: (state) => state.tags,
   IMAGES: (state) => state.images,
   LOCATION: (state) => state.location,
@@ -177,10 +161,8 @@ export const mutations = {
   SET_INFO_AS_FILLED: (state) => state.filledInformation = true,
   TOGGLE_LIKE_USER: (state, likeList) => state.likeList = likeList,
   SET_MAIN_IMAGE: (state, index) => state.images.main = index,
-  SET_TOKEN: (state, token) => state.token = token,
   SET_VALUE: (state, { key, value }) => {
-    state[key].value = value;
-    if (state[key].rules) {
+    if (state[key] && state[key].rules) {
       let msg = null;
       state[key].rules.every((rule) => {
         msg = eval(rule);
@@ -197,35 +179,17 @@ export const mutations = {
       }
     }
   },
-  SET_USER: (state, user) => {
-    state.firstName.value =   user.fname;
-    state.lastName.value =    user.lname;
-    state.mail.value =        user.email;
-    state.age.value =         user.age;
-    state.biography.value =   user.biography;
-    state.gender.value =      user.gender;
-    state.preferences.value = user.preference || [],
-    state.tags.value =        user.tags,
-    state.images.value =      user.images || [];
-    state.images.main =       user.avatar;
-    state.likeList =          user.likeList;
-    state.filledInformation = user.filledInformation;
-    state.location.value =    user.location;
-    state.curLocation =       user.curLocation;
-    state.login.value =       user.login;
-  },
   SET_CUR_LOCATION: (state, location) => state.curLocation = location,
 }
 export const actions = {
 
   async UPDATE_USER ({ commit, state, dispatch }) {
     const userNew = {
-      activationCode: state.token,
       avatar:         state.images.main,
       login:          state.login.value,
       password:       state.password.value,
-      firstName:      state.firstName.value,
-      lastName:       state.lastName.value,
+      fname:          state.fname.value,
+      lname:          state.lname.value,
       mail:           state.mail.value,
       age:            state.age.value,
       biography:      state.biography.value,
@@ -256,45 +220,22 @@ export const actions = {
     commit('SET_CUR_LOCATION', location);
   },
 
-  async REGISTRATION ({ commit, dispatch, state }) {
-    const res = await this.$axios.$post('register', {
-      login:    state.login.value,
-      password: state.password.value,
-      fname:    state.firstName.value,
-      lname:    state.lastName.value,
-      email:    state.mail.value,
-      location: state.location.value,
-    })
+  async REGISTRATION ({ dispatch, state }, data) {
+    const res = await this.$axios.$post('register', data);
     if (res.type === 'ok') {
-      dispatch('SIGN_IN');
+      dispatch('SIGN_IN', {
+        login: data.login,
+        password: data.password,
+      });
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   },
-
-  SET_USER ({ commit }, user) {
-    commit('users/SET_INIT_TOOLS', user, { root: true });
-    commit('forms/SET_USER', user, { root: true });
-    commit('forms/SET_VALUE', { key: 'age',         value: user.age }, { root: true });
-    commit('forms/SET_VALUE', { key: 'firstName',   value: user.fname }, { root: true });
-    commit('forms/SET_VALUE', { key: 'lastName',    value: user.lname }, { root: true });
-    commit('forms/SET_VALUE', { key: 'mail',        value: user.email }, { root: true });
-    commit('forms/SET_VALUE', { key: 'biography',   value: user.biography }, { root: true });
-    commit('forms/SET_VALUE', { key: 'gender',      value: user.gender }, { root: true });
-    commit('forms/SET_VALUE', { key: 'preferences', value: user.preference }, { root: true });
-    commit('forms/SET_VALUE', { key: 'tags',        value: user.tags }, { root: true });
-    commit('forms/SET_VALUE', { key: 'images',      value: user.images }, { root: true });
-  },
   
-  async SIGN_IN ({ commit, state, dispatch }) {
-    let res = await this.$auth.loginWith('local', {
-      data: {
-        login:    state.login.value,
-        password: state.password.value,
-        location: state.curLocation,
-      },
-    })
+  async SIGN_IN ({ state }, data) {
+    data.location = state.curLocation;
+    await this.$auth.loginWith('local', { data });
     this.$router.push({ path: 
-      res.filledInformation ?
+      this.$auth.user.filledInformation ?
       '/main' :
       '/settings'
     });
@@ -339,7 +280,6 @@ export const actions = {
       likeList: newLikeList,
       target: login,
       action: index === -1 ? 'like' : 'dislike',
-      activationCode: state.token,
     })
     if (res.type === 'ok') {
       commit('TOGGLE_LIKE_USER', newLikeList);

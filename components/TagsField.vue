@@ -1,7 +1,7 @@
 <template lang="pug">
   div.tag-field
     TextField(
-      v-if="data.value.length < maxTags"
+      v-if="value && value.length < maxTags"
       v-model.trim="newTag"
       outlined
       :data="data"
@@ -39,13 +39,13 @@ export default {
   },
   methods: {
     deleteTag(tag) {
-      const newVal = this.data.value.filter(val => val !== tag);
+      const newVal = this.value.filter(val => val !== tag);
       this.$emit('input', newVal);
       this.$emit('delete', newVal);
     },
     addTag() {
-      if (this.newTag && !this.data.value.includes(this.newTag)) {
-        const newVal = [...this.data.value, this.newTag];
+      if (this.newTag && !this.value.includes(this.newTag)) {
+        const newVal = [...this.value, this.newTag];
         this.$emit('input', newVal);
         this.$emit('add', newVal);
       }

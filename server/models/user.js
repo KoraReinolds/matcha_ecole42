@@ -143,9 +143,11 @@ module.exports = function(io) {
   
     a.waterfall([
       (callback) => {
+        console.log(body)
         User.findOne({login: body.login}, callback);
       },
       (user, callback) => {
+        console.log('find', user)
         if (!user) {
           callback(null, { type: "error", message: "Неверное имя пользователя или пароль" });
         } else {

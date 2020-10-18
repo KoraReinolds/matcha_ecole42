@@ -4,7 +4,7 @@
     div.content
       div.images
         label.image.add(
-          v-if="data.value.length < 5"
+          v-if="value && value.length < 5"
           for="file"
         )
           font-awesome-icon.fa-2x.choose_file(
@@ -16,7 +16,7 @@
             @change="processFile($event)"
           )
         div.image(
-          v-for="img in data.value"
+          v-for="img in value"
           :key="'img'+img.index"
         )
           font-awesome-icon.fa-2x.delete_mark(
@@ -49,6 +49,7 @@ export default {
   }),
   props: {
     data: Object,
+    value: Array,
   },
   methods: {
     ...mapMutations({
@@ -58,9 +59,9 @@ export default {
       loadImage: 'forms/LOAD_IMAGE',
     }),
     deleteImg(img) {
-      this.$emit('input', this.data.value.filter(val => val !== img));
-      if (this.data.value.length) {
-        if (img.index === this.data.main) this.setAsMainImg(this.data.value[0].index);
+      this.$emit('input', this.value.filter(val => val !== img));
+      if (this.value.length) {
+        if (img.index === this.data.main) this.setAsMainImg(this.value[0].index);
       } else this.setAsMainImg(-1);
     },
     setAsMainImg(index) {

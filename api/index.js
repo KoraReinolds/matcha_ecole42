@@ -10,7 +10,7 @@ export default {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
         return navigator.geolocation.getCurrentPosition(
-          (position) => {
+          position => {
             const long = position.coords.longitude;
             const lat = position.coords.latitude;
             resolve({ y: long, x: lat });

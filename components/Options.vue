@@ -48,9 +48,11 @@ export default {
   },
   methods: {
     optionChecked(opt) {
+      let value = this.value === undefined ?
+        [] : this.value;
       return this.type === 'radio' ?
-        this.data.value === opt :
-        this.data.value.includes(opt)
+        value === opt :
+        value.includes(opt)
     },
     change(event) {
       if (Array.isArray(this.value)) {

@@ -46,6 +46,7 @@ export default {
   },
   mounted() {
     this.getUsers();
+    // commit('users/SET_INIT_TOOLS', user, { root: true });
   },
 };
 </script>

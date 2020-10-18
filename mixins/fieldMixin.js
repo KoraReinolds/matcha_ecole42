@@ -3,51 +3,51 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
   computed: {
     login: {
-      get() { return this.getLogin.value; },
+      get() { return this.$auth.user.login; },
       set(value) { this.setValue({ key: 'login', value }); },
     },
     password: {
-      get() { return this.getPassword.value; },
+      get() { return this.$auth.user.password; },
       set(value) { this.setValue({ key: 'password', value }); },
     },
-    firstName: {
-      get() { return this.getFirstName.value; },
-      set(value) { this.setValue({ key: 'firstName', value }); },
+    fname: {
+      get() { return this.$auth.user.fname; },
+      set(value) { this.setValue({ key: 'fname', value }); },
     },
-    lastName: {
-      get() { return this.getLastName.value; },
-      set(value) { this.setValue({ key: 'lastName', value }); },
+    lname: {
+      get() { return this.$auth.user.lname; },
+      set(value) { this.setValue({ key: 'lname', value }); },
     },
     age: {
-      get() { return this.getAge.value; },
+      get() { return this.$auth.user.age; },
       set(value) { this.setValue({ key: 'age', value }); },
     },
-    mail: {
-      get() { return this.getMail.value; },
-      set(value) { this.setValue({ key: 'mail', value }); },
+    email: {
+      get() { return this.$auth.user.email; },
+      set(value) { this.setValue({ key: 'email', value }); },
     },
     biography: {
-      get() { return this.getBiography.value; },
+      get() { return this.$auth.user.biography; },
       set(value) { this.setValue({ key: 'biography', value }); },
     },
     gender: {
-      get() { return this.getGender.value; },
+      get() { return this.$auth.user.gender; },
       set(value) { this.setValue({ key: 'gender', value }); },
     },
-    preferences: {
-      get() { return this.getPreferences.value; },
-      set(value) { this.setValue({ key: 'preferences', value }); },
+    preference: {
+      get() { return this.$auth.user.preference; },
+      set(value) { this.setValue({ key: 'preference', value }); },
     },
     tags: {
-      get() { return this.getTags.value; },
+      get() { return this.$auth.user.tags; },
       set(value) { this.setValue({ key: 'tags', value }); },
     },
     images: {
-      get() { return this.getImages.value; },
+      get() { return this.$auth.user.images; },
       set(value) { this.setValue({ key: 'images', value }); },
     },
     location: {
-      get() { return this.getLocation.value; },
+      get() { return this.$auth.user.location; },
       set(value) { this.setValue({ key: 'location', value }); },
     },
     ...mapGetters({
@@ -66,8 +66,11 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations({
-      setValue: 'forms/SET_VALUE',
-    }),
+    setValue({ key, value }) {
+      const newUser = {...this.$auth.user};
+      newUser[key] = value;
+      this.$auth.setUser(newUser);
+      this.$store.commit('forms/SET_VALUE', { key, value })
+    }
   },
 };

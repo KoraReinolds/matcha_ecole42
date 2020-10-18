@@ -3,12 +3,12 @@
     TextField.form-field(
       outlined
       :data="getFirstName"
-      v-model.trim="firstName"
+      v-model.trim="fname"
     )
     TextField.form-field(
       outlined
       :data="getLastName"
-      v-model="lastName"
+      v-model="lname"
     )
     TextField.form-field(
       outlined
@@ -21,7 +21,7 @@
     TextField.form-field(
       outlined
       :data="getMail"
-      v-model.trim="mail"
+      v-model.trim="email"
       name="email"
     )
     TextField.form-field.textarea(
@@ -36,7 +36,7 @@
     )
     Options.form-field(
       :data="getPreferences"
-      v-model="preferences"
+      v-model="preference"
       many
     )
     TagsField.form-field(
@@ -70,7 +70,6 @@ import fieldMixin from '@/mixins/fieldMixin';
 
 export default {
   name: 'Settings',
-  mixins: [fieldMixin],
   components: {
     MapField,
     ImagesField,
@@ -78,21 +77,78 @@ export default {
     TextField,
     Options,
   },
-  data: () => ({
-  }),
   computed: {
+    fname: {
+      get() { return this.$auth.user.fname; },
+      set(value) { this.setValue({ key: 'fname', value }); },
+    },
+    lname: {
+      get() { return this.$auth.user.lname; },
+      set(value) { this.setValue({ key: 'lname', value }); },
+    },
+    age: {
+      get() { return this.$auth.user.age; },
+      set(value) { this.setValue({ key: 'age', value }); },
+    },
+    email: {
+      get() { return this.$auth.user.email; },
+      set(value) { this.setValue({ key: 'email', value }); },
+    },
+    biography: {
+      get() { return this.$auth.user.biography; },
+      set(value) { this.setValue({ key: 'biography', value }); },
+    },
+    gender: {
+      get() { return this.$auth.user.gender; },
+      set(value) { this.setValue({ key: 'gender', value }); },
+    },
+    preference: {
+      get() { return this.$auth.user.preference; },
+      set(value) { this.setValue({ key: 'preference', value }); },
+    },
+    tags: {
+      get() { return this.$auth.user.tags; },
+      set(value) { this.setValue({ key: 'tags', value }); },
+    },
+    images: {
+      get() { return this.$auth.user.images; },
+      set(value) { this.setValue({ key: 'images', value }); },
+    },
+    location: {
+      get() { return this.$auth.user.location; },
+      set(value) { this.setValue({ key: 'location', value }); },
+    },
     ...mapGetters({
+      getFirstName: 'forms/FIRST_NAME',
+      getLastName: 'forms/LAST_NAME',
+      getAge: 'forms/AGE',
+      getMail: 'forms/MAIL',
+      getBiography: 'forms/BIOGRAPHY',
+      getGender: 'forms/GENDER',
+      getPreferences: 'forms/PREFERENCES',
+      getTags: 'forms/TAGS',
+      getImages: 'forms/IMAGES',
+      getLocation: 'forms/LOCATION',
       updateValid: 'forms/UPDATE_VALID',
     }),
   },
   methods: {
     ...mapMutations({
-    }),
+      }),
     ...mapActions({
       updateUser: 'forms/UPDATE_USER',
     }),
+    setValue({ key, value }) {
+      const newUser = {...this.$auth.user};
+      newUser[key] = value;
+      this.$auth.setUser(newUser);
+      this.$store.commit('forms/SET_VALUE', { key, value })
+    }
   },
   mounted() {
+    Object.entries(this.$auth.user).forEach(([key, value]) => {
+      this.$store.commit('forms/SET_VALUE', { key, value })
+    })
   },
 };
 </script>

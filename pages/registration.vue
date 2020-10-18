@@ -40,24 +40,63 @@ import TextField from '@/components/TextField.vue';
 
 export default {
   name: 'Registration',
-  mixins: [fieldMixin],
   components: {
     TextField,
   },
   data: () => ({
+    data_login: '',
+    data_password: '',
+    data_fname: '',
+    data_lname: '',
+    data_email: '',
   }),
   computed: {
     ...mapGetters({
       formValid: 'forms/REG_VALID',
+      getLogin: 'forms/LOGIN',
+      getPassword: 'forms/PASSWORD',
+      getFirstName: 'forms/FIRST_NAME',
+      getLastName: 'forms/LAST_NAME',
+      getMail: 'forms/MAIL',
     }),
+    login: {
+      get() { return this.data_login; },
+      set(value) { this.setValue({ key: 'login', value }); },
+    },
+    password: {
+      get() { return this.data_password; },
+      set(value) { this.setValue({ key: 'password', value }); },
+    },
+    firstName: {
+      get() { return this.data_fname; },
+      set(value) { this.setValue({ key: 'fname', value }); },
+    },
+    lastName: {
+      get() { return this.data_lname; },
+      set(value) { this.setValue({ key: 'lname', value }); },
+    },
+    mail: {
+      get() { return this.data_email; },
+      set(value) { this.setValue({ key: 'email', value }); },
+    },
   },
   methods: {
     ...mapMutations({
-    }),
+      }),
     ...mapActions({
-    }),
+      }),
+    setValue({ key, value }) {
+      this[`data_${key}`] = value;
+      this.$store.commit('forms/SET_VALUE', { key, value })
+    },
     register() {
-      if (this.formValid) this.$store.dispatch('forms/REGISTRATION');
+      if (this.formValid) this.$store.dispatch('forms/REGISTRATION', {
+        login: this.data_login,
+        password: this.data_password,
+        fname: this.data_fname,
+        lname: this.data_lname,
+        email: this.data_email,
+      });
     }
   },
   mounted() {

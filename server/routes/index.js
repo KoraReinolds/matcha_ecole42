@@ -8,7 +8,7 @@ module.exports = function(io) {
   router.use((req, res, next) => {
     let token = req.headers.authorization;
     if (token) token = token.split(' ')[1];
-    console.log(res);
+    // console.log(token, req.headers, req.url);
     // console.log('Time: ', Date.now());
     User.findOne({token}, (err, user) => {
       if (err) {
@@ -28,6 +28,7 @@ module.exports = function(io) {
   })
   
   router.post('/login', (req, res, next) => {
+    console.log('params', req);
     User.login(req.body, (err, params) => {
       if (err) next(err)
       else res.send(JSON.stringify(params));
@@ -35,6 +36,7 @@ module.exports = function(io) {
   })
 
   router.use((req, res, next) => {
+    // console.log('here', req.url);
     if (!req.user) {
       res.status(401).send();
     } else {

@@ -1,6 +1,6 @@
 <template lang="pug">
   div.map-field(
-    v-if="showMap && (curLocation || data.value)"
+    v-if="showMap && (curLocation || value)"
   )
     span.title.left {{ data.title }}
     yandex-map.map(
@@ -20,7 +20,7 @@
         cluster-name="1"
       )
       div.btn.curCoord(
-        v-if="data.value"
+        v-if="value"
         @click="$emit('input', '');"
       ) set my curent place
 </template>
@@ -35,6 +35,7 @@ export default {
   }),
   props: {
     data: Object,
+    value: Object,
   },
   components: {
   },
@@ -43,7 +44,7 @@ export default {
       curLocation: 'forms/CUR_LOCATION',
     }),
     mark: function() {
-      let loc = this.data.value || this.curLocation;
+      let loc = this.value || this.curLocation;
       return [loc.x, loc.y];
     },
   },
