@@ -127,7 +127,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      me: 'forms/GET_USER',
+      // me: 'forms/GET_USER',
       user: 'user/USER',
       myLikeList: 'forms/MY_LIKES',
       chatAvailable: 'user/CHAT_AVAILABLE',

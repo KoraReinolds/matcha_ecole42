@@ -1,12 +1,12 @@
 <template lang="pug">
   footer(
-    v-if="token"
+    v-if="$auth.loggedIn"
   )
     div.footer_content
       div.only_laptop Made by mskiles (s.shurn94@gmail.com)
       div.only_mobile
         nuxt-link.link(
-          :to="`/user/${user.login}`"
+          :to="`/user/${$auth.user.login}`"
         )
           font-awesome-icon.icon(
             icon="user"
@@ -42,8 +42,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      token: 'forms/TOKEN',
-      user: 'forms/GET_USER',
     }),
   },
   methods: {

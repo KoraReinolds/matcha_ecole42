@@ -2,17 +2,17 @@
   div#settings
     TextField.form-field(
       outlined
-      :data="getFirstName"
+      :data="fieldsData.fname"
       v-model.trim="fname"
     )
     TextField.form-field(
       outlined
-      :data="getLastName"
+      :data="fieldsData.lname"
       v-model="lname"
     )
     TextField.form-field(
       outlined
-      :data="getAge"
+      :data="fieldsData.age"
       v-model.trim="age"
       type="number"
       min="18"
@@ -20,42 +20,42 @@
     )
     TextField.form-field(
       outlined
-      :data="getMail"
+      :data="fieldsData.email"
       v-model.trim="email"
       name="email"
     )
     TextField.form-field.textarea(
       outlined
       many
-      :data="getBiography"
+      :data="fieldsData.biography"
       v-model.trim="biography"
     )
     Options.form-field(
-      :data="getGender"
+      :data="fieldsData.gender"
       v-model="gender"
     )
     Options.form-field(
-      :data="getPreferences"
+      :data="fieldsData.preference"
       v-model="preference"
       many
     )
     TagsField.form-field(
+      :data="fieldsData.tags"
       v-model="tags"
       :maxTags="5"
-      :data="getTags"
     )
     ImagesField.form-field.images(
+      :data="fieldsData.images"
       v-model="images"
       :maxTags="5"
-      :data="getImages"
     )
     MapField.form-field.map(
-      :data="getLocation"
+      :data="fieldsData.location"
       v-model="location"
     )
     div.btn(
       :class="{ disabled: !updateValid }"
-      @click="updateValid && updateUser()"
+      @click="updateValid && updateUser($auth.user)"
     ) Save Changes
 </template>
 
@@ -66,7 +66,6 @@ import ImagesField from '@/components/ImagesField.vue';
 import TagsField from '@/components/TagsField.vue';
 import TextField from '@/components/TextField.vue';
 import Options from '@/components/Options.vue';
-import fieldMixin from '@/mixins/fieldMixin';
 
 export default {
   name: 'Settings',
@@ -80,55 +79,46 @@ export default {
   computed: {
     fname: {
       get() { return this.$auth.user.fname; },
-      set(value) { this.setValue({ key: 'fname', value }); },
+      set(value) { this.changeUserField({ key: 'fname', value }); },
     },
     lname: {
       get() { return this.$auth.user.lname; },
-      set(value) { this.setValue({ key: 'lname', value }); },
+      set(value) { this.changeUserField({ key: 'lname', value }); },
     },
     age: {
       get() { return this.$auth.user.age; },
-      set(value) { this.setValue({ key: 'age', value }); },
+      set(value) { this.changeUserField({ key: 'age', value }); },
     },
     email: {
       get() { return this.$auth.user.email; },
-      set(value) { this.setValue({ key: 'email', value }); },
+      set(value) { this.changeUserField({ key: 'email', value }); },
     },
     biography: {
       get() { return this.$auth.user.biography; },
-      set(value) { this.setValue({ key: 'biography', value }); },
+      set(value) { this.changeUserField({ key: 'biography', value }); },
     },
     gender: {
       get() { return this.$auth.user.gender; },
-      set(value) { this.setValue({ key: 'gender', value }); },
+      set(value) { this.changeUserField({ key: 'gender', value }); },
     },
     preference: {
       get() { return this.$auth.user.preference; },
-      set(value) { this.setValue({ key: 'preference', value }); },
+      set(value) { this.changeUserField({ key: 'preference', value }); },
     },
     tags: {
       get() { return this.$auth.user.tags; },
-      set(value) { this.setValue({ key: 'tags', value }); },
+      set(value) { this.changeUserField({ key: 'tags', value }); },
     },
     images: {
       get() { return this.$auth.user.images; },
-      set(value) { this.setValue({ key: 'images', value }); },
+      set(value) { this.changeUserField({ key: 'images', value }); },
     },
     location: {
       get() { return this.$auth.user.location; },
-      set(value) { this.setValue({ key: 'location', value }); },
+      set(value) { this.changeUserField({ key: 'location', value }); },
     },
     ...mapGetters({
-      getFirstName: 'forms/FIRST_NAME',
-      getLastName: 'forms/LAST_NAME',
-      getAge: 'forms/AGE',
-      getMail: 'forms/MAIL',
-      getBiography: 'forms/BIOGRAPHY',
-      getGender: 'forms/GENDER',
-      getPreferences: 'forms/PREFERENCES',
-      getTags: 'forms/TAGS',
-      getImages: 'forms/IMAGES',
-      getLocation: 'forms/LOCATION',
+      fieldsData: 'forms/FIELDS_DATA',
       updateValid: 'forms/UPDATE_VALID',
     }),
   },
@@ -137,13 +127,8 @@ export default {
       }),
     ...mapActions({
       updateUser: 'forms/UPDATE_USER',
+      changeUserField: 'forms/CHANGE_USER_FIELD',
     }),
-    setValue({ key, value }) {
-      const newUser = {...this.$auth.user};
-      newUser[key] = value;
-      this.$auth.setUser(newUser);
-      this.$store.commit('forms/SET_VALUE', { key, value })
-    }
   },
   mounted() {
     Object.entries(this.$auth.user).forEach(([key, value]) => {

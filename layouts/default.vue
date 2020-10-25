@@ -22,7 +22,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      token: 'forms/TOKEN',
       login: 'forms/LOGIN',
     }),
   },
@@ -44,11 +43,12 @@ export default {
     window.removeEventListener('resize', this.rechangeCount);
   },
   mounted() {
-    this.resize();
-    this.rechangeCount();
-    window.addEventListener('resize', this.resize);
-    window.addEventListener('resize', this.rechangeCount);
+    // this.resize();
+    // this.rechangeCount();
+    // window.addEventListener('resize', this.resize);
+    // window.addEventListener('resize', this.rechangeCount);
     this.getLocation();
+
   //   this.socket = this.$nuxtSocket({});
   //   this.socket
   //     .on(this.token, (notif, cb) => {

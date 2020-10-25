@@ -1,15 +1,17 @@
 <template lang="pug">
-  form.form
+  form.form(
+    v-on:keyup.enter="signIn()"
+  )
     h2.title Login
     TextField(
-      :data="getLogin"
+      :data="fieldsData.login"
       v-model="login"
       rounded
       filled
       name="login"
     )
     TextField(
-      :data="getPassword"
+      :data="fieldsData.password"
       v-model="password"
       type='password'
       rounded
@@ -24,12 +26,12 @@
       span.btn(
         :class="{ disabled: !formValid }"
         @click.prevent="signIn()"
+        
       ) LogIn
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import fieldMixin from '@/mixins/fieldMixin';
 import TextField from '@/components/TextField.vue';
 
 export default {
@@ -43,9 +45,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      fieldsData: 'forms/FIELDS_DATA',
       formValid: 'forms/LOGIN_VALID',
-      getLogin: 'forms/LOGIN',
-      getPassword: 'forms/PASSWORD',
     }),
     login: {
       get() { return this.data_login; },

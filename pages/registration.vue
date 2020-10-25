@@ -2,24 +2,24 @@
   form.form
       h2.title Registration
       TextField(
-        :data="getLogin"
+        :data="fieldsData.login"
         v-model="login"
         name="login"
       )
       TextField(
-        :data="getPassword"
+        :data="fieldsData.password"
         v-model="password"
       )
       TextField(
-        :data="getFirstName"
+        :data="fieldsData.fname"
         v-model="firstName"
       )
       TextField(
-        :data="getLastName"
+        :data="fieldsData.lname"
         v-model="lastName"
       )
       TextField(
-        :data="getMail"
+        :data="fieldsData.email"
         v-model="mail"
         type="email"
         name="email"
@@ -35,7 +35,6 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import fieldMixin from '@/mixins/fieldMixin';
 import TextField from '@/components/TextField.vue';
 
 export default {
@@ -52,12 +51,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      fieldsData: 'forms/FIELDS_DATA',
       formValid: 'forms/REG_VALID',
-      getLogin: 'forms/LOGIN',
-      getPassword: 'forms/PASSWORD',
-      getFirstName: 'forms/FIRST_NAME',
-      getLastName: 'forms/LAST_NAME',
-      getMail: 'forms/MAIL',
     }),
     login: {
       get() { return this.data_login; },

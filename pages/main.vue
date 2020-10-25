@@ -34,19 +34,20 @@ export default {
   computed: {
     ...mapGetters({
       users: 'users/USERS',
-      user: 'forms/GET_USER'
+      // user: 'forms/GET_USER'
     }),
   },
   methods: {
     ...mapMutations({
-      }),
+      setSettings: 'users/SET_INIT_TOOLS',
+    }),
     ...mapActions({
       getUsers: 'users/GET_USERS',
     }),
   },
   mounted() {
     this.getUsers();
-    // commit('users/SET_INIT_TOOLS', user, { root: true });
+    this.setSettings(this.$auth.user);
   },
 };
 </script>

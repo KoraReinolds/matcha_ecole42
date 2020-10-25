@@ -13,7 +13,7 @@
           input.inputfile(
             type="file"
             id="file"
-            @change="processFile($event)"
+            @change="loadImage($event.target.files)"
           )
         div.image(
           v-for="img in value"
@@ -66,9 +66,6 @@ export default {
     },
     setAsMainImg(index) {
       this.setMainImg(index);
-    },
-    processFile({ target: { files } }) {
-      this.loadImage(files);
     },
   },
   mounted() {

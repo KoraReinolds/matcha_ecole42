@@ -1,6 +1,6 @@
 <template lang="pug">
   div.map-field(
-    v-if="showMap && (curLocation || value)"
+    v-if="showMap && ($auth.user.curLocation || value)"
   )
     span.title.left {{ data.title }}
     yandex-map.map(
@@ -35,16 +35,15 @@ export default {
   }),
   props: {
     data: Object,
-    value: Object,
+    value: [Object, String],
   },
   components: {
   },
   computed: {
     ...mapGetters({
-      curLocation: 'forms/CUR_LOCATION',
     }),
     mark: function() {
-      let loc = this.value || this.curLocation;
+      let loc = this.value || this.$auth.user.curLocation;
       return [loc.x, loc.y];
     },
   },
