@@ -71,7 +71,7 @@ module.exports = function(io) {
                 filledInformation:  req.user.filledInformation,
               }
             }
-            io.emit(user.token, resp);
+            io.emit(user.login, resp);
             callback(null, { type: "ok", message: "", data: resp });
           })
         }

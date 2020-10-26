@@ -111,7 +111,6 @@ export const state = () => ({
       ],
     },
   },
-  // likeList: [],
 })
 export const getters = {
   INFO_FILLED: (state) => state.filledInformation,
@@ -125,11 +124,9 @@ export const getters = {
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
   FIELDS_DATA: (state) => state.formFields,
-  // MY_LOCATION: (state, getters, rootState) => rootState.auth.user.curLocation || rootState.auth.user.location,
-  // MY_LIKES: (state) => state.likeList,
+  MY_LOCATION: (state, getters, rootState) => rootState.auth.user.curLocation || rootState.auth.user.location,
 }
 export const mutations = {
-  // TOGGLE_LIKE_USER: (state, likeList) => state.likeList = likeList,
   SET_VALUE: (state, { key, value }) => {
     let field = state.formFields[key];
     if (field && field.rules) {
@@ -155,7 +152,6 @@ export const actions = {
   CHANGE_USER_FIELD ({ commit, rootState }, { key, value }) {
     const newUser = { ...rootState.auth.user };
     newUser[key] = value;
-    console.log(newUser)
     commit('auth/SET', { key: 'user', value: newUser }, { root: true });
     commit('SET_VALUE', { key, value })
   },
@@ -248,9 +244,9 @@ export const actions = {
     }
   },
 
-  async LIKE ({ commit, state, dispatch }, login) {
-    let index = state.likeList.indexOf(login);
-    let newLikeList = [...state.likeList];
+  async LIKE ({ commit, rootState, dispatch }, login) {
+    let index = rootState.auth.user.likeList.indexOf(login);
+    let newLikeList = [...rootState.auth.user.likeList];
     if (index === -1) {
       newLikeList.push(login);
     } else {
@@ -263,7 +259,10 @@ export const actions = {
       action: index === -1 ? 'like' : 'dislike',
     })
     if (res.type === 'ok') {
-      commit('TOGGLE_LIKE_USER', newLikeList);
+      dispatch('CHANGE_USER_FIELD', {
+        key: 'likeList',
+        value: newLikeList,
+      });
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true });
   }

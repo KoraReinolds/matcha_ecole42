@@ -86,12 +86,11 @@ module.exports = function(io) {
 
   schema.statics.getUsers = async function(req, callback) {
     const options = req.body;
-    const distance = function (point1, point2) {
-      const diffX = Math.abs(point1.x - point2.x);
-      const diffY = Math.abs(point1.y - point2.y);
-      return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3);
-    };
-    console.log(options.maxAge + 1)
+    // const distance = function (point1, point2) {
+    //   const diffX = Math.abs(point1.x - point2.x);
+    //   const diffY = Math.abs(point1.y - point2.y);
+    //   return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3);
+    // };
     const docs = await this.find({
         login: { $ne: options.login },
         gender: { $in: options.preference },
@@ -101,14 +100,13 @@ module.exports = function(io) {
       })
       .sort(options.sortOrder)
       .select('-_id -salt -token -hashedPassword -__v -email -likeList -created')
-    console.log("DOCS ", docs)
     let filteredDocs = docs
-      .filter((user) => {
-        const dist = distance(user.curLocation || user.location,
-          req.user.curLocation || req.user.location);
-        user.dist = dist;
-        return options.minDist <= dist && dist <= options.maxDist;
-      })
+      // .filter((user) => {
+      //   const dist = distance(user.curLocation || user.location,
+      //     req.user.curLocation || req.user.location);
+      //   user.dist = dist;
+      //   return options.minDist <= dist && dist <= options.maxDist;
+      // })
     if (options.tags.length) {
       filteredDocs = filteredDocs.filter(
         (user) => options.tags.some((tag) => user.tags.includes(tag))
@@ -197,7 +195,7 @@ module.exports = function(io) {
               target: user._id,
             }).save((err, action) => {
               if (err) callback(null, { type: "error", message: "Error occurred on the server" });
-              io.emit(user.token, {
+              io.emit(user.login, {
                 action:         action.action,
                 created:        action.created, 
                 who: {
@@ -260,7 +258,7 @@ module.exports = function(io) {
           target: user._id,
         }).save((err, action) => {
           if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
-          io.emit(user.token, {
+          io.emit(user.login, {
             action:         action.action,
             created:        action.created, 
             who: {

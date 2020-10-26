@@ -41,8 +41,8 @@ export const mutations = {
 export const actions = {
 
   PUSH_POP_WINDOW ({ commit, state, rootState }, res) {
-    if (res.message) {
-      const msg= {
+    if (res.message && !res.action) {
+      const msg = {
         action: res.type,
         visible: true,
         msg: res.message,
@@ -51,13 +51,20 @@ export const actions = {
       setTimeout(function() {
         commit('HIDE_MSG', msg);
       }.bind(this), 3000)
+    } else if (res.action) {
+      const msg = {
+        ...res,
+        visible: true,
+      }
+      commit('PUSH_POP_WINDOW', msg);
+      setTimeout(function() {
+        commit('HIDE_MSG', msg);
+      }.bind(this), 3000)
     }
   },
 
   async GET_NOTIFICATIONS ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$post('notifications', {
-      activationCode: rootState.auth.token,
-    })
+    const res = await this.$axios.$post('notifications')
     if (res.type === 'ok') {
       commit('SET_NOTIFICATIONS', res.data);
     }
@@ -71,9 +78,7 @@ export const actions = {
   },
 
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$post('history', {
-      activationCode: rootState.auth.token,
-    })
+    const res = await this.$axios.$post('history')
     if (res.type === 'ok') {
       commit('SET_HISTORY', res.data);
     }

@@ -15,11 +15,6 @@ export const mutations = {
   SET_CUR_USER: (state, user) => state.curUser = user,
   PUSH_MESSAGE: (state, message) => state.messages.push(message),
   SET_MESSAGES: (state, messages) => state.messages = messages,
-  // CLEAR_DATA: (state) => {
-  //   state.users = [];
-  //   state.curUser = null;
-  //   state.messages = [];
-  // },
 }
 export const actions = {
 
@@ -28,14 +23,12 @@ export const actions = {
       target: state.curUser.login,
       message: message.replace(/\n/g, '<br />'),
     };
-    const res = await this.$axios.$post('send-message', {
-      activationCode: rootState.auth.token,
-      ...msg,
-    })
+    const res = await this.$axios.$post('send-message', msg)
+    console.log(res)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
         ...res.data,
-        who: { login: rootState.auth.login.value },
+        who: { login: rootState.auth.login },
       });
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true });
@@ -43,7 +36,6 @@ export const actions = {
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
     const res = await this.$axios.$post('get-messages', {
-      activationCode: rootState.auth.token,
       login: user.login
     })
     if (res.type === 'ok') {
@@ -56,7 +48,6 @@ export const actions = {
 
   async GET_CHAT_LIST ({ commit, dispatch, state, rootState }) {
     const res = await this.$axios.$post('chat-list', {
-      activationCode: rootState.auth.token,
     })
     if (res.type === 'ok') {
       commit('SET_USERS', res.data);

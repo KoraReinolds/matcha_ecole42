@@ -1,5 +1,5 @@
 <template lang="pug">
-  div#main(v-if="user && users")
+  div#main(v-if="$auth.user && users")
     div.user-list
       template(v-if="users.length")
         transition-group(tag="p" name="user")
@@ -34,7 +34,6 @@ export default {
   computed: {
     ...mapGetters({
       users: 'users/USERS',
-      // user: 'forms/GET_USER'
     }),
   },
   methods: {
@@ -46,8 +45,8 @@ export default {
     }),
   },
   mounted() {
-    this.getUsers();
     this.setSettings(this.$auth.user);
+    this.getUsers();
   },
 };
 </script>

@@ -12,7 +12,7 @@
       )
         Like(
           :size="2"
-          :active="user ? myLikeList.includes(user.login) : false"
+          :active="user ? $auth.user.likeList.includes(user.login) : false"
           :user="user"
         )
         Ban(
@@ -40,7 +40,7 @@
             :size="1"
           )
           Distance.dist(
-            v-if="myPage"
+            v-if="!myPage"
             :value="user ? (user.location || user.curLocation) : undefined"
             :size="1"
           )
@@ -127,18 +127,16 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      // me: 'forms/GET_USER',
       user: 'user/USER',
-      myLikeList: 'forms/MY_LIKES',
       chatAvailable: 'user/CHAT_AVAILABLE',
       mobile: 'IS_MOBILE',
     }),
     myPage: function() {
-      return this.user ? this.me.login === this.user.login : true;
+      return this.user ? this.$auth.user.login === this.user.login : true;
     },
     chatAvailable: function() {
-      return this.user ? this.user.likeList.includes(this.me.login) &&
-        this.myLikeList.includes(this.user.login) : false;
+      return this.user ? this.user.likeList.includes(this.$auth.user.login) &&
+        this.$auth.user.likeList.includes(this.user.login) : false;
     }
   },
   methods: {

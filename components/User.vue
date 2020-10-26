@@ -20,7 +20,7 @@
           Like.like(
             :user="user"
             :size="2"
-            :active="myLikeList.includes(user.login)"
+            :active="$auth.user.likeList.includes(user.login)"
           )
       div.content
         span.fio
@@ -86,7 +86,6 @@ export default {
   computed: {
     ...mapGetters({
       mobile: 'IS_MOBILE',
-      myLikeList: 'forms/MY_LIKES',
       curPage: 'users/CUR_PAGE',
       maxLength: 'users/MAX_LENGTH',
     }),

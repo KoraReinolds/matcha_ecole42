@@ -43,26 +43,28 @@ export default {
     window.removeEventListener('resize', this.rechangeCount);
   },
   mounted() {
-    // this.resize();
-    // this.rechangeCount();
-    // window.addEventListener('resize', this.resize);
-    // window.addEventListener('resize', this.rechangeCount);
+    this.resize();
+    this.rechangeCount();
+    window.addEventListener('resize', this.resize);
+    window.addEventListener('resize', this.rechangeCount);
     this.getLocation();
 
-  //   this.socket = this.$nuxtSocket({});
-  //   this.socket
-  //     .on(this.token, (notif, cb) => {
-  //       if (notif.action === 'messages') {
-  //         if (notif.who.login === this.$route.params.id) {
-  //           this.pushMessage(notif);
-  //         }
-  //       }
-  //       this.pushPopWindow(notif);
-  //       this.pushNotification(notif);
-  //       if (this.$router.currentRoute.name === 'notifications') {
-  //         this.setAllNotifAsChecked();
-  //       }
-  //     })
+    if (this.$auth.loggedIn) {
+      this.socket = this.$nuxtSocket({});
+      this.socket
+        .on(this.$auth.user.login, (notif, cb) => {
+          if (notif.action === 'messages') {
+            if (notif.who.login === this.$route.params.id) {
+              this.pushMessage(notif);
+            }
+          }
+          this.pushPopWindow(notif);
+          this.pushNotification(notif);
+          if (this.$router.currentRoute.name === 'notifications') {
+            this.setAllNotifAsChecked();
+          }
+        })
+    }
   }
 }
 </script>

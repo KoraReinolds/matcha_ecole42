@@ -127,7 +127,6 @@ export const actions = {
       return sum;
     }, {});
     const res = await this.$axios.$post('get-users', {
-      activationCode: rootState.auth.token,
       limit:          state.limit,
       skip:           (state.curPage - 1) * state.limit,
       preference:     state.tools.pref.value,
