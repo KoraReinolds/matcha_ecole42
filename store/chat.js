@@ -1,4 +1,4 @@
-import API from '~/api';
+import API from '~/api'
 
 export const state = () => ({
   users: [],
@@ -22,16 +22,16 @@ export const actions = {
     const msg = {
       target: state.curUser.login,
       message: message.replace(/\n/g, '<br />'),
-    };
+    }
     const res = await this.$axios.$post('send-message', msg)
     console.log(res)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
         ...res.data,
         who: { login: rootState.auth.login },
-      });
+      })
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
@@ -39,20 +39,20 @@ export const actions = {
       login: user.login
     })
     if (res.type === 'ok') {
-      commit('SET_CUR_USER', user);
-      commit('SET_MESSAGES', res.data);
+      commit('SET_CUR_USER', user)
+      commit('SET_MESSAGES', res.data)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
-    return res;
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+    return res
   },
 
   async GET_CHAT_LIST ({ commit, dispatch, state, rootState }) {
     const res = await this.$axios.$post('chat-list', {
     })
     if (res.type === 'ok') {
-      commit('SET_USERS', res.data);
+      commit('SET_USERS', res.data)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
-    return res;
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+    return res
   },
 }

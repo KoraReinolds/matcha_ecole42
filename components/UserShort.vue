@@ -14,7 +14,7 @@
           height="96px"
           width="96px"
           rounded
-          :src="user.images[user.avatar].src"
+          :src="user.images.filter(img => img.avatar)[0].src"
         )
     div.info-container(
       :class="[$route.name]"

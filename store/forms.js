@@ -1,4 +1,4 @@
-import API from '~/api';
+import API from '~/api'
 
 export const state = () => ({
   formFields: {
@@ -94,7 +94,6 @@ export const state = () => ({
       ],
     },
     images: {
-      main: 0,
       errorMsg: '',
       title: 'Images',
       valid: false,
@@ -124,25 +123,25 @@ export const getters = {
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
   FIELDS_DATA: (state) => state.formFields,
-  MY_LOCATION: (state, getters, rootState) => rootState.auth.user.curLocation || rootState.auth.user.location,
+  MY_LOCATION: (state, getters, rootState) => rootState.auth.user.choosenLocation || rootState.auth.user.location,
 }
 export const mutations = {
   SET_VALUE: (state, { key, value }) => {
-    let field = state.formFields[key];
+    let field = state.formFields[key]
     if (field && field.rules) {
-      let msg = null;
+      let msg = null
       field.rules.every((rule) => {
-        msg = eval(rule);
+        msg = eval(rule)
         if (msg !== true) {
-          field.errorMsg = msg;
-          field.valid = false;
-          return false;
+          field.errorMsg = msg
+          field.valid = false
+          return false
         }
-        return true;
-      });
+        return true
+      })
       if (msg === true) {
-        field.errorMsg = null;
-        field.valid = true;
+        field.errorMsg = null
+        field.valid = true
       }
     }
   },
@@ -150,107 +149,91 @@ export const mutations = {
 export const actions = {
 
   CHANGE_USER_FIELD ({ commit, rootState }, { key, value }) {
-    const newUser = { ...rootState.auth.user };
-    newUser[key] = value;
-    commit('auth/SET', { key: 'user', value: newUser }, { root: true });
+    const newUser = { ...rootState.auth.user }
+    newUser[key] = value
+    commit('auth/SET', { key: 'user', value: newUser }, { root: true })
     commit('SET_VALUE', { key, value })
   },
 
   async UPDATE_USER ({ commit, state, dispatch }, user) {
     const res = await this.$axios.$post('profile-update', user)
     if (res.type === 'ok') {
-      dispatch('CHANGE_USER_FIELD', { key: 'filledInformation', value: true });
+      dispatch('CHANGE_USER_FIELD', { key: 'filledInformation', value: true })
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async LOGOUT () {
-    await this.$auth.logout();
-    location.reload();
+    await this.$auth.logout()
+    location.reload()
   },
 
   async GET_LOCATION ({ dispatch }) {
     let location =
-    await API.getLocationByGPS().catch((e) => {}) ||
-    await API.getLocationByIP().catch((e) => {}) ||
-    { x: 0, y: 0 };
-    dispatch('CHANGE_USER_FIELD', { key: 'curLocation', value: location });
+      await API.getLocationByGPS().catch((e) => {}) ||
+      await API.getLocationByIP().catch((e) => {}) ||
+      { x: 0, y: 0 }
+    dispatch('CHANGE_USER_FIELD', { key: 'location', value: location })
   },
 
   async REGISTRATION ({ dispatch, state }, data) {
-    const res = await this.$axios.$post('register', data);
+    const res = await this.$axios.$post('register', data)
     if (res.type === 'ok') {
       dispatch('SIGN_IN', {
         login: data.login,
         password: data.password,
-      });
+      })
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
   
-  async SIGN_IN ({ dispatch, state }, data) {
-    data.location = state.curLocation;
-    let res;
+  async SIGN_IN ({ dispatch, rootState }, data) {
+    data.location = rootState.auth.user.location
     try {
-      res = await this.$auth.loginWith('local', { data });
+      await this.$auth.loginWith('local', { data })
     } catch (e) {
       if (e.message.slice(-3) === '401') {
-        res = {
+        dispatch('history/PUSH_POP_WINDOW', {
           type: 'error',
           message: 'Неправильное имя логина или пароль'
-        }
-        dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+        }, { root: true })
       }
     }
     this.$router.push({ path: 
       this.$auth.user.filledInformation ?
       '/main' :
       '/settings'
-    });
+    })
   },
 
-  LOAD_IMAGE ({ dispatch, commit, rootState }, files) {
-    const images = [ ...rootState.auth.user.images ];
-    const len = Object.keys(images).length;
-    if (files[0].type === 'image/jpeg' && len < 5) {
-      const img = {
-        src: '',
-        index: [0,1,2,3,4].filter(val => 
-          !images.map(img => img.index).includes(val))[0],
-      };
-      console.log(img)
-      const reader = new FileReader();
-      reader.readAsDataURL(files[0]);
+  LOAD_IMAGE ({ dispatch, rootState }, files) {
+    const images = [ ...rootState.auth.user.images ]
+    if (files[0].type === 'image/jpeg' && Object.keys(images).length < 5) {
+      const img = { src: '' }
+      const reader = new FileReader()
+      reader.readAsDataURL(files[0])
       reader.onload = async () => {
-        // img.src = reader.result.split(',')[1];
-        const fd = new FormData();
-        fd.append('image', reader.result.split(',')[1]);
-        img.src = fd;
-        const res = await this.$axios.$post(`https://api.imgbb.com/1/upload?
-          expiration=3600&
-          key=52cdc2758163512d48d7ac9715a14c64`, fd)
-        img.src = res.data.display_url;
+        img.src = reader.result
+        const fd = new FormData()
+        fd.append('image', reader.result.split(',')[1])
+        const res = await API.uploadImage(fd)
+        img.src = res.data.data.display_url
+        console.log(res.data.display_url)
         dispatch('CHANGE_USER_FIELD', {
           key: 'images',
           value: [...images, img],
-        });
-        if (!len) {
-          dispatch('CHANGE_USER_FIELD', {
-            key: 'avatar',
-            value: 0,
-          });
-        }
-      };
+        })
+      }
     }
   },
 
   async LIKE ({ commit, rootState, dispatch }, login) {
-    let index = rootState.auth.user.likeList.indexOf(login);
-    let newLikeList = [...rootState.auth.user.likeList];
+    let index = rootState.auth.user.likeList.indexOf(login)
+    let newLikeList = [...rootState.auth.user.likeList]
     if (index === -1) {
-      newLikeList.push(login);
+      newLikeList.push(login)
     } else {
-      newLikeList.splice(index, 1);
+      newLikeList.splice(index, 1)
     }
     const res = await this.$axios.$post('like-user', {
       login,
@@ -262,8 +245,8 @@ export const actions = {
       dispatch('CHANGE_USER_FIELD', {
         key: 'likeList',
         value: newLikeList,
-      });
+      })
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   }
 }

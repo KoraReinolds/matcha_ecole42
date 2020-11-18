@@ -7,7 +7,7 @@
     )
       div.image
         CustomImage.custom_image(
-          :src="user.images[user.avatar].src"
+          :src="user.images.filter(img => img.avatar)[0].src"
           @click="paginate"
         )
         RoundedIcon.gender.only_laptop(
@@ -20,7 +20,7 @@
           Like.like(
             :user="user"
             :size="2"
-            :active="$auth.user.likeList.includes(user.login)"
+            :active="true"
           )
       div.content
         span.fio
@@ -44,7 +44,7 @@
         :size="2"
       )
       Distance.icon(
-        :value="user.curLocation || user.location"
+        :value="user.choosenLocation || user.location"
         :size="2"
       )
       div.icon.pref

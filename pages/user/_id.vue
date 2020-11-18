@@ -5,14 +5,14 @@
       CustomImage(
         :width="mobile ? '100%' : '200px'"
         :height="mobile ? '100%' : '300px'"
-        :src="user ? user.images[user.avatar].src : ''"
+        :src="user ? user.images.filter(img => img.avatar)[0].src : ''"
       )
       div.icons(
         v-if="!myPage"
       )
         Like(
           :size="2"
-          :active="user ? $auth.user.likeList.includes(user.login) : false"
+          :active="user ? true : false"
           :user="user"
         )
         Ban(
@@ -41,7 +41,7 @@
           )
           Distance.dist(
             v-if="!myPage"
-            :value="user ? (user.location || user.curLocation) : undefined"
+            :value="user ? (user.location || user.choosenLocation) : undefined"
             :size="1"
           )
           Online.online.only_laptop(
@@ -135,8 +135,9 @@ export default {
       return this.user ? this.$auth.user.login === this.user.login : true;
     },
     chatAvailable: function() {
-      return this.user ? this.user.likeList.includes(this.$auth.user.login) &&
-        this.$auth.user.likeList.includes(this.user.login) : false;
+      return true
+      // return this.user ? this.user.likeList.includes(this.$auth.user.login) &&
+      //   this.$auth.user.likeList.includes(this.user.login) : false;
     }
   },
   methods: {

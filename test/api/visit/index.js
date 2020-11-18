@@ -27,7 +27,7 @@ export default {
           biography: '123',
           images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
           avatar: 0,
-          curLocation: { y: 37.5420654, x: 55.808093 },
+          choosenLocation: { y: 37.5420654, x: 55.808093 },
           location: { y: 37.5420654, x: 55.808093 },
         }
       },
@@ -94,7 +94,7 @@ export default {
           biography: '123',
           images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
           avatar: 0,
-          curLocation: { y: 37.5420654, x: 55.808093 },
+          choosenLocation: { y: 37.5420654, x: 55.808093 },
           location: { y: 37.5420654, x: 55.808093 },
         }
       },

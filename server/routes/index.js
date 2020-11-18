@@ -1,147 +1,121 @@
 
 module.exports = function(io) {
-  const express = require('express');
-  const router = express.Router();
-  const User = require('../models/user')(io);
-  const Actions = require('../models/actions')(io);
+  const express = require('express')
+  const router = express.Router()
+  const User = require('../models/user')(io)
+  const Actions = require('../models/actions')(io)
 
-  router.use((req, res, next) => {
-    let token = req.headers.authorization;
-    if (token) token = token.split(' ')[1];
-    // console.log(token, req.headers, req.url);
-    // console.log('Time: ', Date.now());
-    User.findOne({token}, (err, user) => {
-      if (err) {
-        res.send(JSON.stringify({ type: "error", message: "Произошла ошибка. Обратитесь к администратору", err, }));
-      }
-      req.user = user;
-      // console.log("USER", user ? user.login : 'anon');
-      next();
-    });
-  });
-
-  router.post('/register', (req, res, next) => {
-    User.registration(req.body, (err, params) => {
-      if (err) next(err)
-      else res.send(JSON.stringify(params));
-    })
-  })
-  
-  router.post('/login', (req, res, next) => {
-    console.log('params', req);
-    User.login(req.body, (err, params) => {
-      if (err) next(err)
-      else res.send(JSON.stringify(params));
-    })
-  })
-
-  router.use((req, res, next) => {
-    // console.log('here', req.url);
-    if (!req.user) {
-      res.status(401).send();
-    } else {
-      next();
+  const errorHandleWrapper = function(callback) {
+    return function (req, res, next) {
+      callback(req, res, next)
+        .catch(next)
     }
+  }
+
+  router.use(errorHandleWrapper(async (req, res, next) => {
+    let token = req.headers.authorization
+    if (token) token = token.split(' ')[1]
+    req.user = await User.findOne({token})
+    next()
+  }))
+
+  router.post('/register', errorHandleWrapper(async (req, res) => {
+    res.json(await User.registration(req.body))
+  }))
+
+  router.post('/login', errorHandleWrapper(async (req, res) => {
+    res.json(await User.login(req.body))
+  }))
+
+  router.use((req, res, next) => {
+    if (!req.user) res.status(401).send()
+    next()
   }),
   
   router.post('/send-message', (req, res, next) => {
     if (req.user) {
       Actions.sendMessage(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
   
   router.post('/get-messages', (req, res, next) => {
     if (req.user) {
       Actions.getMessages(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
   
   router.post('/chat-list', (req, res, next) => {
     if (req.user) {
       User.getUsersForChat(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
 
   router.post('/history', (req, res, next) => {
     if (req.user) {
       Actions.getHistory(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
   
   router.post('/notifications', (req, res, next) => {
     if (req.user) {
       Actions.getNotifications(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
   
   router.post('/like-user', (req, res, next) => {
     if (req.user) {
       User.likeUser(req, (err, params) => {
         if (err) next(err)
-        else res.send(JSON.stringify(params));
+        else res.send(JSON.stringify(params))
       })
-    } else next();
+    } else next()
   })
   
   router.post('/get-users', (req, res, next) => {
-    req.body.login = req.user.login;
+    req.body.login = req.user.login
     User.getUsers(req, (err, params) => {
       if (err) next(err)
-      else res.send(JSON.stringify(params));
+      else res.send(JSON.stringify(params))
     })
   })
   
-  router.post('/profile-update', (req, res, next) => {
-    if (req.user) {
-      User.updateUser(req, (err, params) => {
-        if (err) next(err)
-        else res.send(JSON.stringify(params));
-      })
-    } else next();
-  })
+  router.post('/profile-update', errorHandleWrapper(async (req, res) => {
+    res.json(await User.updateUser(req))
+  }))
 
-  router.post('/logout', (req, res, next) => {
-    User.logout(req, (err, params) => {
-      if (err) next(err)
-      else res.send(JSON.stringify(params));
-    })
-  })
+  router.post('/logout', errorHandleWrapper(async (req, res) => {
+    res.json(await User.logout(req))
+  }))
   
-  router.post('/profile-get', (req, res, next) => {
-    if (req.user) {
-      User.getUserByName(req, (err, params) => {
-        console.log("RES", params)
-        if (err) next(err)
-        else res.send(JSON.stringify(params));
-      })
-    } else next();
-  })
+  router.post('/profile-get', errorHandleWrapper(async (req, res) => {
+    res.json(await User.getUserByName(req))
+  }))
   
   router.get('/', (req, res, next) => {
-    res.send("API matcha");
+    res.send("API matcha")
   })
 
   router.use((req, res, next) => {
-    res.send(JSON.stringify({
+    res.json({
       type: "error",
       message: "Произошла ошибка. Обратитесь к администратору",
-    }));
-  });
+    })
+  })
 
-  return router;
-};
+  return router
+}

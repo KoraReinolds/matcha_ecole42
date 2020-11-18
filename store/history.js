@@ -12,30 +12,30 @@ export const getters = {
 }
 export const mutations = {
   CLOSE_MSG: (state, index) => {
-    state.notifications[index].visible = false;
+    state.notifications[index].visible = false
   },
   SET_HISTORY: (state, list) => state.history = list.reverse(),
   SET_NOTIFICATIONS: (state, list) => {
-    state.notifications = list.reverse();
-    state.notificationsChecked = list.length;
+    state.notifications = list.reverse()
+    state.notificationsChecked = list.length
   },
   SET_ALL_NOTIF_AS_CHECKED: (state) => {
-    state.notificationsChecked = state.notifications.length;
+    state.notificationsChecked = state.notifications.length
   },
   PUSH_NOTIFICATION: (state, notif) => {
-    state.notifications.unshift(notif);
+    state.notifications.unshift(notif)
   },
   PUSH_POP_WINDOW: (state, msg) => {
-    state.popWindows.push(msg);
+    state.popWindows.push(msg)
   },
   HIDE_MSG: (state, notif) => {
     const index = state.popWindows.findIndex(
       mess => {
         return notif === mess
       }
-    );
-    state.popWindows[index].visible = false;
-    state.popWindows = [...state.popWindows];
+    )
+    state.popWindows[index].visible = false
+    state.popWindows = [...state.popWindows]
   }
 }
 export const actions = {
@@ -46,19 +46,19 @@ export const actions = {
         action: res.type,
         visible: true,
         msg: res.message,
-      };
-      commit('PUSH_POP_WINDOW', msg);
+      }
+      commit('PUSH_POP_WINDOW', msg)
       setTimeout(function() {
-        commit('HIDE_MSG', msg);
+        commit('HIDE_MSG', msg)
       }.bind(this), 3000)
     } else if (res.action) {
       const msg = {
         ...res,
         visible: true,
       }
-      commit('PUSH_POP_WINDOW', msg);
+      commit('PUSH_POP_WINDOW', msg)
       setTimeout(function() {
-        commit('HIDE_MSG', msg);
+        commit('HIDE_MSG', msg)
       }.bind(this), 3000)
     }
   },
@@ -66,28 +66,28 @@ export const actions = {
   async GET_NOTIFICATIONS ({ commit, state, rootState, dispatch }) {
     const res = await this.$axios.$post('notifications')
     if (res.type === 'ok') {
-      commit('SET_NOTIFICATIONS', res.data);
+      commit('SET_NOTIFICATIONS', res.data)
     }
     if (res.message) {
       dispatch('history/PUSH_POP_WINDOW', {
         action: res.type,
         visible: true,
         msg: res.message,
-      }, { root: true });
+      }, { root: true })
     }
   },
 
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
     const res = await this.$axios.$post('history')
     if (res.type === 'ok') {
-      commit('SET_HISTORY', res.data);
+      commit('SET_HISTORY', res.data)
     }
     if (res.message) {
       dispatch('history/PUSH_POP_WINDOW', {
         action: res.type,
         visible: true,
         msg: res.message,
-      }, { root: true });
+      }, { root: true })
     }
   },
 

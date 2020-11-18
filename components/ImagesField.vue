@@ -16,7 +16,7 @@
             @change="loadImage($event.target.files)"
           )
         div.image(
-          v-for="img in value"
+          v-for="(img, index) in value"
           :key="'img'+img.index"
         )
           font-awesome-icon.fa-2x.delete_mark(
@@ -26,10 +26,10 @@
           CustomImage(
             :src="img.src"
             :key="'user_image'+img.index"
-            @click="setAsMainImg(img.index)"
+            @click="setAsMainImg(img)"
           )
           font-awesome-icon.icon.main_mark.fa-2x(
-            v-if="data.main === img.index"
+            v-if="img.avatar"
             icon="check"
           )
     div.tooltip-field {{ data.errorMsg }}
@@ -53,19 +53,21 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setMainImg: 'forms/SET_MAIN_IMAGE',
     }),
     ...mapActions({
       loadImage: 'forms/LOAD_IMAGE',
     }),
     deleteImg(img) {
-      this.$emit('input', this.value.filter(val => val !== img));
-      if (this.value.length) {
-        if (img.index === this.data.main) this.setAsMainImg(this.value[0].index);
-      } else this.setAsMainImg(-1);
+      let newImages = this.value
+        .filter(val => val !== img) // удаляем изображение
+        .map((val, index) => ({ ...val, index })) // сохраняем порядок для сервера
+      if (img.avatar) {
+        newImages[0].avatar = true // если удалили аватар устанавливаем первое изображение в качестве аватара
+      }
+      this.$emit('input', newImages)
     },
-    setAsMainImg(index) {
-      this.setMainImg(index);
+    setAsMainImg(img) {
+      this.$emit('input', this.value.map(val => ({ ...val, avatar: img === val })))
     },
   },
   mounted() {

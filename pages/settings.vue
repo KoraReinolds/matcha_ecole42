@@ -52,6 +52,7 @@
     MapField.form-field.map(
       :data="fieldsData.location"
       v-model="location"
+      :location="$auth.user.location"
     )
     div.btn(
       :class="{ disabled: !updateValid }"
@@ -114,8 +115,8 @@ export default {
       set(value) { this.changeUserField({ key: 'images', value }); },
     },
     location: {
-      get() { return this.$auth.user.location; },
-      set(value) { this.changeUserField({ key: 'location', value }); },
+      get() { return this.$auth.user.choosenLocation; },
+      set(value) { this.changeUserField({ key: 'choosenLocation', value }); },
     },
     ...mapGetters({
       fieldsData: 'forms/FIELDS_DATA',

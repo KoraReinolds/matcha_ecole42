@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default {
 
   uploadImage(fd) {
@@ -16,6 +18,7 @@ export default {
             resolve({ y: long, x: lat });
           },
           (err) => reject(err.message),
+          { timeout: 1000 }
         );
       }
       return reject(new Error('No support for geolocation'));

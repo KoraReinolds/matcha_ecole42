@@ -1,8 +1,8 @@
 module.exports = function(io) {
 
-  const mongo = require('../db/mongo');
-  const a = require('async');
-  const { Schema } = require('../db/mongo');
+  const mongo = require('../db/mongo')
+  const a = require('async')
+  const { Schema } = require('../db/mongo')
 
   let schema = new mongo.Schema({
     action: {
@@ -28,8 +28,8 @@ module.exports = function(io) {
   })
 
   schema.statics.sendMessage = function(req, callback) {
-    const User = mongo.models.User;
-    const Actions = mongo.models.Actions;
+    const User = mongo.models.User
+    const Actions = mongo.models.Actions
   
     a.waterfall([
       (callback) => {
@@ -38,7 +38,7 @@ module.exports = function(io) {
       },
       (user, callback) => {
         if (!user) {
-          callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+          callback(null, { type: "error", message: "Невозможно выполнить операцию!" })
         }
         if (req.user.login !== user.login) {
           new Actions({
@@ -47,7 +47,7 @@ module.exports = function(io) {
             who: req.user._id,
             message: req.body.message,
           }).save((err, action) => {
-            if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" });
+            if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" })
             const resp = {
               action:         action.action,
               created:        action.created,
@@ -57,7 +57,7 @@ module.exports = function(io) {
                 avatar:             req.user.avatar,
                 biography:          req.user.biography,
                 // created:            req.user.created,
-                curLocation:        req.user.curLocation,
+                choosenLocation:        req.user.choosenLocation,
                 fameRaiting:        req.user.fameRaiting,
                 fname:              req.user.fname,
                 gender:             req.user.gender,
@@ -71,24 +71,24 @@ module.exports = function(io) {
                 filledInformation:  req.user.filledInformation,
               }
             }
-            io.emit(user.login, resp);
-            callback(null, { type: "ok", message: "", data: resp });
+            io.emit(user.login, resp)
+            callback(null, { type: "ok", message: "", data: resp })
           })
         }
       },
-    ], callback);
+    ], callback)
   }
   
   schema.statics.getMessages = function(req, callback) {
-    const User = mongo.models.User;
+    const User = mongo.models.User
   
     a.waterfall([
       (callback) => {
-        User.findOne({ login: req.body.login }, callback);
+        User.findOne({ login: req.body.login }, callback)
       },
       (user, callback) => {
         if (!user) {
-          callback(null, { type: "error", message: "User not found" });
+          callback(null, { type: "error", message: "User not found" })
         } else {
           this.find({
             action: 'messages',
@@ -100,23 +100,23 @@ module.exports = function(io) {
             .populate('who target', 'login -_id')
             .select('who target action message created -_id')
             .exec((err, users) => {
-              if (err) return callback(err);
-              callback(null, { type: "ok", message: "", data: users });
+              if (err) return callback(err)
+              callback(null, { type: "ok", message: "", data: users })
             })
         }
       },
-    ], callback);
-  };
+    ], callback)
+  }
 
   schema.statics.getNotifications = function(req, callback) {
     this.find({ target: req.user._id })
       .populate('who', '-__v -salt -created -__v -token -_id -hashedPassword -email -likeList')
       .select('who action created -_id')
       .exec((err, users) => {
-        if (err) return callback(err);
-        callback(null, { type: "ok", message: "", data: users });
+        if (err) return callback(err)
+        callback(null, { type: "ok", message: "", data: users })
       })
-  };
+  }
 
   schema.statics.getHistory = function(req, callback) {
     this.find({ who: req.user._id})
@@ -124,10 +124,10 @@ module.exports = function(io) {
       .select('target action created -_id')
 
       .exec((err, users) => {
-        if (err) return callback(err);
-        callback(null, { type: "ok", message: "", data: users });
+        if (err) return callback(err)
+        callback(null, { type: "ok", message: "", data: users })
       })
-  };
+  }
 
-  return mongo.model('Actions', schema);
+  return mongo.model('Actions', schema)
 }

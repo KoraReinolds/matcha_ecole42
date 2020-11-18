@@ -1,4 +1,4 @@
-import API from '~/api';
+import API from '~/api'
 
 export const state = () => ({
   users: [],
@@ -73,59 +73,59 @@ export const getters = {
 }
 export const mutations = {
   CHANGE_COUNT_PER_PAGE: (state) => {
-    state.limit = window.innerWidth <= 480 ? 1 : 3;
+    state.limit = window.innerWidth <= 480 ? 1 : 3
     console.log(state.limit)
-    state.curPage = 1;
+    state.curPage = 1
   },
   SET_INIT_TOOLS: (state, user) => {
-    state.tools.pref.value = user.preference;
-    state.tools.minAge.value = Math.max(+user.age - 5, 18);
-    state.tools.maxAge.value = Math.min(+user.age + 5, 99);
-    state.tools.tags.value = user.tags;
+    state.tools.pref.value = user.preference
+    state.tools.minAge.value = Math.max(+user.age - 5, 18)
+    state.tools.maxAge.value = Math.min(+user.age + 5, 99)
+    state.tools.tags.value = user.tags
   },
   SET_USERS: (state, { users, length }) => {
-    state.users = users;
-    state.maxLength = length;
+    state.users = users
+    state.maxLength = length
   },
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
   GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
   CHANGE_SORT_ORDER: (state, { key, val }) => {
     if (val.length) {
-      const prefix = val[0].split('_')[0];
+      const prefix = val[0].split('_')[0]
       if (!state.sortOrder.includes(prefix)) {
-        state.sortOrder.push(prefix);
+        state.sortOrder.push(prefix)
       }
     } else {
-      const index = state.sortOrder.indexOf(state.tools[key].options[0]);
-      state.sortOrder.splice(index, 1);
+      const index = state.sortOrder.indexOf(state.tools[key].options[0])
+      state.sortOrder.splice(index, 1)
     }
   },
 }
 export const actions = {
   SORT: ({ commit, dispatch }, opt) => {
-    if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]];
-    commit('CHANGE_TOOLS', opt);
-    commit('CHANGE_SORT_ORDER', opt);
-    dispatch('GET_USERS', state.curPage);
+    if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]]
+    commit('CHANGE_TOOLS', opt)
+    commit('CHANGE_SORT_ORDER', opt)
+    dispatch('GET_USERS', state.curPage)
   },
   FILTER_LIST ({ commit, dispatch }, opt) {
-    commit('CHANGE_TOOLS', opt);
-    dispatch('GET_USERS', state.curPage);
+    commit('CHANGE_TOOLS', opt)
+    dispatch('GET_USERS', state.curPage)
   },
   async GET_USERS ({ commit, state, rootState, dispatch }, page) {
-    commit('CHANGE_PAGE', page || 1);
+    commit('CHANGE_PAGE', page || 1)
     const sortOrder = state.sortOrder.reduce((sum, cur) => {
-      let val;
+      let val
       if (cur === 'dist') val = state.tools.sortDist.value
       else if (cur === 'age') val = state.tools.sortAge.value
       else if (cur === 'fameRaiting') val = state.tools.sortRate.value
       else if (cur === 'countTags') val = state.tools.sortTags.value
       if (val.length) {
-        sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1);
+        sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)
       }
-      return sum;
-    }, {});
+      return sum
+    }, {})
     const res = await this.$axios.$post('get-users', {
       limit:          state.limit,
       skip:           (state.curPage - 1) * state.limit,
@@ -140,8 +140,8 @@ export const actions = {
       sortOrder:      sortOrder,
     })
     if (res.type === 'ok') {
-      commit('SET_USERS', res.data);
+      commit('SET_USERS', res.data)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true });
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 }

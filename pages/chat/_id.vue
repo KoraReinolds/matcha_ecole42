@@ -81,7 +81,7 @@
               :height="`${mobile ? 48 : 70}px`"
               :width="`${mobile ? 48 : 70}px`"
               rounded
-              :src="user.images[user.avatar].src"
+              :src="user.images.filter(img => img.avatar)[0].src"
             )
             div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
