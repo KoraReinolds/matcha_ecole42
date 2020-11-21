@@ -41,7 +41,7 @@
           )
           Distance.dist(
             v-if="!myPage"
-            :value="user ? (user.location || user.choosenLocation) : undefined"
+            :value="user ? (user.location) : undefined"
             :size="1"
           )
           Online.online.only_laptop(

@@ -49,7 +49,6 @@ export default {
           biography: '123',
           images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
           avatar: 0,
-          choosenLocation: { y: 37.5420654, x: 55.808093 },
           location: { y: 37.5420654, x: 55.808093 },
         }
       },
@@ -103,7 +102,6 @@ export default {
           biography: '123',
           images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
           avatar: 0,
-          choosenLocation: { y: 37.5420654, x: 55.808093 },
           location: { y: 37.5420654, x: 55.808093 },
         }
       },
@@ -146,7 +144,6 @@ export default {
         images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
         lname: "skiles",
         location: { y: 37.5420654, x: 55.808093 },
-        choosenLocation: { y: 37.5999959, x: 55.808099 },
         mail: "reinoldskora@gmail.com",
         password: "12345",
         preference: ["male", "bisexual"],
@@ -171,7 +168,6 @@ export default {
         images: [{src: "https://i.ibb.co/sgwqj1R/f824d53e3ffa.png", index: 0}],
         lname: "skiles",
         location: { y: 37.5420654, x: 55.808093 },
-        choosenLocation: { y: 37.5999959, x: 55.808099 },
         mail: "reinoldskora@gmail.com",
         password: "12345",
         preference: ["male", "bisexual"],

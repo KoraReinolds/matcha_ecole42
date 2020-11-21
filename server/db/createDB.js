@@ -23,7 +23,7 @@ function dropDatabase(callback) {
 
 function requireModels(callback) {
   require('../models/user')()
-  
+
   a.each(Object.keys(mongo.models), (modelName, callback) => {
     mongo.models[modelName].ensureIndexes(callback)
   }, callback)
@@ -31,18 +31,17 @@ function requireModels(callback) {
 
 function createUsers(callback) {
 
-  let users = dataGenerator.generateUsers(100)
+  let users = dataGenerator.generateUsers(0)
   users.push({
     filledInformation:  true,
-    location:           { x: 55.751640, y: 37.616565 },
-    choosenLocation:    null,
-    login:              "mskiles",
+    location:           { x: 37.616565, y: 55.751640 },
+    login:              "User_1",
     fname:              "first",
     lname:              "last",
     password:           "123",
     email:              "reinoldskora@gmail.com",
     age:                24,
-    fameRaiting:        1000,
+    fameRaiting:        0,
     gender:             "male",
     preference:         ["male"],
     biography:          "my name is Jack my name is Jack my name is Jack my name is Jack my name is Jack",
@@ -72,6 +71,16 @@ function createUsers(callback) {
   })
 
   a.each(users, (userData, callback) => {
-    new mongo.models.User(userData).save(callback)
+    new mongo.models.User({
+      ...userData,
+      geoLoc: {
+        type: "Point",
+        // coordinates: [userData.location.y, userData.location.x],
+        // coordinates: [ 55.751640, 37.616565 ],
+        // coordinates: [ 37.616565, 55.751640 ],
+        coordinates: [ 0.3, 0.3 ],
+
+      },
+    }).save(callback)
   }, callback)
 }

@@ -44,7 +44,7 @@
         :size="2"
       )
       Distance.icon(
-        :value="user.choosenLocation || user.location"
+        :value="user.location"
         :size="2"
       )
       div.icon.pref

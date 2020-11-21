@@ -110,6 +110,7 @@ export const state = () => ({
       ],
     },
   },
+  realLocation: null,
 })
 export const getters = {
   INFO_FILLED: (state) => state.filledInformation,
@@ -123,9 +124,10 @@ export const getters = {
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
   FIELDS_DATA: (state) => state.formFields,
-  MY_LOCATION: (state, getters, rootState) => rootState.auth.user.choosenLocation || rootState.auth.user.location,
+  MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
+  SET_LOCATION: (state, location) => state.realLocation = location,
   SET_VALUE: (state, { key, value }) => {
     let field = state.formFields[key]
     if (field && field.rules) {
@@ -156,9 +158,10 @@ export const actions = {
   },
 
   async UPDATE_USER ({ commit, state, dispatch }, user) {
-    const res = await this.$axios.$post('profile-update', user)
+    let res = await this.$axios.$post('profile-update', user)
     if (res.type === 'ok') {
       dispatch('CHANGE_USER_FIELD', { key: 'filledInformation', value: true })
+      res = { type: 'ok', message: 'Данные успешно обновлены' }
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
@@ -168,15 +171,16 @@ export const actions = {
     location.reload()
   },
 
-  async GET_LOCATION ({ dispatch }) {
+  async GET_LOCATION ({ commit }) {
     let location =
       await API.getLocationByGPS().catch((e) => {}) ||
       await API.getLocationByIP().catch((e) => {}) ||
       { x: 0, y: 0 }
-    dispatch('CHANGE_USER_FIELD', { key: 'location', value: location })
+    commit('SET_LOCATION', location)
   },
 
   async REGISTRATION ({ dispatch, state }, data) {
+    data.location = state.realLocation
     const res = await this.$axios.$post('register', data)
     if (res.type === 'ok') {
       dispatch('SIGN_IN', {
@@ -187,10 +191,17 @@ export const actions = {
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
   
-  async SIGN_IN ({ dispatch, rootState }, data) {
-    data.location = rootState.auth.user.location
+  async SIGN_IN ({ dispatch, state }, data) {
+    data.location = state.realLocation
     try {
-      await this.$auth.loginWith('local', { data })
+      
+      const { token } = await this.$axios.$post('login', data)
+      document.cookie = `token=${token}`
+      this.$auth.setUserToken(token)
+      const { data: user } = await this.$axios.$get(`profile-get`)
+      this.$auth.setUser(user)
+
+      // await this.$auth.loginWith('local', { data })
     } catch (e) {
       if (e.message.slice(-3) === '401') {
         dispatch('history/PUSH_POP_WINDOW', {
@@ -214,6 +225,8 @@ export const actions = {
       reader.readAsDataURL(files[0])
       reader.onload = async () => {
         img.src = reader.result
+        img.index = images.length
+        img.avatar = !img.index
         const fd = new FormData()
         fd.append('image', reader.result.split(',')[1])
         const res = await API.uploadImage(fd)

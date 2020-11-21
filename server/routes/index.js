@@ -13,11 +13,18 @@ module.exports = function(io) {
   }
 
   router.use(errorHandleWrapper(async (req, res, next) => {
+    console.log('Cookies: ', req.cookies)
+
     let token = req.headers.authorization
+    console.log(token)
     if (token) token = token.split(' ')[1]
     req.user = await User.findOne({token})
     next()
   }))
+  
+  router.get('/', (req, res, next) => {
+    res.end(`Cookies: ${JSON.stringify(req.cookies)}`)
+  })
 
   router.post('/register', errorHandleWrapper(async (req, res) => {
     res.json(await User.registration(req.body))
@@ -28,6 +35,7 @@ module.exports = function(io) {
   }))
 
   router.use((req, res, next) => {
+
     if (!req.user) res.status(401).send()
     next()
   }),
@@ -86,13 +94,9 @@ module.exports = function(io) {
     } else next()
   })
   
-  router.post('/get-users', (req, res, next) => {
-    req.body.login = req.user.login
-    User.getUsers(req, (err, params) => {
-      if (err) next(err)
-      else res.send(JSON.stringify(params))
-    })
-  })
+  router.post('/get-users', errorHandleWrapper(async (req, res) => {
+    res.json(await User.getUsers({ ...req.body, login: req.user.login }))
+  }))
   
   router.post('/profile-update', errorHandleWrapper(async (req, res) => {
     res.json(await User.updateUser(req))
@@ -102,13 +106,9 @@ module.exports = function(io) {
     res.json(await User.logout(req))
   }))
   
-  router.post('/profile-get', errorHandleWrapper(async (req, res) => {
+  router.get('/profile-get', errorHandleWrapper(async (req, res) => {
     res.json(await User.getUserByName(req))
   }))
-  
-  router.get('/', (req, res, next) => {
-    res.send("API matcha")
-  })
 
   router.use((req, res, next) => {
     res.json({

@@ -1,6 +1,6 @@
 <template lang="pug">
   div.map-field(
-    v-if="showMap && (location || value)"
+    v-if="showMap && (realLocation)"
   )
     span.title.left {{ data.title }}
     yandex-map.map(
@@ -36,7 +36,7 @@ export default {
   props: {
     data: Object,
     value: [Object, String],
-    location: Object,
+    realLocation: Object,
   },
   components: {
   },
@@ -44,7 +44,7 @@ export default {
     ...mapGetters({
     }),
     mark: function() {
-      let loc = this.value || this.location;
+      let loc = this.value || this.realLocation;
       return [loc.x, loc.y];
     },
   },

@@ -2,8 +2,42 @@ module.exports = function(io) {
   const crypto = require('crypto')
   const mongo = require('../db/mongo')
   const a = require('async')
-  
+
+  const pointSchema = new mongo.Schema({
+    type: {
+      type: String,
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+    }
+  })
+
+  const getLocation = function() {
+    console.log("here ", this.geoLoc ?
+      {
+        x: this.geoLoc.coordinates[0],
+        y: this.geoLoc.coordinates[1]
+      } : null)
+    return this.geoLoc ?
+      {
+        x: this.geoLoc.coordinates[0],
+        y: this.geoLoc.coordinates[1]
+      } : null
+  }
+
   let schema = new mongo.Schema({
+    geoLoc: { // геолокация по которой ведутся расчеты дистанции, равна выбранной или реальной, если выбранная отсутствует
+      type: pointSchema,
+      index: '2dsphere',
+    },
+    realLocation: { // реальная геолокация пользователя, обновляется при логине
+      type: Object,
+    },
+    location: { // выбранная пользователем геолокация, обновляется при изменении профиля
+      type: Object,
+      // get: getLocation,
+    },
     login: {
       type: String,
       required: true,
@@ -23,12 +57,6 @@ module.exports = function(io) {
     },
     age: {
       type: Number,
-    },
-    location: {
-      type: Object,
-    },
-    choosenLocation: {
-      type: Object,
     },
     email: {
       type: String,
@@ -66,7 +94,7 @@ module.exports = function(io) {
     filledInformation: {
       type: Boolean,
     },
-  })
+  }, { toJSON: { getters: true } })
   
   schema.statics.getUsersForChat = async function(req, callback) {
     const docs = await this.find({
@@ -78,139 +106,22 @@ module.exports = function(io) {
     callback(null, { type: "ok", message: "", data: filteredDocs })
   }
 
-  schema.statics.getUsers = async function(req, callback) {
-    const options = req.body
-    // const distance = function (point1, point2) {
-    //   const diffX = Math.abs(point1.x - point2.x)
-    //   const diffY = Math.abs(point1.y - point2.y)
-    //   return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3)
-    // }
-    const docs = await this.find({
-        login: { $ne: options.login },
-        gender: { $in: options.preference },
-        filledInformation: true,
-        age: { $gt: +options.minAge - 1, $lt: +options.maxAge + 1 },
-        fameRaiting: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
-      })
-      .sort(options.sortOrder)
-      .select('-_id -salt -token -hashedPassword -__v -email -likeList -created')
-    let filteredDocs = docs
-      // .filter((user) => {
-      //   const dist = distance(user.choosenLocation || user.location,
-      //     req.user.choosenLocation || req.user.location)
-      //   user.dist = dist
-      //   return options.minDist <= dist && dist <= options.maxDist
-      // })
-    if (options.tags.length) {
-      filteredDocs = filteredDocs.filter(
-        (user) => options.tags.some((tag) => user.tags.includes(tag))
-      )
-    }
-    filteredDocs.forEach((user) => {
-      user.countTags = user.tags.reduce((sum, tag) => {
-        return sum += +options.tags.includes(tag)
-      }, 0)
-    })
-    const sortFields = Object.keys(options.sortOrder)
-    const sortLen = sortFields.length
-    let i = 0
-    const compare = function(a, b, i) {
-      const field = sortFields[i]
-      return (i === sortLen)
-        ? 0 : (
-          options.sortOrder[field] * (a[field] - b[field]) ||
-          compare(a, b, i + 1)
-        )
-    }
-    filteredDocs = filteredDocs.sort((a, b) => compare(a, b, 0))
-    let res = {
-      users: filteredDocs.slice(options.skip, options.skip + options.limit),
-      length: filteredDocs.length,
-    }
-    callback(null, { type: "ok", message: "", data: res })
-  }
+  schema.statics.getUsers = require('./get_users')
   
-  schema.statics.login = async (body) => {
-  
-    const user = await User.findOne({ login: body.login })
-
-    if (!user || !user.checkPassword(body.password)) {
-      return { type: "error", message: "Неверное имя пользователя или пароль" }
-    }
-
-    const buffer = await crypto.randomBytes(48)
-    console.log('body.location ', body)
-    user.location = body.location
-    user.token = buffer.toString('hex')
-    await user.save()
-
-    return { type: "ok", token: user.token }
-
-  }
+  schema.statics.login = require('./login')
   
   schema.statics.logout = async (req) => {
+
     await this.findOneAndUpdate({ login: req.user.login }, { token: '' })
+
     return { type: "ok" }
+
   }
   
-  schema.statics.updateUser = async (req) => {
-    await User.findOneAndUpdate({ login: req.user.login }, { ...req.body, filledInformation: true })
-    return { type: "ok", message: "Данные успешно обновленны" }
-  }
+  schema.statics.updateUser = require('./profile_update')
   
-  schema.statics.getUserByName = async (req) => {
-
-    const login = req.body.login || req.user.login
-
-    const user = await User.findOne({ login })
-      .select('-salt -token -hashedPassword -__v -created')
-
-    if (!user) {
-      return { type: "error", message: "User not found" }
-    }
-    console.log(user.location)
-    return { type: "ok", data: user }
-
-  //   if (req.user.login !== login) {
-  //     new mongo.models.Actions({
-  //       who: req.user._id,
-  //       action: 'visit',
-  //       target: user._id,
-  //     }).save((err, action) => {
-  //       if (err) callback(null, { type: "error", message: "Error occurred on the server" })
-  //       io.emit(user.login, {
-  //         action:         action.action,
-  //         created:        action.created, 
-  //         who: {
-  //           age:          req.user.age,
-  //           avatar:       req.user.avatar,
-  //           biography:    req.user.biography,
-  //           created:      req.user.created,
-  //           choosenLocation:  req.user.choosenLocation,
-  //           fameRaiting:  req.user.fameRaiting,
-  //           fname:        req.user.fname,
-  //           gender:       req.user.gender,
-  //           images:       req.user.images,
-  //           likeList:     req.user.likeList,
-  //           lname:        req.user.lname,
-  //           location:     req.user.location,
-  //           login:        req.user.login,
-  //           preference:   req.user.preference,
-  //           tags:         req.user.tags,
-  //         }
-  //       })
-  //       user = JSON.parse(JSON.stringify(user))
-  //       delete user._id
-  //       callback(null, { type: "ok", message: "", data: user })
-  //     })
-  //   } else {
-  //     user = JSON.parse(JSON.stringify(user))
-  //     delete user._id
-  //     callback(null, { type: "ok", message: "", data: user })
-  //   }
-  // }
-  }
-  
+  schema.statics.getUserByName = require('./get_profile')
+    
   schema.statics.likeUser = function(req, callback) {
     const User = this
   
@@ -247,7 +158,6 @@ module.exports = function(io) {
               avatar:       req.user.avatar,
               biography:    req.user.biography,
               created:      req.user.created,
-              // choosenLocation:  req.user.choosenLocation,
               fameRaiting:  req.user.fameRaiting,
               fname:        req.user.fname,
               gender:       req.user.gender,
@@ -266,29 +176,7 @@ module.exports = function(io) {
     ], callback)
   }
   
-  schema.statics.registration = async (body) => {
-    
-    const user = await User.findOne({ login: body.login })
-
-    if (user) {
-      return { type: "error", message: "Пользователь с таким логином уже существует" }
-    }
-
-    const newUser = new User({
-      ...body,
-      filledInformation: false,
-      age: null,
-      fameRaiting: 0,
-      gender: '',
-      preferences: [],
-      biography: '',
-      tags: [],
-      images: [],
-    })
-    await newUser.save()
-    return { type: "ok" }
-      
-  }
+  schema.statics.registration = require('./registration')
   
   schema.virtual('password')
     .set(function(password) {
@@ -299,9 +187,12 @@ module.exports = function(io) {
     })
     .get(function() { return this._plainPassword })
   
-  
   schema.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword
+  }
+
+  schema.methods.encryptPassword = function(password) {
+    return crypto.createHmac('sha1', this.salt).update(password).digest('hex')
   }
 
   schema.methods.encryptPassword = function(password) {

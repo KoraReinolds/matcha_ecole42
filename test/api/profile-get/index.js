@@ -24,7 +24,6 @@ export default {
     //       biography: '',
     //       images: [],
     //       avatar: -1,
-    //       choosenLocation: { y: 37.5420654, x: 55.808093 }
     //     }
     //   },
     // },
@@ -71,7 +70,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       },
     },
@@ -99,7 +97,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       },
     },
@@ -127,7 +124,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       },
     },
@@ -155,7 +151,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       }
     },
@@ -183,7 +178,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       }
     },
@@ -211,7 +205,6 @@ export default {
           biography: '',
           images: [],
           avatar: -1,
-          choosenLocation: { y: 37.5420654, x: 55.808093 }
         }
       }
     },

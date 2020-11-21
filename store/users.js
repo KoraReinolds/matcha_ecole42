@@ -65,7 +65,8 @@ export const state = () => ({
 })
 export const getters = {
   MAX_LENGTH: (state) => state.maxLength,
-  USERS: (state) => state.users.slice(0, state.limit),
+  USERS: (state) => state.users,
+  // USERS: (state) => state.users.slice(0, state.limit),
   CUR_PAGE: (state) => state.curPage,
   LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
   TOOLS: (state) => state.tools,
@@ -83,9 +84,9 @@ export const mutations = {
     state.tools.maxAge.value = Math.min(+user.age + 5, 99)
     state.tools.tags.value = user.tags
   },
-  SET_USERS: (state, { users, length }) => {
+  SET_USERS: (state, users) => {
     state.users = users
-    state.maxLength = length
+    state.maxLength = 1
   },
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,

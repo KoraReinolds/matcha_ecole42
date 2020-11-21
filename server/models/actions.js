@@ -57,7 +57,6 @@ module.exports = function(io) {
                 avatar:             req.user.avatar,
                 biography:          req.user.biography,
                 // created:            req.user.created,
-                choosenLocation:        req.user.choosenLocation,
                 fameRaiting:        req.user.fameRaiting,
                 fname:              req.user.fname,
                 gender:             req.user.gender,
