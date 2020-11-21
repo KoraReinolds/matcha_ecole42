@@ -68,7 +68,7 @@ export const state = () => ({
       ],
     },
     gender: {
-      options: ['male', 'female', 'bisexual'],
+      options: {male: 3, female: 2, bisexual: 1 },
       errorMsg: '',
       title: 'Gender',
       valid: false,
@@ -77,7 +77,7 @@ export const state = () => ({
       ],
     },
     preference: {
-      options: ['male', 'female', 'bisexual'],
+      options: {male: 3, female: 2, bisexual: 1 },
       errorMsg: '',
       title: 'Preferences',
       valid: false,
@@ -113,7 +113,7 @@ export const state = () => ({
   realLocation: null,
 })
 export const getters = {
-  INFO_FILLED: (state) => state.filledInformation,
+  INFO_FILLED: (state) => state.isFilled,
   LOGIN_VALID: ({formFields}) => ['login', 'password']
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
@@ -160,7 +160,7 @@ export const actions = {
   async UPDATE_USER ({ commit, state, dispatch }, user) {
     let res = await this.$axios.$post('profile-update', user)
     if (res.type === 'ok') {
-      dispatch('CHANGE_USER_FIELD', { key: 'filledInformation', value: true })
+      dispatch('CHANGE_USER_FIELD', { key: 'isFilled', value: true })
       res = { type: 'ok', message: 'Данные успешно обновлены' }
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
@@ -195,13 +195,18 @@ export const actions = {
     data.location = state.realLocation
     try {
       
-      const { token } = await this.$axios.$post('login', data)
-      document.cookie = `token=${token}`
-      this.$auth.setUserToken(token)
-      const { data: user } = await this.$axios.$get(`profile-get`)
-      this.$auth.setUser(user)
+      // let res = await this.$axios.$post('login', data)
+      // document.cookie = `token=${res.token}`
+      // // this.$auth.setUserToken(token)
+      // console.log(res)
+      // // document.cookie = `token: ${res.token}`
+      // res = await this.$axios.$get(`profile-get/${data.login}`)
+      // console.log(res)
+      // // this.$auth.setUser(user)
 
-      // await this.$auth.loginWith('local', { data })
+      await this.$auth.loginWith('local', { data })
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+
     } catch (e) {
       if (e.message.slice(-3) === '401') {
         dispatch('history/PUSH_POP_WINDOW', {
@@ -211,7 +216,7 @@ export const actions = {
       }
     }
     this.$router.push({ path: 
-      this.$auth.user.filledInformation ?
+      this.$auth.user.isFilled ?
       '/main' :
       '/settings'
     })
@@ -240,20 +245,21 @@ export const actions = {
     }
   },
 
-  async LIKE ({ commit, rootState, dispatch }, login) {
-    let index = rootState.auth.user.likeList.indexOf(login)
-    let newLikeList = [...rootState.auth.user.likeList]
-    if (index === -1) {
-      newLikeList.push(login)
-    } else {
-      newLikeList.splice(index, 1)
-    }
-    const res = await this.$axios.$post('like-user', {
-      login,
-      likeList: newLikeList,
-      target: login,
-      action: index === -1 ? 'like' : 'dislike',
-    })
+  async LIKE ({ commit, rootState, dispatch }, { login, likedFrom }) {
+    // let index = rootState.auth.user.likeList.indexOf(login)
+    // let newLikeList = [...rootState.auth.user.likeList]
+    // if (index === -1) {
+    //   newLikeList.push(login)
+    // } else {
+    //   newLikeList.splice(index, 1)
+    // }
+    const res = await this.$axios.$post(`like-user/${login}/${likedFrom ? 0 : 1}`)
+    // , {
+    //   login,
+    //   likeList: newLikeList,
+    //   target: login,
+    //   action: index === -1 ? 'like' : 'dislike',
+    // })
     if (res.type === 'ok') {
       dispatch('CHANGE_USER_FIELD', {
         key: 'likeList',

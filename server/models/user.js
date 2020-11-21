@@ -88,10 +88,10 @@ module.exports = function(io) {
     images: {
       type: Object,
     },
-    fameRaiting: {
+    rating: {
       type: Number,
     },
-    filledInformation: {
+    isFilled: {
       type: Boolean,
     },
   }, { toJSON: { getters: true } })
@@ -158,7 +158,7 @@ module.exports = function(io) {
               avatar:       req.user.avatar,
               biography:    req.user.biography,
               created:      req.user.created,
-              fameRaiting:  req.user.fameRaiting,
+              rating:  req.user.rating,
               fname:        req.user.fname,
               gender:       req.user.gender,
               images:       req.user.images,

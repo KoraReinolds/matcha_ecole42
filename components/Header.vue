@@ -6,7 +6,7 @@
       v-if="$auth.loggedIn"
     )
       div.only_laptop(
-        v-if="$auth.user.filledInformation"
+        v-if="$auth.user.isFilled"
       )
         nuxt-link.link(
           :to="`/user/${$auth.user.login}`"
@@ -23,7 +23,7 @@
       
       div.right-panel
         nuxt-link.link(
-          v-if="$auth.user.filledInformation"
+          v-if="$auth.user.isFilled"
           to=`/notifications`
         )
           font-awesome-icon-layers

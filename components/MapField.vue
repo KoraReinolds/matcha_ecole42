@@ -21,7 +21,7 @@
       )
       div.btn.curCoord(
         v-if="value"
-        @click="$emit('input', '');"
+        @click="$emit('input', null);"
       ) set my curent place
 </template>
 

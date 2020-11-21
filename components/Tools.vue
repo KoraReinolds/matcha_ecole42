@@ -86,7 +86,7 @@
       )
       Options.form-field(
         :data="tools.sortRate"
-        :icons="{ fameRaiting: 'sort-amount-down-alt', fameRaiting_rev: 'sort-amount-down' }"
+        :icons="{ rating: 'sort-amount-down-alt', rating_rev: 'sort-amount-down' }"
         v-model="sortRate"
         many
       )

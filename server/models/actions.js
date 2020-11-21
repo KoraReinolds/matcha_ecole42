@@ -57,7 +57,7 @@ module.exports = function(io) {
                 avatar:             req.user.avatar,
                 biography:          req.user.biography,
                 // created:            req.user.created,
-                fameRaiting:        req.user.fameRaiting,
+                rating:        req.user.rating,
                 fname:              req.user.fname,
                 gender:             req.user.gender,
                 images:             req.user.images,
@@ -67,7 +67,7 @@ module.exports = function(io) {
                 login:              req.user.login,
                 preference:         req.user.preference,
                 tags:               req.user.tags,
-                filledInformation:  req.user.filledInformation,
+                isFilled:  req.user.isFilled,
               }
             }
             io.emit(user.login, resp)

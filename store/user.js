@@ -12,7 +12,7 @@ export const mutations = {
 export const actions = {
 
   async GET_USER ({ commit, state, rootState, dispatch }, login) {
-    const res = await this.$axios.$post('profile-get', { login })
+    const res = await this.$axios.$get(`profile-get/${login}`, { login })
     if (res.type === 'ok') {
       commit('SET_USER', res.data)
     }

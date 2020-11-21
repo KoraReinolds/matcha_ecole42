@@ -5,7 +5,7 @@ export const state = () => ({
   curPage: 1,
   maxLength: null,
   limit: 3,
-  sortOrder: ['countTags', 'fameRaiting', 'dist'],
+  sortOrder: ['countTags', 'rating', 'dist'],
   tools: {
     pref: {
       value: [],
@@ -52,9 +52,9 @@ export const state = () => ({
       options: ['age', 'age_rev'],
     },
     sortRate: {
-      value: ['fameRaiting_rev'],
+      value: ['rating_rev'],
       title: 'Rate',
-      options: ['fameRaiting', 'fameRaiting_rev'],
+      options: ['rating', 'rating_rev'],
     },
     sortTags: {
       value: ['countTags_rev'],
@@ -120,7 +120,7 @@ export const actions = {
       let val
       if (cur === 'dist') val = state.tools.sortDist.value
       else if (cur === 'age') val = state.tools.sortAge.value
-      else if (cur === 'fameRaiting') val = state.tools.sortRate.value
+      else if (cur === 'rating') val = state.tools.sortRate.value
       else if (cur === 'countTags') val = state.tools.sortTags.value
       if (val.length) {
         sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)

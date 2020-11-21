@@ -33,7 +33,7 @@ function createUsers(callback) {
 
   let users = dataGenerator.generateUsers(0)
   users.push({
-    filledInformation:  true,
+    isFilled:  true,
     location:           { x: 37.616565, y: 55.751640 },
     login:              "User_1",
     fname:              "first",
@@ -41,7 +41,7 @@ function createUsers(callback) {
     password:           "123",
     email:              "reinoldskora@gmail.com",
     age:                24,
-    fameRaiting:        0,
+    rating:        0,
     gender:             "male",
     preference:         ["male"],
     biography:          "my name is Jack my name is Jack my name is Jack my name is Jack my name is Jack",

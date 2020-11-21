@@ -41,7 +41,7 @@
     )
     TagsField.form-field(
       :data="fieldsData.tags"
-      v-model="tags"
+    v-model="tags"
       :maxTags="5"
     )
     ImagesField.form-field.images(
@@ -58,6 +58,7 @@
       :class="{ disabled: !updateValid }"
       @click="updateValid && updateUser($auth.user)"
     ) Save Changes
+      //- @click="updateUser($auth.user)"
 </template>
 
 <script>

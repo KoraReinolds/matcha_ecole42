@@ -40,7 +40,7 @@
 
     div.sidebar.only_laptop
       Raiting.icon(
-        :value="user.fameRaiting"
+        :value="user.rating"
         :size="2"
       )
       Distance.icon(

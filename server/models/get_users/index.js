@@ -19,9 +19,9 @@ module.exports = async function(options) {
         $match: {
           login: { $ne: options.login },
           gender: { $in: options.preference },
-          filledInformation: true,
+          isFilled: true,
           age: { $gt: +options.minAge - 1, $lt: +options.maxAge + 1 },
-          fameRaiting: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
+          rating: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
         }
       },
     ])

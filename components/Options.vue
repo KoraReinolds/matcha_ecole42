@@ -7,16 +7,16 @@
       :class="{ many: type === 'checkbox', icons }"
     )
       div(
-        v-for="opt in data.options"
+        v-for="[opt, value] in Object.entries(data.options)"
         :key="data.title+opt"
       )
         input(
           :type="type"
           :id="data.title+opt"
-          :value="opt"
+          :value="value"
           @change="change"
           :name="data.title"
-          :checked="optionChecked(opt)"
+          :checked="optionChecked(value)"
         )
         label(
           :class="{ label: !icons }"
@@ -25,9 +25,9 @@
           font-awesome-icon.icon.fa-2x(
             v-if="icons"
             :icon="['fas', icons[opt]]"
-            :class="{ active: optionChecked(opt) }"
+            :class="{ active: optionChecked(value) }"
           )
-          template(v-else) {{ opt }}
+          template(v-else) {{ opt }} {{ value }}
       div.tooltip-field {{ data.errorMsg }}
 </template>
 
@@ -48,11 +48,14 @@ export default {
   },
   methods: {
     optionChecked(opt) {
-      let value = this.value === undefined ?
-        [] : this.value;
-      return this.type === 'radio' ?
-        value === opt :
-        value.includes(opt)
+      console.log("opt ", this.many ?
+        this.value.includes(opt) :
+        this.value === opt)
+      // let value = this.value === undefined ?
+      //   [] : this.value;
+      return this.many ?
+        this.value.includes(opt) :
+        this.value === opt
     },
     change(event) {
       if (Array.isArray(this.value)) {

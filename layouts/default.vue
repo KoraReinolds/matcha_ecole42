@@ -50,20 +50,20 @@ export default {
     this.getLocation();
 
     if (this.$auth.loggedIn) {
-      this.socket = this.$nuxtSocket({});
-      this.socket
-        .on(this.$auth.user.login, (notif, cb) => {
-          if (notif.action === 'messages') {
-            if (notif.who.login === this.$route.params.id) {
-              this.pushMessage(notif);
-            }
-          }
-          this.pushPopWindow(notif);
-          this.pushNotification(notif);
-          if (this.$router.currentRoute.name === 'notifications') {
-            this.setAllNotifAsChecked();
-          }
-        })
+      // this.socket = this.$nuxtSocket({});
+      // this.socket
+      //   .on(this.$auth.user.login, (notif, cb) => {
+      //     if (notif.action === 'messages') {
+      //       if (notif.who.login === this.$route.params.id) {
+      //         this.pushMessage(notif);
+      //       }
+      //     }
+      //     this.pushPopWindow(notif);
+      //     this.pushNotification(notif);
+      //     if (this.$router.currentRoute.name === 'notifications') {
+      //       this.setAllNotifAsChecked();
+      //     }
+      //   })
     }
   }
 }

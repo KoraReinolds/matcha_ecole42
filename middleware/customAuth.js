@@ -2,7 +2,7 @@ export default function ({ store, redirect, route, $auth }) {
   if ($auth.loggedIn) {
     if (['login', 'registration'].includes(route.name)) {
       return redirect(
-        $auth.user.filledInformation ?
+        $auth.user.isFilled ?
         '/main' :
         '/settings'
       )

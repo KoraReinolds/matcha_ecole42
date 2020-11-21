@@ -3,7 +3,7 @@
     :class="[`fa-${size}x`, { like_color: active }]"
     :style="{ cursor: disabled === '' ? 'default' : 'pointer' }"
     icon="heart"
-    @click="disabled !== '' && like(user.login)"
+    @click="disabled !== '' && like(user)"
   )
 </template>
 

@@ -12,9 +12,10 @@
       )
         Like(
           :size="2"
-          :active="user ? true : false"
+          :active="user.likedFrom"
           :user="user"
         )
+        div likedFrom: {{ user.likedFrom }}
         Ban(
           :size="2"
           :active="true"
@@ -36,7 +37,7 @@
             :user="user"
           )
           Raiting.rate(
-            :value="user ? user.fameRaiting : undefined"
+            :value="user ? user.rating : undefined"
             :size="1"
           )
           Distance.dist(

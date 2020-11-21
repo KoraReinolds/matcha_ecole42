@@ -41,7 +41,7 @@ const generateUser = () => {
   const lname = randomValueFromArray(gender === 'male' ? manLNames : womanLNames)
   const email = `${fname}@mail.ru`
   const age = getRandomValue(18, 55)
-  const fameRaiting = getRandomValue(0, 1000)
+  const rating = getRandomValue(0, 1000)
   const preference = randomArray(1, genderArray.length, genderArray)
   const biography = randomText(1, 5, sentences)
   const images = [
@@ -49,7 +49,7 @@ const generateUser = () => {
     { avatar: false, index: 1, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },
   ]
   return {
-    filledInformation: true,
+    isFilled: true,
     location,
     login: `${fname}-${getRandomValue(0, 100000)}`,
     fname,
@@ -57,7 +57,7 @@ const generateUser = () => {
     password: "123",
     email,
     age,
-    fameRaiting,
+    rating,
     gender,
     preference,
     biography,

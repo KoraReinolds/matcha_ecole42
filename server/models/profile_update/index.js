@@ -12,7 +12,7 @@ module.exports = async function({ user, body }) {
     delete body.location
   }
 
-  await User.findOneAndUpdate({ login: user.login }, { ...body, filledInformation: true })
+  await User.findOneAndUpdate({ login: user.login }, { ...body, isFilled: true })
 
   return { type: "ok" }
 
