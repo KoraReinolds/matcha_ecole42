@@ -13,17 +13,13 @@ module.exports = function(io) {
   }
 
   router.use(errorHandleWrapper(async (req, res, next) => {
-    console.log('Cookies: ', req.cookies)
-
     let token = req.headers.authorization
-    console.log(token)
-    if (token) token = token.split(' ')[1]
     req.user = await User.findOne({token})
     next()
   }))
   
   router.get('/', (req, res, next) => {
-    res.end(`Cookies: ${JSON.stringify(req.cookies)}`)
+    res.send(`Cookies: ${JSON.stringify(req.cookies)}`)
   })
 
   router.post('/register', errorHandleWrapper(async (req, res) => {
@@ -85,14 +81,16 @@ module.exports = function(io) {
     } else next()
   })
   
-  router.post('/like-user', (req, res, next) => {
-    if (req.user) {
-      User.likeUser(req, (err, params) => {
-        if (err) next(err)
-        else res.send(JSON.stringify(params))
-      })
-    } else next()
-  })
+  router.post('/like-user/:login/:isLike', errorHandleWrapper(async (req, res) => {
+    res.json(await Actions.likeUser(req))
+
+    // if (req.user) {
+    //   User.likeUser(req, (err, params) => {
+    //     if (err) next(err)
+    //     else res.send(JSON.stringify(params))
+    //   })
+    // } else next()
+  }))
   
   router.post('/get-users', errorHandleWrapper(async (req, res) => {
     res.json(await User.getUsers({ ...req.body, login: req.user.login }))
@@ -107,6 +105,10 @@ module.exports = function(io) {
   }))
   
   router.get('/profile-get', errorHandleWrapper(async (req, res) => {
+    res.json(await User.getUserByName(req))
+  }))
+  
+  router.get('/profile-get/:login', errorHandleWrapper(async (req, res) => {
     res.json(await User.getUserByName(req))
   }))
 

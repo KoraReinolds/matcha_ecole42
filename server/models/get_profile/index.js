@@ -1,14 +1,26 @@
+const mongo = require('../../db/mongo')
+
 module.exports = async function(req) {
 
   const User = this
-  const login = req.body.login || req.user.login
-
+  const login = req.params.login || req.user.login
+  const exclude = `-id -realLocation -salt -token -hashedPassword -__v -created -geoLoc
+    ${login === req.user.login ? '' : '-email'}`
   const user = await User.findOne({ login })
-    .select('-_id -login -realLocation -salt -token -hashedPassword -__v -created')
-
-  if (!user) {
+    // .populate('User')
+    .select(exclude)
+  console.log("USER ", user)
+  if (!user || (req.params.login && !user.isFilled)) {
     return { type: "error", message: "User not found" }
   }
+
+  // if (req.params.login) {
+  //   const q = mongo.models.Actions.findOne({ who: user._id })
+  // }
+  console.log()
+
+  // delete user.id
+
   return { type: "ok", data: user }
 
   //   if (req.user.login !== login) {

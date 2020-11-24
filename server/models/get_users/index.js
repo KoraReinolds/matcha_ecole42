@@ -9,7 +9,7 @@ module.exports = async function(options) {
             type: "Point",
             // coordinates: [ 55.751640, 37.616565 ],
             // coordinates: [ 37.616565, 55.751640 ],
-            coordinates: [ 0.2, 0.2 ],
+            coordinates: [ 0.3, 0.3 ],
           },
           distanceField: "calculated",
           maxDistance: 25000000,
@@ -19,17 +19,15 @@ module.exports = async function(options) {
         $match: {
           login: { $ne: options.login },
           gender: { $in: options.preference },
-          isFilled: true,
+          filledInformation: true,
           age: { $gt: +options.minAge - 1, $lt: +options.maxAge + 1 },
-          rating: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
+          fameRaiting: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
         }
       },
     ])
     
     // .select('-_id -salt -token -hashedPassword -__v -email -created')
   // let filteredDocs = docs
-  console.log(options)
-  console.log(docs[0])
 
 
   // if (options.tags.length) {

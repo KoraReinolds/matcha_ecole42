@@ -167,7 +167,6 @@ export default {
     }),
     sendMessage() {
       if (this.message.trim()) {
-        console.log(this.message)
         this.$store.dispatch('chat/SEND_MESSAGE', this.message);
         this.message = '';
         this.$refs.input.style.cssText = 'height:36px';

@@ -27,6 +27,8 @@ module.exports = function(io) {
     },
   })
 
+  schema.statics.likeUser = require('./like_user')
+  
   schema.statics.sendMessage = function(req, callback) {
     const User = mongo.models.User
     const Actions = mongo.models.Actions

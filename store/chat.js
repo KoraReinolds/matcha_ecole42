@@ -24,7 +24,6 @@ export const actions = {
       message: message.replace(/\n/g, '<br />'),
     }
     const res = await this.$axios.$post('send-message', msg)
-    console.log(res)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
         ...res.data,

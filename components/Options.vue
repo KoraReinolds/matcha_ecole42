@@ -48,11 +48,6 @@ export default {
   },
   methods: {
     optionChecked(opt) {
-      console.log("opt ", this.many ?
-        this.value.includes(opt) :
-        this.value === opt)
-      // let value = this.value === undefined ?
-      //   [] : this.value;
       return this.many ?
         this.value.includes(opt) :
         this.value === opt

@@ -75,7 +75,6 @@ export const getters = {
 export const mutations = {
   CHANGE_COUNT_PER_PAGE: (state) => {
     state.limit = window.innerWidth <= 480 ? 1 : 3
-    console.log(state.limit)
     state.curPage = 1
   },
   SET_INIT_TOOLS: (state, user) => {

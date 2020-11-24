@@ -194,19 +194,8 @@ export const actions = {
   async SIGN_IN ({ dispatch, state }, data) {
     data.location = state.realLocation
     try {
-      
-      // let res = await this.$axios.$post('login', data)
-      // document.cookie = `token=${res.token}`
-      // // this.$auth.setUserToken(token)
-      // console.log(res)
-      // // document.cookie = `token: ${res.token}`
-      // res = await this.$axios.$get(`profile-get/${data.login}`)
-      // console.log(res)
-      // // this.$auth.setUser(user)
-
       await this.$auth.loginWith('local', { data })
       dispatch('history/PUSH_POP_WINDOW', res, { root: true })
-
     } catch (e) {
       if (e.message.slice(-3) === '401') {
         dispatch('history/PUSH_POP_WINDOW', {
@@ -236,7 +225,6 @@ export const actions = {
         fd.append('image', reader.result.split(',')[1])
         const res = await API.uploadImage(fd)
         img.src = res.data.data.display_url
-        console.log(res.data.display_url)
         dispatch('CHANGE_USER_FIELD', {
           key: 'images',
           value: [...images, img],

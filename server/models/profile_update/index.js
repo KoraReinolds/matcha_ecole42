@@ -1,6 +1,5 @@
 module.exports = async function({ user, body }) {
 
-  console.log(user, body)
   const User = this
 
   if (body.location) { // обновляем геолокацию, если пользователь хочет ее изменить

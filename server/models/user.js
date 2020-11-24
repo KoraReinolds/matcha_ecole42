@@ -14,11 +14,6 @@ module.exports = function(io) {
   })
 
   const getLocation = function() {
-    console.log("here ", this.geoLoc ?
-      {
-        x: this.geoLoc.coordinates[0],
-        y: this.geoLoc.coordinates[1]
-      } : null)
     return this.geoLoc ?
       {
         x: this.geoLoc.coordinates[0],
@@ -80,7 +75,8 @@ module.exports = function(io) {
       type: Array,
     },
     gender: {
-      type: String,
+      type: Number,
+      default: 1,
     },
     preference: {
       type: Array,
@@ -94,7 +90,8 @@ module.exports = function(io) {
     isFilled: {
       type: Boolean,
     },
-  }, { toJSON: { getters: true } })
+  })
+  // }, { toJSON: { getters: true } })
   
   schema.statics.getUsersForChat = async function(req, callback) {
     const docs = await this.find({
@@ -121,60 +118,6 @@ module.exports = function(io) {
   schema.statics.updateUser = require('./profile_update')
   
   schema.statics.getUserByName = require('./get_profile')
-    
-  schema.statics.likeUser = function(req, callback) {
-    const User = this
-  
-    a.waterfall([
-      (callback) => {
-        User.findOne({login: req.body.login}, callback)
-      },
-      (user, callback) => {
-        if (!user) {
-          callback(null, { type: "error", message: "Невозможно выполнить операцию!" })
-        } else {
-          User.findOneAndUpdate(
-            { login: req.user.login },
-            { likeList: req.body.likeList },
-            function(err, doc) {
-              if (err) callback(404)
-              callback(null, user)
-            }
-          )
-        }
-      },
-      (user, callback) => {
-        new mongo.models.Actions({
-          who: req.user._id,
-          action: req.body.action,
-          target: user._id,
-        }).save((err, action) => {
-          if (err) callback(null, { type: "error", message: "Невозможно выполнить операцию!" })
-          io.emit(user.login, {
-            action:         action.action,
-            created:        action.created, 
-            who: {
-              age:          req.user.age,
-              avatar:       req.user.avatar,
-              biography:    req.user.biography,
-              created:      req.user.created,
-              rating:  req.user.rating,
-              fname:        req.user.fname,
-              gender:       req.user.gender,
-              images:       req.user.images,
-              likeList:     req.user.likeList,
-              lname:        req.user.lname,
-              location:     req.user.location,
-              login:        req.user.login,
-              preference:   req.user.preference,
-              tags:         req.user.tags,
-            }
-          })
-          callback(null, { type: "ok", message: "Данные успешно обновленны" })
-        })
-      }
-    ], callback)
-  }
   
   schema.statics.registration = require('./registration')
   
