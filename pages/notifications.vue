@@ -4,11 +4,11 @@
       v-if="notifList.length"
     )
       UserShort(
-        v-for="(userData, index) in notifList"
-        :key="'notif'+index+userData.login"
-        :user="userData.who"
-        :action="userData.action"
-        :time="userData.created"
+        v-for="({ type, time, ...who }, index) in notifList"
+        :key="'notif'+index+who.login"
+        :user="who"
+        :action="type"
+        :time="time"
       )
     template(
       v-else

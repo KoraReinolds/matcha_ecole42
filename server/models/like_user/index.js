@@ -4,23 +4,15 @@ module.exports = async function(req) {
 
   const Actions = this
 
-  const user = await mongo.models.User.findOne({ login: req.params.login })
+  const user = await mongo.models.User.findOne({ login: req.body.login })
 
   if (!user) {
     return { type: "error", message: "Невозможно выполнить операцию!" }
   }
 
-  // User.findOneAndUpdate(
-  //   { login: req.params.login },
-  //   // function(err, doc) {
-  //   //   if (err) callback(404)
-  //   //   callback(null, user)
-  //   // }
-  // )
-
   await new Actions({
     who: req.user._id,
-    action: req.params.isLike ? 'like' : 'dislike',
+    action: +req.body.value ? 'like' : 'dislike',
     target: user._id,
   }).save()
 
@@ -47,7 +39,6 @@ module.exports = async function(req) {
   //       tags:         req.user.tags,
   //     }
   //   })
-  //   callback(null, { type: "ok", message: "Данные успешно обновленны" })
   // }
     
 }

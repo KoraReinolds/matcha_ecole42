@@ -79,6 +79,7 @@ export const actions = {
 
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
     const res = await this.$axios.$post('history')
+    console.log(res)
     if (res.type === 'ok') {
       commit('SET_HISTORY', res.data)
     }

@@ -15,7 +15,6 @@
           :active="user.likedFrom"
           :user="user"
         )
-        div likedFrom: {{ user.likedFrom }}
         Ban(
           :size="2"
           :active="true"
@@ -136,9 +135,7 @@ export default {
       return this.user ? this.$auth.user.login === this.user.login : true;
     },
     chatAvailable: function() {
-      return true
-      // return this.user ? this.user.likeList.includes(this.$auth.user.login) &&
-      //   this.$auth.user.likeList.includes(this.user.login) : false;
+      return this.user ? this.user.likedFrom && this.user.likedTo : false
     }
   },
   methods: {

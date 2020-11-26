@@ -5,7 +5,7 @@
   )
     div.img-container
       RoundedIcon.gender(
-        :icon="user.gender"
+        :icon="['ban', 'bisexual', 'male', 'female'][user.gender]"
         :mask="mobile"
         :size="6"
       )
@@ -14,7 +14,7 @@
           height="96px"
           width="96px"
           rounded
-          :src="user.images.filter(img => img.avatar)[0].src"
+          :src="user.images"
         )
     div.info-container(
       :class="[$route.name]"

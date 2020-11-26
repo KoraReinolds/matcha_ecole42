@@ -127,6 +127,7 @@ export const getters = {
   MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
+  TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
   SET_VALUE: (state, { key, value }) => {
     let field = state.formFields[key]
@@ -233,7 +234,9 @@ export const actions = {
     }
   },
 
-  async LIKE ({ commit, rootState, dispatch }, { login, likedFrom }) {
+  async LIKE ({ commit, rootState, dispatch }, user) {
+
+    const { login, likedFrom } = user
     // let index = rootState.auth.user.likeList.indexOf(login)
     // let newLikeList = [...rootState.auth.user.likeList]
     // if (index === -1) {
@@ -241,7 +244,10 @@ export const actions = {
     // } else {
     //   newLikeList.splice(index, 1)
     // }
-    const res = await this.$axios.$post(`like-user/${login}/${likedFrom ? 0 : 1}`)
+    const res = await this.$axios.$post(`like-user`, {
+      login,
+      value: likedFrom ? 0 : 1,
+    })
     // , {
     //   login,
     //   likeList: newLikeList,
@@ -249,10 +255,7 @@ export const actions = {
     //   action: index === -1 ? 'like' : 'dislike',
     // })
     if (res.type === 'ok') {
-      dispatch('CHANGE_USER_FIELD', {
-        key: 'likeList',
-        value: newLikeList,
-      })
+      commit('TOGGLE_LIKE', user)
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   }

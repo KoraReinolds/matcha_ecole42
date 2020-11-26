@@ -1,14 +1,14 @@
-import { mount } from '@vue/test-utils'
+// import { mount } from '@vue/test-utils'
 import axios from 'axios'
-import register from './api/register'
-import login from './api/login'
-import logout from './api/logout'
-import profileGet from './api/profile-get'
-import profileUpdate from './api/profile-update'
-import getUsers from './api/get-users'
-import likeUser from './api/like-user'
-import visit from './api/visit'
-import messages from './api/messages'
+// import register from './api/register'
+// import login from './api/login'
+// import logout from './api/logout'
+// import profileGet from './api/profile-get'
+// import profileUpdate from './api/profile-update'
+// import getUsers from './api/get-users'
+// import likeUser from './api/like-user'
+// import visit from './api/visit'
+// import messages from './api/messages'
 const { generateUser } = require('../server/dataGeneration/index')
 
 const baseUrl = "http://localhost:4000"
@@ -23,9 +23,7 @@ const registerTemplate = {
   lname: "skiles",
   location: { y: 37.5420654, x: 55.808093 },
 }
-const updateProfileTemplate = {
-
-}
+const history = []
 
 const store = {
 
@@ -39,6 +37,8 @@ const store = {
     delete user.geoLoc
     delete user.realLocation
     delete user.email
+    user.likedFrom = false
+    user.likedTo = false
     const resp = this.users[login] && this.users[login].isFilled ? {
       type: "ok",
       data: user,
@@ -131,6 +131,30 @@ const store = {
     }
   },
 
+  likeUser(from, to, isLike, desc) {
+
+    test(`like-user/, (${desc})`, async () => {
+      let data
+      let error
+      try {
+        data = (await axios.post(`${baseUrl}/like-user/${to}/${isLike}`, {}, {
+          headers: { "Authorization": tokens[from] }
+        })).data
+        history.push({
+          from,
+          to,
+          isLike,
+        })
+      } catch({ response }) {
+        error = response
+      }
+      console.log(history)
+      if (data) expect(data).toEqual(successResponce)
+      else if (error) expect(error.status).toEqual(401)
+    })
+    
+  },
+
   profileUpdate(login) {
 
     const num = login.split('_')[1]
@@ -166,17 +190,15 @@ describe('API', () => {
   // register
   Array.from(Array(count).keys()).forEach(num => store.registerUser(`User_${num}`))
   
-  // store.getUserProfile(`User_0`, `User_1`, 'kek')
-
   // login
   Array.from(Array(count).keys()).forEach(num => store.loginUser(`User_${num}`))
 
   // profile-get
   Array.from(Array(count).keys()).forEach(num => store.getUserProfile(`User_${num}`, `User_${num}`))
   
-  store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
-  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
-  store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
+  // store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
+  // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
+  // store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
 
   // profile-update
   Array.from(Array(count - 2).keys()).forEach(num => {
@@ -185,7 +207,21 @@ describe('API', () => {
     store.getUserProfile(user, user, `${user}: Получение профиля после обновления`)
   })
 
-  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
+  // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
+
+  store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
+  store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
+  store.getUserProfile('User_0', 'User_1', `User_0: Получение профиля после лайков`)
+  store.getUserProfile('User_1', 'User_0', `User_1: Получение профиля после лайков`)
+
+
+  // store.likeUser('User_1', 'User_2', 1, 'User_1: Пользователь поставил лайк User_0')
+  // store.likeUser('User_1', 'User_3', 1, 'User_1: Пользователь поставил лайк User_0')
+  // store.likeUser('User_1', 'User_2', 0, 'User_1: Пользователь убрал лайк User_0')
+
+  // store.getUserProfile('User_0', 'User_0', `User_0: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_2', `User_0: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_3', `User_0: Получение профиля после лайков`)
 
 
   

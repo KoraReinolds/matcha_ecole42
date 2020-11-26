@@ -5,11 +5,11 @@
     )
       transition-group(name="list" tag="div")
         UserShort(
-          v-for="(userData, index) in historyList"
-          :key="'history'+index+userData.login"
-          :user="userData.target"
-          :action="userData.action"
-          :time="userData.created"
+          v-for="({ type, time, ...target }, index) in historyList"
+          :key="'history'+index+target.login"
+          :user="target"
+          :action="type"
+          :time="time"
         )
     template(
       v-else

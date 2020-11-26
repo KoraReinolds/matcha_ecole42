@@ -4,22 +4,74 @@ module.exports = async function(req) {
 
   const User = this
   const login = req.params.login || req.user.login
-  const exclude = `-id -realLocation -salt -token -hashedPassword -__v -created -geoLoc
-    ${login === req.user.login ? '' : '-email'}`
-  const user = await User.findOne({ login })
-    // .populate('User')
-    .select(exclude)
-  console.log("USER ", user)
+  const user = (await User
+    .aggregate([
+      {
+        $addFields: { "likedTo": false },
+      },
+      {
+        $addFields: { "likedFrom": false },
+      },
+      {
+        $match: { login, }
+      },
+      {
+        $project: {
+          __v: 0,
+          realLocation: 0,
+          salt: 0,
+          token: 0,
+          hashedPassword: 0,
+          created: 0,
+          geoLoc: 0,
+        }
+      }
+    ]))[0]
+
   if (!user || (req.params.login && !user.isFilled)) {
     return { type: "error", message: "User not found" }
   }
 
-  // if (req.params.login) {
-  //   const q = mongo.models.Actions.findOne({ who: user._id })
-  // }
-  console.log()
+  if (req.params.login) {
+    await new mongo.models.Actions({
+      who: req.user._id,
+      action: 'visit',
+      target: user._id,
+    }).save()
+  }
+  
+  if (req.params.login) {
 
-  // delete user.id
+    const likedTo = await mongo.models.Actions.findOne(
+      {
+        $or: [
+          {$and: [{ who: user._id }, {action: 'like'}]},
+          {$and: [{ who: user._id }, {action: 'dislike'}]},
+        ],
+      },
+      {},
+      { sort: { 'created' : -1 } }
+    )
+    user.likedTo = likedTo ? likedTo.action === "like" : false
+    const likedFrom = await mongo.models.Actions.findOne(
+      {
+        $or: [
+          {$and: [{ target: user._id }, {action: 'like'}]},
+          {$and: [{ target: user._id }, {action: 'dislike'}]},
+        ],
+      },
+      {},
+      { sort: { 'created' : -1 } }
+    )
+    user.likedFrom = likedFrom ? likedFrom.action === "like" : false
+  }
+  
+  if (req.params.login) delete user.email
+  else {
+    delete user.likedFrom
+    delete user.likedTo
+  }
+  delete user._id
 
   return { type: "ok", data: user }
 

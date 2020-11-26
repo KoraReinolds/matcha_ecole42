@@ -63,33 +63,16 @@ module.exports = function(io) {
     } else next()
   })
 
-  router.post('/history', (req, res, next) => {
-    if (req.user) {
-      Actions.getHistory(req, (err, params) => {
-        if (err) next(err)
-        else res.send(JSON.stringify(params))
-      })
-    } else next()
-  })
+  router.post('/history', errorHandleWrapper(async (req, res) => {
+    res.json(await Actions.getHistory(req))
+  }))
   
-  router.post('/notifications', (req, res, next) => {
-    if (req.user) {
-      Actions.getNotifications(req, (err, params) => {
-        if (err) next(err)
-        else res.send(JSON.stringify(params))
-      })
-    } else next()
-  })
+  router.post('/notifications', errorHandleWrapper(async (req, res) => {
+    res.json(await Actions.getNotifications(req))
+  }))
   
-  router.post('/like-user/:login/:isLike', errorHandleWrapper(async (req, res) => {
+  router.post('/like-user', errorHandleWrapper(async (req, res) => {
     res.json(await Actions.likeUser(req))
-
-    // if (req.user) {
-    //   User.likeUser(req, (err, params) => {
-    //     if (err) next(err)
-    //     else res.send(JSON.stringify(params))
-    //   })
-    // } else next()
   }))
   
   router.post('/get-users', errorHandleWrapper(async (req, res) => {

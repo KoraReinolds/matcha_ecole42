@@ -109,26 +109,9 @@ module.exports = function(io) {
     ], callback)
   }
 
-  schema.statics.getNotifications = function(req, callback) {
-    this.find({ target: req.user._id })
-      .populate('who', '-__v -salt -created -__v -token -_id -hashedPassword -email -likeList')
-      .select('who action created -_id')
-      .exec((err, users) => {
-        if (err) return callback(err)
-        callback(null, { type: "ok", message: "", data: users })
-      })
-  }
+  schema.statics.getNotifications = require('./notifications')
 
-  schema.statics.getHistory = function(req, callback) {
-    this.find({ who: req.user._id})
-      .populate('target', '-__v -salt -created -__v -token -_id -hashedPassword -email -likeList')
-      .select('target action created -_id')
-
-      .exec((err, users) => {
-        if (err) return callback(err)
-        callback(null, { type: "ok", message: "", data: users })
-      })
-  }
+  schema.statics.getHistory = require('./history')
 
   return mongo.model('Actions', schema)
 }

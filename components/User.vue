@@ -11,7 +11,7 @@
           @click="paginate"
         )
         RoundedIcon.gender.only_laptop(
-          :icon="user.gender"
+          :icon="['ban', 'bisexual', 'male', 'female'][user.gender]"
           :size="4"
           :mask="false"
         )
