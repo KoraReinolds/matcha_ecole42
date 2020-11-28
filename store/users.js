@@ -126,19 +126,20 @@ export const actions = {
       }
       return sum
     }, {})
-    const res = await this.$axios.$post('get-users', {
-      limit:          state.limit,
-      skip:           (state.curPage - 1) * state.limit,
-      preference:     state.tools.pref.value,
-      minAge:         state.tools.minAge.value,
-      maxAge:         state.tools.maxAge.value,
-      minDist:        state.tools.minDist.value,
-      maxDist:        state.tools.maxDist.value,
-      minRate:        state.tools.minRate.value,
-      maxRate:        state.tools.maxRate.value,
-      tags:           state.tools.tags.value,
-      sortOrder:      sortOrder,
-    })
+    // preference:     state.tools.pref.value,
+    // minDist:        state.tools.minDist.value,
+    // maxDist:        state.tools.maxDist.value,
+    const res = await this.$axios.$get(`get-users
+      ?tags=${state.tools.tags.value}
+      &sortOrder=${sortOrder}
+      &ageMin=${state.tools.minAge.value}
+      $ageMax=${state.tools.maxAge.value}
+      $minRating=${state.tools.minRate.value}
+      $maxRating=${state.tools.maxRate.value}
+      $deltaRadius=${state.tools.maxRate.value}
+      $limit=${state.limit}
+      $skip=${(state.curPage - 1) * state.limit}
+    `)
     if (res.type === 'ok') {
       commit('SET_USERS', res.data)
     }
