@@ -164,12 +164,12 @@ export default {
         font-size: 16px;
         color: rgba($color: #000000, $alpha: 0.45);
       }
-      &:hover {
-        border-color: rgba(0.0, 0.0, 0.0, 0.75);
-        label {
-          color: rgba(0.0, 0.0, 0.0, 0.75);
-        }
-      }
+      // &:hover {
+      //   border-color: rgba(0.0, 0.0, 0.0, 0.75);
+      //   label {
+      //     color: rgba(0.0, 0.0, 0.0, 0.75);
+      //   }
+      // }
     }
     &.error {
       .tooltip-field,
@@ -238,7 +238,7 @@ export default {
 
     &.outlined {
       .input-field {
-        border-radius: 8px;
+        // border-radius: 8px;
         textarea,
         input {
           position: relative;
@@ -261,7 +261,7 @@ export default {
 
     &.rounded {
       .input-field {
-        border-radius: 28px;
+        // border-radius: 28px;
         legend {
           margin-left: 22px;
         }

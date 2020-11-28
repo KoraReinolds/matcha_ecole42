@@ -1,9 +1,9 @@
 module.exports = {
 
-  // server: {
-  //   port: 3000,
-  //   host: '192.168.29.15'
-  // },
+  server: {
+    port: 3000,
+    host: '192.168.29.73'
+  },
   /*
   ** Headers of the page
   */
@@ -106,7 +106,7 @@ module.exports = {
   io: {
     // module options
     sockets: [{
-      url: 'http://localhost:4000'
+      url: 'ws://192.168.29.71:4567/chat'
     }]
   },
   styleResources: {
@@ -119,8 +119,8 @@ module.exports = {
   axios: {
     // credentials: true,
     // baseURL: 'http://localhost:4567', // Used as fallback if no runtime config is provided
-    // baseURL: 'http://192.168.29.13:4567', // Used as fallback if no runtime config is provided
-    baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
+    baseURL: 'http://192.168.29.71:4567', // Used as fallback if no runtime config is provided
+    // baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
     // baseURL: 'https://matcha-server.herokuapp.com', // Used as fallback if no runtime config is provided
   },
   auth: {

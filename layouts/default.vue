@@ -49,21 +49,51 @@ export default {
     window.addEventListener('resize', this.rechangeCount);
     this.getLocation();
 
+    // let socket = new WebSocket(
+    //   "ws://192.168.29.71:4567/chat?token=access_token",
+    // );
+    // socket.onopen = function(e) {
+    //   console.log("[open] Соединение установлено");
+    //   console.log("Отправляем данные на сервер");
+    //   socket.send("Меня зовут Джон");
+    // };
+
+    // socket.onmessage = function(event) {
+    //   alert(`[message] Данные получены с сервера: ${event.data}`);
+    // };
+
+    // socket.onclose = function(event) {
+    //   if (event.wasClean) {
+    //     console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+    //   } else {
+    //     // например, сервер убил процесс или сеть недоступна
+    //     // обычно в этом случае event.code 1006
+    //     console.log('[close] Соединение прервано');
+    //   }
+    // };
+
+    // socket.onerror = function(error) {
+    //   alert(`[error] ${error.message}`);
+    // };
+    // console.log(socket)
+    // // let socket = new WebSocket("wss://javascript.info/article/websocket/demo/hello");
+    // console.log("socket ", socket)
     if (this.$auth.loggedIn) {
-      // this.socket = this.$nuxtSocket({});
-      // this.socket
-      //   .on(this.$auth.user.login, (notif, cb) => {
-      //     if (notif.action === 'messages') {
-      //       if (notif.who.login === this.$route.params.id) {
-      //         this.pushMessage(notif);
-      //       }
-      //     }
-      //     this.pushPopWindow(notif);
-      //     this.pushNotification(notif);
-      //     if (this.$router.currentRoute.name === 'notifications') {
-      //       this.setAllNotifAsChecked();
-      //     }
-      //   })
+    //   this.socket = this.$nuxtSocket({});
+    //   this.socket
+    //     .on(this.$auth.user.login, (notif, cb) => {
+    //       if (notif.action === 'messages') {
+    //         if (notif.who.login === this.$route.params.id) {
+    //           this.pushMessage(notif);
+    //         }
+    //       }
+    //       this.pushPopWindow(notif);
+    //       this.pushNotification(notif);
+    //       if (this.$router.currentRoute.name === 'notifications') {
+    //         this.setAllNotifAsChecked();
+    //       }
+    //     })
+    //   conosle.log(this.socket)
     }
   }
 }

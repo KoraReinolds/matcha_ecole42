@@ -37,7 +37,6 @@
     Options.form-field(
       :data="fieldsData.preference"
       v-model="preference"
-      many
     )
     TagsField.form-field(
       :data="fieldsData.tags"
@@ -88,7 +87,7 @@ export default {
       set(value) { this.changeUserField({ key: 'lname', value }); },
     },
     age: {
-      get() { return this.$auth.user.age; },
+      get() { return this.$auth.user.age || ''; },
       set(value) { this.changeUserField({ key: 'age', value }); },
     },
     email: {

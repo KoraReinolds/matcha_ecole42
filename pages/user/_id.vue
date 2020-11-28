@@ -39,14 +39,9 @@
             :value="user ? user.rating : undefined"
             :size="1"
           )
-          Distance.dist(
-            v-if="!myPage"
-            :value="user ? (user.location) : undefined"
-            :size="1"
-          )
           Online.online.only_laptop(
             v-if="user"
-            :time="this.user.time"
+            :time="new Date(this.user.time)"
           )
 
       div.title.left Gender
@@ -55,10 +50,7 @@
       div.title.left Preferences
       div.field.preferences
         template(v-if="user")
-          span(
-            v-for="pref in user.preference"
-            :key="`user_pref_${pref}`"
-          ) {{ pref }}
+          span {{ ['male', 'female', 'bisexual'][user.preference - 1] }}
         template(v-else)
           span ...
 
@@ -192,6 +184,7 @@ export default {
       padding: 10px 5%;
       .fio {
         display: flex;
+        align-items: center;
         flex-wrap: wrap;
         @media (max-width: map-get($grid-breakpoints, sm)) { flex-direction: column; };
         position: relative;

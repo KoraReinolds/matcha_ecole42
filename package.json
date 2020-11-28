@@ -14,7 +14,7 @@
     "server": "node ./server/db/createDB.js; node ./server/index.js;",
     "serverdev": "cd ./server; supervisor ./index.js;",
     "start": "nuxt start",
-    "test": "node ./server/db/clearDB.js; jest"
+    "test": "jest"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
@@ -22,9 +22,7 @@
     "@nuxtjs/axios": "^5.12.1",
     "@vue/cli-plugin-unit-jest": "^4.5.6",
     "@vue/test-utils": "^1.1.0",
-    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "js-cookie": "^2.2.1",
     "mongoose": "^5.10.0",
     "nuxt": "^2.0.0",
     "nuxt-auth": "^2.0.10",

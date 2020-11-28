@@ -46,7 +46,7 @@ export const actions = {
   },
 
   async GET_CHAT_LIST ({ commit, dispatch, state, rootState }) {
-    const res = await this.$axios.$post('chat-list', {
+    const res = await this.$axios.$get('connected', {
     })
     if (res.type === 'ok') {
       commit('SET_USERS', res.data)

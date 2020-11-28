@@ -129,17 +129,23 @@ export const actions = {
     // preference:     state.tools.pref.value,
     // minDist:        state.tools.minDist.value,
     // maxDist:        state.tools.maxDist.value,
-    const res = await this.$axios.$get(`get-users
-      ?tags=${state.tools.tags.value}
-      &sortOrder=${sortOrder}
-      &ageMin=${state.tools.minAge.value}
-      $ageMax=${state.tools.maxAge.value}
-      $minRating=${state.tools.minRate.value}
-      $maxRating=${state.tools.maxRate.value}
-      $deltaRadius=${state.tools.maxRate.value}
-      $limit=${state.limit}
-      $skip=${(state.curPage - 1) * state.limit}
-    `)
+    console.log(state.tools.tags.value, `get-users
+    ?tags=${state.tools.tags.value.join()}
+    &sortAge=1
+    &sortLocation=1
+    &sortRating=1
+    &sortTags=1
+    &ageMin=${state.tools.minAge.value}
+    &ageMax=${state.tools.maxAge.value}
+    &minRating=${state.tools.minRate.value}
+    &maxRating=${state.tools.maxRate.value}
+    &deltaRadius=${state.tools.maxRate.value}
+    &limit=${state.limit}
+    &offset=${(state.curPage - 1) * state.limit}
+  `)
+    // const res = await this.$axios.$get(`get-users?tags=${state.tools.tags.value.join()}&sortAge=1&sortLocation=1&sortRating=1&sortTags=1&ageMin=${state.tools.minAge.value}&ageMax=${state.tools.maxAge.value}&minRating=${state.tools.minRate.value}&maxRating=${state.tools.maxRate.value}&deltaRadius=${state.tools.maxRate.value}&limit=${state.limit}&offset=${(state.curPage - 1) * state.limit}
+    // `)
+    const res = await this.$axios.$get('get-users?ageMin=0&ageMax=100&minRating=0&maxRating=999&deltaRadius=1000&limit=100&offset=0&sortAge=1&sortLocation=1&sortRating-1&sortTags=1&needPreference=1')
     if (res.type === 'ok') {
       commit('SET_USERS', res.data)
     }

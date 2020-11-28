@@ -35,7 +35,7 @@
 export default {
   name: 'Options',
   props: {
-    value: [Array, String],
+    value: [Number],
     data: Object,
     many: Boolean,
     icons: Object,
@@ -58,9 +58,9 @@ export default {
         let newVal = [...this.value];
         if (!this.value.includes(value)) newVal.push(value);
         else newVal = newVal.filter(val => val !== value);
-        this.$emit('input', newVal)
+        this.$emit('input', +newVal)
       } else {
-        this.$emit('input', event.target.value)
+        this.$emit('input', +event.target.value)
       }
     },
   },
@@ -81,6 +81,7 @@ export default {
       z-index: -1;
       opacity: 0;
       width: 0;
+      
       height: 0;
       &:checked + .label:after {
         top: 10px;

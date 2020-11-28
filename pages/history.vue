@@ -8,7 +8,7 @@
           v-for="({ type, time, ...target }, index) in historyList"
           :key="'history'+index+target.login"
           :user="target"
-          :action="type"
+          :action="getAction(type)"
           :time="time"
         )
     template(
@@ -36,6 +36,12 @@ export default {
     ...mapActions({
       getHistory: 'history/GET_HISTORY',
     }),
+    getAction(type) {
+      return {
+        LIKE: 'like',
+        PROFILE_LOAD: 'visit',
+      }[type]
+    }
   },
   mounted() {
     this.getHistory();

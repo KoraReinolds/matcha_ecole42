@@ -5,7 +5,7 @@
   )
     div.img-container
       RoundedIcon.gender(
-        :icon="['ban', 'bisexual', 'male', 'female'][user.gender]"
+        :icon="['bisexual', 'male', 'female'][user.gender - 1]"
         :mask="mobile"
         :size="6"
       )
@@ -14,7 +14,7 @@
           height="96px"
           width="96px"
           rounded
-          :src="user.images"
+          :src="user.src"
         )
     div.info-container(
       :class="[$route.name]"
@@ -27,7 +27,7 @@
         NameLink(
           :user="user"
         )
-      span.time {{ getDate(time) }}
+      span.time {{ getDate(time) }} {{ action }}
 
 </template>
 

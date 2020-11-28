@@ -42,7 +42,7 @@ const generateUser = () => {
   const email = `${fname}@mail.ru`
   const age = getRandomValue(18, 55)
   const rating = getRandomValue(0, 1000)
-  const preference = randomArray(1, genderArray.length, genderArray)
+  const preference = randomValueFromArray(genderArray)
   const biography = randomText(1, 5, sentences)
   const images = [
     { avatar: true, index: 0, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },

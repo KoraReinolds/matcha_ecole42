@@ -11,7 +11,7 @@ import axios from 'axios'
 // import messages from './api/messages'
 const { generateUser } = require('../server/dataGeneration/index')
 
-const baseUrl = "http://localhost:4000"
+const baseUrl = "http://192.168.29.71:4567"
 // const baseUrl = "https://mskiles-matcha-back.herokuapp.com"
 const tokens = {}
 const successResponce = { type: 'ok' }
@@ -100,6 +100,7 @@ const store = {
       })
       if (data) {
         expect(data.token === undefined).toBe(false)
+        // users[user.login].rating += 2
         tokens[user.login] = data.token
         delete data.token
       }
@@ -112,6 +113,7 @@ const store = {
     const request = { ...registerTemplate, login }
 
     test(`register, (${request.login}: Регистрация пользователя ${request.login})`, async () =>  {
+      console.log(request)
       const { data } = await axios.post(`${baseUrl}/register`, request)
       expect(data).toEqual(successResponce)
     })
@@ -120,10 +122,10 @@ const store = {
       ...request,
       age: null,
       biography: "",
-      gender: 1,
+      gender: 3,
       images: [],
       isFilled: false,
-      preference: [],
+      preference: 3,
       tags: [],
       rating: 0,
       geoLoc: null,
@@ -187,6 +189,19 @@ const store = {
 describe('API', () => {
 
   const count = 10
+
+  test(`clear, (ckear)`, async () => {
+    let data
+    let error
+    try {
+      data = (await axios.get(`${baseUrl}/clear`)).data
+    } catch({ response }) {
+      error = response
+    }
+    if (data) expect(data).toEqual(successResponce)
+    else if (error) expect(error.status).toEqual(401)
+  })
+  
   // register
   Array.from(Array(count).keys()).forEach(num => store.registerUser(`User_${num}`))
   
@@ -196,9 +211,9 @@ describe('API', () => {
   // profile-get
   Array.from(Array(count).keys()).forEach(num => store.getUserProfile(`User_${num}`, `User_${num}`))
   
-  // store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
-  // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
-  // store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
+  store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
+  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
+  store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
 
   // profile-update
   Array.from(Array(count - 2).keys()).forEach(num => {
@@ -207,12 +222,12 @@ describe('API', () => {
     store.getUserProfile(user, user, `${user}: Получение профиля после обновления`)
   })
 
-  // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
+  // // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
 
-  store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
-  store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
-  store.getUserProfile('User_0', 'User_1', `User_0: Получение профиля после лайков`)
-  store.getUserProfile('User_1', 'User_0', `User_1: Получение профиля после лайков`)
+  // store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
+  // store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
+  // store.getUserProfile('User_0', 'User_1', `User_0: Получение профиля после лайков`)
+  // store.getUserProfile('User_1', 'User_0', `User_1: Получение профиля после лайков`)
 
 
   // store.likeUser('User_1', 'User_2', 1, 'User_1: Пользователь поставил лайк User_0')

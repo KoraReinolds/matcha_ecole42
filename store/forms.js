@@ -68,21 +68,21 @@ export const state = () => ({
       ],
     },
     gender: {
-      options: {male: 3, female: 2, bisexual: 1 },
+      options: { male: 1, female: 2 },
       errorMsg: '',
       title: 'Gender',
       valid: false,
       rules: [
-        "!!value || 'Required'",
+        "value !== 3 || 'Required'",
       ],
     },
     preference: {
-      options: {male: 3, female: 2, bisexual: 1 },
+      options: { male: 1, female: 2, both: 3 },
       errorMsg: '',
       title: 'Preferences',
       valid: false,
       rules: [
-        "!!value.length || 'Required'",
+        "!!value || 'Required'",
       ],
     },
     tags: {

@@ -8,7 +8,7 @@ export default {
   data: () => ({
   }),
   props: {
-    time: Number,
+    time: Date,
   },
   methods: {
     getTime() {
@@ -33,7 +33,8 @@ export default {
 <style scoped lang="scss">
 .time {
   color: rgb(161, 161, 161);
-  font-size: 14px;
+  font-size: 12px;
+  font-family: sans-serif;
 }
 
 </style>

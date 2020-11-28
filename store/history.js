@@ -64,7 +64,7 @@ export const actions = {
   },
 
   async GET_NOTIFICATIONS ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$post('notifications')
+    const res = await this.$axios.$get('notification?limit=50&offset=0')
     if (res.type === 'ok') {
       commit('SET_NOTIFICATIONS', res.data)
     }
@@ -78,7 +78,7 @@ export const actions = {
   },
 
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$post('history')
+    const res = await this.$axios.$get('history?limit=50&offset=0')
     console.log(res)
     if (res.type === 'ok') {
       commit('SET_HISTORY', res.data)
