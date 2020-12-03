@@ -1,16 +1,17 @@
 <template lang="pug">
   div#main(v-if="$auth.user && users")
     div.user-list
+      //- div(v-for="user in tools") {{ user }}
       template(v-if="users.length")
         transition-group(tag="p" name="user")
           User(
             v-for="(user, index) in users"
             :key="user.login"
-            :user="{...user, index: index}"
+            :user="user"
           )
       template(v-else)
         div.else Search returned no results
-      Paginator.paginator
+      //- Paginator.paginator
     Tools.tools
 
   </div>
@@ -33,6 +34,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      tools: 'users/TOOLS',
       users: 'users/USERS',
     }),
   },
@@ -60,7 +62,7 @@ export default {
   @media (max-width: map-get($grid-breakpoints, sm)) {
     flex-direction: column;
   }
-  .user-list {
+.user-list {
     .else {
       @media (min-width: map-get($grid-breakpoints, sm)) {
         width: 800px;

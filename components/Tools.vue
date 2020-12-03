@@ -12,53 +12,46 @@
       v-if="show"
     )
       Options.pref.form-field(
-        many
         :data="tools.pref"
         :icons="prefIcons"
         v-model.trim="pref"
       )
-
       TextField.form-field(
-        :data="tools.minAge"
-        v-model="minAge"
+        :data="tools.ageMin"
+        v-model="ageMin"
         type="number"
         min="18"
         max="99"
-        @blur="filterList({ val: $event.target.value, key: 'minAge' })"
+        @blur="filterList({ val: $event.target.value, key: 'ageMin' })"
       )
       TextField.form-field(
-        :data="tools.maxAge"
-        v-model="maxAge"
+        :data="tools.ageMax"
+        v-model="ageMax"
         type="number"
         min="18"
         max="99"
-        @blur="filterList({ val: $event.target.value, key: 'maxAge' })"
+        @blur="filterList({ val: $event.target.value, key: 'ageMax' })"
       )
 
       TextField.form-field(
-        :data="tools.minDist"
-        @blur="filterList({ val: $event.target.value, key: 'minDist' })"
-        v-model="minDist"
-        type="number"
-      )
-      TextField.form-field(
-        :data="tools.maxDist"
-        @blur="filterList({ val: $event.target.value, key: 'maxDist' })"
-        v-model="maxDist"
+        class="radius"
+        :data="tools.radius"
+        @blur="filterList({ val: $event.target.value, key: 'radius' })"
+        v-model="radius"
         type="number"
       )
 
       TextField.form-field(
-        :data="tools.minRate"
-        @blur="filterList({ val: $event.target.value, key: 'minRate' })"
-        v-model="minRate"
+        :data="tools.minRating"
+        @blur="filterList({ val: $event.target.value, key: 'minRating' })"
+        v-model="minRating"
         type="number"
         step="10"
       )
       TextField.form-field(
-        :data="tools.maxRate"
-        @blur="filterList({ val: $event.target.value, key: 'maxRate' })"
-        v-model="maxRate"
+        :data="tools.maxRating"
+        @blur="filterList({ val: $event.target.value, key: 'maxRating' })"
+        v-model="maxRating"
         type="number"
         step="10"
         max="1000"
@@ -73,8 +66,8 @@
       )
 
       Options.form-field(
-        :data="tools.sortDist"
-        v-model="sortDist"
+        :data="tools.sortLocation"
+        v-model="sortLocation"
         :icons="{ dist: 'sort-amount-down-alt', dist_rev: 'sort-amount-down' }"
         many
       )
@@ -85,9 +78,9 @@
         many
       )
       Options.form-field(
-        :data="tools.sortRate"
+        :data="tools.sortRating"
         :icons="{ rating: 'sort-amount-down-alt', rating_rev: 'sort-amount-down' }"
-        v-model="sortRate"
+        v-model="sortRating"
         many
       )
       Options.form-field(
@@ -132,45 +125,41 @@ export default {
       set(value) { this.filterList({ val: value, key: 'pref' }); },
       get() { return this.tools.pref.value; },
     },
-    minAge: {
-      set(value) { this.changeToolsValue({ val: value, key: 'minAge' }); },
-      get() { return this.tools.minAge.value; },
+    ageMin: {
+      set(value) { this.filterList({ val: value, key: 'ageMin' }); },
+      get() { return this.tools.ageMin.value; },
     },
-    maxAge: {
-      set(value) { this.changeToolsValue({ val: value, key: 'maxAge' }); },
-      get() { return this.tools.maxAge.value; },
+    ageMax: {
+      set(value) { this.filterList({ val: value, key: 'ageMax' }); },
+      get() { return this.tools.ageMax.value; },
     },
-    maxDist: {
-      set(value) { this.changeToolsValue({ val: value, key: 'maxDist' }); },
-      get() { return this.tools.maxDist.value; },
+    radius: {
+      set(value) { this.changeToolsValue({ val: value, key: 'radius' }); },
+      get() { return this.tools.radius.value; },
     },
-    minDist: {
-      set(value) { this.changeToolsValue({ val: value, key: 'minDist' }); },
-      get() { return this.tools.minDist.value; },
+    maxRating: {
+      set(value) { this.filterList({ val: value, key: 'maxRating' }); },
+      get() { return this.tools.maxRating.value; },
     },
-    maxRate: {
-      set(value) { this.changeToolsValue({ val: value, key: 'maxRate' }); },
-      get() { return this.tools.maxRate.value; },
-    },
-    minRate: {
-      set(value) { this.changeToolsValue({ val: value, key: 'minRate' }); },
-      get() { return this.tools.minRate.value; },
+    minRating: {
+      set(value) { this.filterList({ val: value, key: 'minRating' }); },
+      get() { return this.tools.minRating.value; },
     },
     tags: {
-      set(value) { this.changeToolsValue({ val: value, key: 'tags' }); },
+      set(value) { this.filterList({ val: value, key: 'tags' }); },
       get() { return this.tools.tags.value; },
     },
-    sortDist: {
-      set(value) { this.sort({ val: value, key: 'sortDist' }); },
-      get() { return this.tools.sortDist.value; },
+    sortLocation: {
+      set(value) { this.sort({ val: value, key: 'sortLocation' }); },
+      get() { return this.tools.sortLocation.value; },
     },
     sortAge: {
       set(value) { this.sort({ val: value, key: 'sortAge' }); },
       get() { return this.tools.sortAge.value; },
     },
-    sortRate: {
-      set(value) { this.sort({ val: value, key: 'sortRate' }); },
-      get() { return this.tools.sortRate.value; },
+    sortRating: {
+      set(value) { this.sort({ val: value, key: 'sortRating' }); },
+      get() { return this.tools.sortRating.value; },
     },
     sortTags: {
       set(value) { this.sort({ val: value, key: 'sortTags' }); },
@@ -190,7 +179,7 @@ export default {
       this.filterUsers();
     },
     ...mapMutations({
-      changeToolsValue: 'users/CHANGE_TOOLS',
+      // changeToolsValue: 'users/CHANGE_TOOLS',
     }),
     ...mapActions({
       addTag: 'users/ADD_TAG',
@@ -246,6 +235,7 @@ export default {
     .form-field {
       width: 45%;
       &.pref,
+      &.radius,
       &.tags {
         width: 100%
       }

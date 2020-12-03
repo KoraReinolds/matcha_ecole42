@@ -1,31 +1,62 @@
-module.exports = async function(options) {
+const mongo = require('../../db/mongo')
 
-  const User = this
-  const docs = await User
-    .aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: "Point",
-            // coordinates: [ 55.751640, 37.616565 ],
-            // coordinates: [ 37.616565, 55.751640 ],
-            coordinates: [ 0.3, 0.3 ],
-          },
-          distanceField: "calculated",
-          maxDistance: 25000000,
-        }
-      },
-      {
-        $match: {
-          login: { $ne: options.login },
-          gender: { $in: options.preference },
-          filledInformation: true,
-          age: { $gt: +options.minAge - 1, $lt: +options.maxAge + 1 },
-          fameRaiting: { $gt: +options.minRate - 1, $lt: +options.maxRate + 1 },
-        }
-      },
-    ])
-    
+module.exports = async function({
+  user,
+  query: {
+    needPreference: pref,
+    ageMin,
+    ageMax,
+    deltaRadius,
+    minRating,
+    maxRating,
+    tags,
+    sortLocation,
+    sortAge,
+    sortRating,
+    sortTags,
+  }
+}) {
+  // console.log(ageMin, +ageMin)
+  // const users = await this.find()
+  // users.forEach(user => console.log(user.login, user.geoLoc))
+  console.log(user)
+  let docs = await this.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          // coordinates: [ 55.751640, 37.616565 ],
+          // coordinates: [ 37.616565, 55.751640 ],
+          coordinates: user.geoLoc.coordinates,
+        },
+        distanceField: "calculated",
+        maxDistance: 25000000,
+      }
+    },
+    {
+      $addFields: { "likedTo": false },
+    },
+    {
+      $addFields: { "likedFrom": false },
+    },
+    {
+      $match: {
+        isFilled: true,
+        login: { $ne: user.login },
+        gender: +pref,
+        // age: { $gt: +ageMin - 1, $lt: +ageMax + 1 },
+        // rating: { $gt: +minRating - 1, $lt: +maxRating + 1 },
+      }
+    },
+  ])
+
+  docs = await Promise.all(docs.map(async userInQuery => {
+    userInQuery.likedTo = await mongo.models.Actions.checkIfUserLikeMe(user, userInQuery)
+    userInQuery.likedFrom = await mongo.models.Actions.checkIfILikeUser(user, userInQuery)
+    return userInQuery
+  }))
+
+  console.log(docs, "NONONONONO")
     // .select('-_id -salt -token -hashedPassword -__v -email -created')
   // let filteredDocs = docs
 

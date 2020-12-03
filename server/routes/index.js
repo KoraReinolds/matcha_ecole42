@@ -75,17 +75,8 @@ module.exports = function(io) {
     res.json(await Actions.likeUser(req))
   }))
   
-  router.get(`/get-users
-    ?tags=${tags}
-    &sortOrder=${sortOrder}
-    &ageMin=${ageMin}
-    &ageMax=${ageMax}
-    &minRating=${minRating}
-    &maxRating=${maxRating}
-    &deltaRadius=${deltaRadius}
-    &limit=${limit}
-    &offset=${offset}`, errorHandleWrapper(async (req, res) => {
-    res.json(await User.getUsers({ ...req.params, login: req.user.login }))
+  router.get(`/get-users`, errorHandleWrapper(async (req, res) => {
+    res.json(await User.getUsers(req))
   }))
   
   router.post('/profile-update', errorHandleWrapper(async (req, res) => {

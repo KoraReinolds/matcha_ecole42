@@ -12,7 +12,6 @@
       )
         Like(
           :size="2"
-          :active="user.likedFrom"
           :user="user"
         )
         Ban(

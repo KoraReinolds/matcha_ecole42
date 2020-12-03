@@ -6,7 +6,7 @@
     )
     span(
       :style="{ fontSize: `${size * 10}px` }"
-    ) {{ (myLocation && value) ? `${distance()} km` : '...' }}
+    ) {{ (myLocation && value) ? `${Math.floor(value / 1000)} km` : '...' }}
 </template>
 
 <script>
@@ -17,7 +17,7 @@ export default {
   data: () => ({
   }),
   props: {
-    value: Object,
+    value: Number,
     size: Number,
   },
   computed: {
@@ -26,11 +26,6 @@ export default {
     }),
   },
   methods: {
-    distance() {
-      const diffX = Math.abs(this.myLocation.x - this.value.x);
-      const diffY = Math.abs(this.myLocation.y - this.value.y);
-      return Math.floor(Math.sqrt(diffX * diffX + diffY * diffY) * 111.3);
-    },
   },
   mounted() {
   },

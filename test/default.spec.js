@@ -1,17 +1,9 @@
 // import { mount } from '@vue/test-utils'
 import axios from 'axios'
-// import register from './api/register'
-// import login from './api/login'
-// import logout from './api/logout'
-// import profileGet from './api/profile-get'
-// import profileUpdate from './api/profile-update'
-// import getUsers from './api/get-users'
-// import likeUser from './api/like-user'
-// import visit from './api/visit'
-// import messages from './api/messages'
 const { generateUser } = require('../server/dataGeneration/index')
 
-const baseUrl = "http://192.168.29.71:4567"
+const baseUrl = "http://localhost:4000"
+// const baseUrl = "http://192.168.29.71:4567"
 // const baseUrl = "https://mskiles-matcha-back.herokuapp.com"
 const tokens = {}
 const successResponce = { type: 'ok' }
@@ -29,17 +21,20 @@ const store = {
 
   users: {},
 
-  getOtherProfile(login) {
+  getOtherProfile(loginFrom, loginTo) {
 
-    const user = { ...this.users[login] }
+    const q1 = history.filter(user => user.to === loginTo && user.from === loginFrom)
+    const q2 = history.filter(user => user.to === loginFrom && user.from === loginTo)
+    // console.log(loginFrom, loginTo, q1, q2, history)
+    const user = { ...this.users[loginTo] }
     user.location = user.geoLoc || user.realLocation
     delete user.password
     delete user.geoLoc
     delete user.realLocation
     delete user.email
-    user.likedFrom = false
-    user.likedTo = false
-    const resp = this.users[login] && this.users[login].isFilled ? {
+    user.likedFrom = q1.length ? q1.reverse()[0].isLike === 1 : false
+    user.likedTo = q2.length ? q2.reverse()[0].isLike === 1 : false
+    const resp = this.users[loginTo] && this.users[loginTo].isFilled ? {
       type: "ok",
       data: user,
     } : {
@@ -68,7 +63,7 @@ const store = {
     const targetUser = this.users[loginTo]
     let myProfile = loginFrom === loginTo
     const path = "profile-get" + `${myProfile ? '' : '/' + loginTo}`
-    // console.log(`${baseUrl}/${path}`)
+
     test(`${path}, (${user.login}: ${desc || 'Получение информации о пользователе'}`, async () => {
       let data
       let error
@@ -81,7 +76,7 @@ const store = {
       }
 
       if (data) {
-        expect(data).toEqual(myProfile ? store.getMyProfile(loginFrom) : store.getOtherProfile(loginTo))
+        expect(data).toEqual(myProfile ? store.getMyProfile(loginFrom) : store.getOtherProfile(loginFrom, loginTo))
       } else if (error) {
         expect(error.status).toEqual(401)
       }
@@ -113,7 +108,7 @@ const store = {
     const request = { ...registerTemplate, login }
 
     test(`register, (${request.login}: Регистрация пользователя ${request.login})`, async () =>  {
-      console.log(request)
+      // console.log(request)
       const { data } = await axios.post(`${baseUrl}/register`, request)
       expect(data).toEqual(successResponce)
     })
@@ -139,7 +134,10 @@ const store = {
       let data
       let error
       try {
-        data = (await axios.post(`${baseUrl}/like-user/${to}/${isLike}`, {}, {
+        data = (await axios.post(`${baseUrl}/like-user`, {
+          login: to,
+          value: isLike ? 1 : 0
+        }, {
           headers: { "Authorization": tokens[from] }
         })).data
         history.push({
@@ -150,7 +148,6 @@ const store = {
       } catch({ response }) {
         error = response
       }
-      console.log(history)
       if (data) expect(data).toEqual(successResponce)
       else if (error) expect(error.status).toEqual(401)
     })
@@ -190,17 +187,17 @@ describe('API', () => {
 
   const count = 10
 
-  test(`clear, (ckear)`, async () => {
-    let data
-    let error
-    try {
-      data = (await axios.get(`${baseUrl}/clear`)).data
-    } catch({ response }) {
-      error = response
-    }
-    if (data) expect(data).toEqual(successResponce)
-    else if (error) expect(error.status).toEqual(401)
-  })
+  // test(`clear, (ckear)`, async () => {
+  //   let data
+  //   let error
+  //   try {
+  //     data = (await axios.get(`${baseUrl}/clear`)).data
+  //   } catch({ response }) {
+  //     error = response
+  //   }
+  //   if (data) expect(data).toEqual(successResponce)
+  //   else if (error) expect(error.status).toEqual(401)
+  // })
   
   // register
   Array.from(Array(count).keys()).forEach(num => store.registerUser(`User_${num}`))
@@ -222,21 +219,23 @@ describe('API', () => {
     store.getUserProfile(user, user, `${user}: Получение профиля после обновления`)
   })
 
-  // // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
+  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
 
-  // store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
-  // store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
+  store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
+  store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
   // store.getUserProfile('User_0', 'User_1', `User_0: Получение профиля после лайков`)
   // store.getUserProfile('User_1', 'User_0', `User_1: Получение профиля после лайков`)
 
-
+  // store.getUserProfile('User_0', 'User_1', `User_1: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_2', `User_1: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_3', `User_1: Получение профиля после лайков`)
   // store.likeUser('User_1', 'User_2', 1, 'User_1: Пользователь поставил лайк User_0')
   // store.likeUser('User_1', 'User_3', 1, 'User_1: Пользователь поставил лайк User_0')
   // store.likeUser('User_1', 'User_2', 0, 'User_1: Пользователь убрал лайк User_0')
 
-  // store.getUserProfile('User_0', 'User_0', `User_0: Получение профиля после лайков`)
-  // store.getUserProfile('User_0', 'User_2', `User_0: Получение профиля после лайков`)
-  // store.getUserProfile('User_0', 'User_3', `User_0: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_1', `User_1: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_2', `User_1: Получение профиля после лайков`)
+  // store.getUserProfile('User_0', 'User_3', `User_1: Получение профиля после лайков`)
 
 
   

@@ -8,31 +8,27 @@ export const state = () => ({
   sortOrder: ['countTags', 'rating', 'dist'],
   tools: {
     pref: {
-      value: [],
+      value: null,
       title: 'Preferences',
       options: ['male', 'female', 'bisexual']
     },
-    minAge: {
+    ageMin: {
       value: null,
       title: "Min_age",
     },
-    maxAge: {
+    ageMax: {
       value: null,
       title: "Max_age",
     },
-    minDist: {
-      value: '0',
-      title: "Min_dist",
-    },
-    maxDist: {
+    radius: {
       value: 10,
-      title: "Max_dist",
+      title: "Radius",
     },
-    minRate: {
+    minRating: {
       value: '0',
       title: "Min_rate",
     },
-    maxRate: {
+    maxRating: {
       value: 500,
       title: "Max_rate",
     },
@@ -40,8 +36,7 @@ export const state = () => ({
       value: ['poker'],
       title: 'Tags',
     },
-    
-    sortDist: {
+    sortLocation: {
       value: ['dist'],
       title: 'Dist',
       options: ['dist', 'dist_rev'],
@@ -51,7 +46,7 @@ export const state = () => ({
       title: 'Age',
       options: ['age', 'age_rev'],
     },
-    sortRate: {
+    sortRating: {
       value: ['rating_rev'],
       title: 'Rate',
       options: ['rating', 'rating_rev'],
@@ -78,9 +73,9 @@ export const mutations = {
     state.curPage = 1
   },
   SET_INIT_TOOLS: (state, user) => {
-    state.tools.pref.value = user.preference
-    state.tools.minAge.value = Math.max(+user.age - 5, 18)
-    state.tools.maxAge.value = Math.min(+user.age + 5, 99)
+    state.tools.pref.value = ['male', 'female', 'bisexual'][user.preference - 1]
+    state.tools.ageMin.value = Math.max(+user.age - 5, 18)
+    state.tools.ageMax.value = Math.min(+user.age + 5, 99)
     state.tools.tags.value = user.tags
   },
   SET_USERS: (state, users) => {
@@ -103,49 +98,77 @@ export const mutations = {
   },
 }
 export const actions = {
-  SORT: ({ commit, dispatch }, opt) => {
-    if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]]
-    commit('CHANGE_TOOLS', opt)
-    commit('CHANGE_SORT_ORDER', opt)
-    dispatch('GET_USERS', state.curPage)
-  },
+  // SORT: ({ commit, dispatch }, opt) => {
+  //   if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]]
+  //   commit('CHANGE_TOOLS', opt)
+  //   commit('CHANGE_SORT_ORDER', opt)
+  //   dispatch('GET_USERS', state.curPage)
+  // },
   FILTER_LIST ({ commit, dispatch }, opt) {
     commit('CHANGE_TOOLS', opt)
     dispatch('GET_USERS', state.curPage)
   },
   async GET_USERS ({ commit, state, rootState, dispatch }, page) {
     commit('CHANGE_PAGE', page || 1)
-    const sortOrder = state.sortOrder.reduce((sum, cur) => {
-      let val
-      if (cur === 'dist') val = state.tools.sortDist.value
-      else if (cur === 'age') val = state.tools.sortAge.value
-      else if (cur === 'rating') val = state.tools.sortRate.value
-      else if (cur === 'countTags') val = state.tools.sortTags.value
-      if (val.length) {
-        sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)
-      }
-      return sum
-    }, {})
+    // const sortOrder = state.sortOrder.reduce((sum, cur) => {
+    //   let val
+    //   if (cur === 'dist') val = state.tools.sortLocation.value
+    //   else if (cur === 'age') val = state.tools.sortAge.value
+    //   else if (cur === 'rating') val = state.tools.sortRating.value
+    //   else if (cur === 'countTags') val = state.tools.sortTags.value
+    //   if (val.length) {
+    //     sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)
+    //   }
+    //   return sum
+    // }, {})
     // preference:     state.tools.pref.value,
-    // minDist:        state.tools.minDist.value,
-    // maxDist:        state.tools.maxDist.value,
-    console.log(state.tools.tags.value, `get-users
-    ?tags=${state.tools.tags.value.join()}
-    &sortAge=1
-    &sortLocation=1
-    &sortRating=1
-    &sortTags=1
-    &ageMin=${state.tools.minAge.value}
-    &ageMax=${state.tools.maxAge.value}
-    &minRating=${state.tools.minRate.value}
-    &maxRating=${state.tools.maxRate.value}
-    &deltaRadius=${state.tools.maxRate.value}
-    &limit=${state.limit}
-    &offset=${(state.curPage - 1) * state.limit}
-  `)
-    // const res = await this.$axios.$get(`get-users?tags=${state.tools.tags.value.join()}&sortAge=1&sortLocation=1&sortRating=1&sortTags=1&ageMin=${state.tools.minAge.value}&ageMax=${state.tools.maxAge.value}&minRating=${state.tools.minRate.value}&maxRating=${state.tools.maxRate.value}&deltaRadius=${state.tools.maxRate.value}&limit=${state.limit}&offset=${(state.curPage - 1) * state.limit}
+    // `
+    // ageMin=0&
+    // ageMax=100&
+    // minRating=0&
+    // maxRating=999&
+    // deltaRadius=1000&
+    // limit=100&
+    // offset=0&
+    // sortAge=1&
+    // sortLocation=1&
+    // sortRating-1&
+    // sortTags=1&
+    // needPreference=1
+    // `
+    const tools = state.tools
+    const reqParams = {
+      needPreference: { male: 1, female: 2, bisexual: 3 }[tools.pref.value],
+      ageMin: tools.ageMin.value,
+      ageMax: tools.ageMax.value,
+      deltaRadius: tools.radius.value,
+      minRating: tools.minRating.value,
+      maxRating: tools.maxRating.value,
+      tags: tools.tags.value.join(),
+      // sortLocation: tools.sortLocation,
+      // sortAge: tools.sortAge,
+      // sortRating: tools.sortRating,
+      // sortTags: tools.sortTags,
+    }
+
+  //   console.log(Object.entries(reqParams).map(param => param.join('=')).join('&'))
+  //   console.log(state.tools.tags.value, `get-users
+  //   ?tags=${state.tools.tags.value.join()}
+  //   &sortAge=1
+  //   &sortLocation=1
+  //   &sortRating=1
+  //   &sortTags=1
+  //   &ageMin=${state.tools.ageMin.value}
+  //   &ageMax=${state.tools.ageMax.value}
+  //   &minRating=${state.tools.minRating.value}
+  //   &maxRating=${state.tools.maxRating.value}
+  //   &deltaRadius=${state.tools.maxRating.value}
+  //   &limit=${state.limit}
+  //   &offset=${(state.curPage - 1) * state.limit}
+  // `)
+    // const res = await this.$axios.$get(`get-users?tags=${state.tools.tags.value.join()}&sortAge=1&sortLocation=1&sortRating=1&sortTags=1&ageMin=${state.tools.ageMin.value}&ageMax=${state.tools.ageMax.value}&minRating=${state.tools.minRating.value}&maxRating=${state.tools.maxRating.value}&deltaRadius=${state.tools.maxRating.value}&limit=${state.limit}&offset=${(state.curPage - 1) * state.limit}
     // `)
-    const res = await this.$axios.$get('get-users?ageMin=0&ageMax=100&minRating=0&maxRating=999&deltaRadius=1000&limit=100&offset=0&sortAge=1&sortLocation=1&sortRating-1&sortTags=1&needPreference=1')
+    const res = await this.$axios.$get(`get-users?${Object.entries(reqParams).map(param => param.join('=')).join('&')}`)
     if (res.type === 'ok') {
       commit('SET_USERS', res.data)
     }

@@ -1,6 +1,6 @@
 <template lang="pug">
   font-awesome-icon.icon.like(
-    :class="[`fa-${size}x`, { like_color: active }]"
+    :class="[`fa-${size}x`, { like_color: user.likedFrom }]"
     :style="{ cursor: disabled === '' ? 'default' : 'pointer' }"
     icon="heart"
     @click="disabled !== '' && like(user)"
@@ -17,7 +17,6 @@ export default {
   props: {
     size: Number,
     user: Object,
-    active: Boolean,
     disabled: Boolean,
   },
   computed: {

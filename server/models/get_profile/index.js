@@ -41,29 +41,8 @@ module.exports = async function(req) {
   }
   
   if (req.params.login) {
-
-    const likedTo = await mongo.models.Actions.findOne(
-      {
-        $or: [
-          {$and: [{ who: user._id }, {action: 'like'}]},
-          {$and: [{ who: user._id }, {action: 'dislike'}]},
-        ],
-      },
-      {},
-      { sort: { 'created' : -1 } }
-    )
-    user.likedTo = likedTo ? likedTo.action === "like" : false
-    const likedFrom = await mongo.models.Actions.findOne(
-      {
-        $or: [
-          {$and: [{ target: user._id }, {action: 'like'}]},
-          {$and: [{ target: user._id }, {action: 'dislike'}]},
-        ],
-      },
-      {},
-      { sort: { 'created' : -1 } }
-    )
-    user.likedFrom = likedFrom ? likedFrom.action === "like" : false
+    user.likedTo = await mongo.models.Actions.checkIfUserLikeMe(req.user, user)
+    user.likedFrom = await mongo.models.Actions.checkIfILikeUser(req.user, user)
   }
   
   if (req.params.login) delete user.email

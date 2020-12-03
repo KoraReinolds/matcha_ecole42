@@ -76,10 +76,11 @@ module.exports = function(io) {
     },
     gender: {
       type: Number,
-      default: 1,
+      default: 3,
     },
     preference: {
-      type: Array,
+      type: Number,
+      default: 3,
     },
     images: {
       type: Object,

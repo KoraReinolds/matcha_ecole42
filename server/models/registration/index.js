@@ -10,7 +10,7 @@ module.exports = async function(body) {
     ...body,
     geoLoc: {
       type: "Point",
-      coordinates: [body.location.x, body.location.y],
+      coordinates: [body.location.y, body.location.x],
     },
     location: null,
     isFilled: false,

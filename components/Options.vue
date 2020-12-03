@@ -8,11 +8,11 @@
     )
       div(
         v-for="[opt, value] in Object.entries(data.options)"
-        :key="data.title+opt"
+        :key="data.title+value"
       )
         input(
           :type="type"
-          :id="data.title+opt"
+          :id="data.title+value"
           :value="value"
           @change="change"
           :name="data.title"
@@ -20,14 +20,14 @@
         )
         label(
           :class="{ label: !icons }"
-          :for="data.title+opt"
+          :for="data.title+value"
         )
           font-awesome-icon.icon.fa-2x(
             v-if="icons"
-            :icon="['fas', icons[opt]]"
+            :icon="['fas', icons[value]]"
             :class="{ active: optionChecked(value) }"
           )
-          template(v-else) {{ opt }} {{ value }}
+          template(v-else) {{ opt }}
       div.tooltip-field {{ data.errorMsg }}
 </template>
 
@@ -35,7 +35,7 @@
 export default {
   name: 'Options',
   props: {
-    value: [Number],
+    value: [Number, String, Array],
     data: Object,
     many: Boolean,
     icons: Object,
@@ -58,9 +58,9 @@ export default {
         let newVal = [...this.value];
         if (!this.value.includes(value)) newVal.push(value);
         else newVal = newVal.filter(val => val !== value);
-        this.$emit('input', +newVal)
+        this.$emit('input', newVal)
       } else {
-        this.$emit('input', +event.target.value)
+        this.$emit('input', event.target.value)
       }
     },
   },
@@ -160,6 +160,7 @@ export default {
       padding: 10px 0;
       .icon {
         cursor: pointer;
+        color: lightgray;
         &.active {
           color: $main-color;
         }

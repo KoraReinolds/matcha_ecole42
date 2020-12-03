@@ -1,17 +1,17 @@
 <template lang="pug">
   div.user(
-    :class="[user.gender]"
+    :class="[gender(user.gender)]"
   )
     div.main(
-      :class="[`${user.gender}_background-light`]"
+      :class="[`${gender(user.gender)}_background-light`]"
     )
       div.image
         CustomImage.custom_image(
-          :src="user.images.filter(img => img.avatar)[0].src"
+          :src="user.images.filter(img => img.avatar)[0] ? user.images.filter(img => img.avatar)[0].src : null"
           @click="paginate"
         )
         RoundedIcon.gender.only_laptop(
-          :icon="['ban', 'bisexual', 'male', 'female'][user.gender]"
+          :icon="gender(user.preference)"
           :size="4"
           :mask="false"
         )
@@ -20,7 +20,6 @@
           Like.like(
             :user="user"
             :size="2"
-            :active="true"
           )
       div.content
         span.fio
@@ -33,7 +32,7 @@
         div.only_laptop.tags
           Tag(
             v-for="tag in user.tags"
-            :class="[`${user.gender}_background`]"
+            :class="[`${gender(user.gender)}_background`]"
             :key="`user_tag_${tag}`"
             :name="tag"
           )
@@ -44,18 +43,17 @@
         :size="2"
       )
       Distance.icon(
-        :value="user.location"
+        :value="user.calculated"
         :size="2"
       )
-      div.icon.pref
-        RoundedIcon.pref_icon(
-          :class="['pref_icon']"
-          v-for="(gender, index) in user.preference"
-          :key="'pref'+user.login+gender"
-          :icon="gender"
-          :size="3"
-          :mask="false"
-        )
+      //- div.icon.pref
+      //-   RoundedIcon.pref_icon(
+      //-     :class="['pref_icon']"
+      //-     :key="'pref'+user.login"
+      //-     :icon="gender(user.preference)"
+      //-     :size="3"
+      //-     :mask="false"
+      //-   )
 
 </template>
 
@@ -91,6 +89,7 @@ export default {
     }),
   },
   methods: {
+    gender: index => ['male', 'female', 'bisexual'][index - 1],
     paginate(e) {
       if (this.mobile) {
         if (e.clientX > window.innerWidth * 0.8) {
@@ -107,6 +106,9 @@ export default {
       getUsers: 'users/GET_USERS',
     }),
   },
+  mounted() {
+    console.log(this.user)
+  }
 };
 </script>
 
@@ -166,12 +168,12 @@ export default {
 
     .sidebar {
       height: 100%;
-      width: 200px;
+      // width: 200px;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: center;
       .icon {
-        padding: 0 20px;
+        padding: 20px;
       }
     }
 

@@ -237,23 +237,14 @@ export const actions = {
   async LIKE ({ commit, rootState, dispatch }, user) {
 
     const { login, likedFrom } = user
-    // let index = rootState.auth.user.likeList.indexOf(login)
-    // let newLikeList = [...rootState.auth.user.likeList]
-    // if (index === -1) {
-    //   newLikeList.push(login)
-    // } else {
-    //   newLikeList.splice(index, 1)
-    // }
+
     const res = await this.$axios.$post(`like-user`, {
       login,
       value: likedFrom ? 0 : 1,
     })
-    // , {
-    //   login,
-    //   likeList: newLikeList,
-    //   target: login,
-    //   action: index === -1 ? 'like' : 'dislike',
-    // })
+    // this.$set(user, 'likedFrom', !user.likedFrom)
+    
+    console.log(user, res)
     if (res.type === 'ok') {
       commit('TOGGLE_LIKE', user)
     }

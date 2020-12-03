@@ -11,7 +11,7 @@ module.exports = async function(body) {
   const buffer = await crypto.randomBytes(48)
   user.realLocation = body.location
   if (!user.location) { // если ползователь не менял геолокацию
-    user.geoLoc.coordinates = [body.location.x, body.location.y]
+    user.geoLoc.coordinates = [body.location.y, body.location.x]
   }
   user.token = buffer.toString('hex')
   await user.save()
