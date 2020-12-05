@@ -6,7 +6,7 @@ const womanNames = JSON.parse('["Доминика","Цвета","Ирина","Ю
 const womanLNames = JSON.parse('["Самсонова","Виноградова","Кулакова","Маслова","Чикольба","Андрейко","Блохина","Агафонова","Терентьева","Линник","Сирко","Соболева","Барановска","Пархоменко","Королёва","Тарасова","Зимина","Ковалёва","Пархоменко","Лобанова","Воронова","Гамула","Гайчук","Гуляева","Селезнёва","Никонова","Гребневска","Симоненко","Макарова","Громова","Самойлова","Кулагина","Острожска","Шарапова","Хижняк","Гуляева","Бердник","Копылова","Федункив","Фролова","Денисова","Тимошенко","Кудрявцева","Лыткина","Власова","Трофимова","Козлова","Суворова","Ермакова","Коровяк","Линник","Мирна","Евсеева","Харитонова","Белова","Гайчук","Тетерина","Белозёрова","Овчаренко","Быкова","Коновалова","Ефремова","Титова","Тарасова","Носова","Пономаренко","Федосеева","Рыбакова","Цветкова","Павленко","Кабанова","Медяник","Щербакова","Филатова","Кобзар","Сысоева","Дементьева","Хованска","Попова","Новикова","Андрейко","Ковалёва","Шумейко","Гущина","Ланова","Козлова","Кулакова","Сирко","Кобзар","Каськив","Самсонова","Гордеева","Марочко","Макарова","Владимирова","Капустина","Владимирова","Сафонова","Абрамова"]')
 const genderArray = [2, 3, 1]
 const myLocation = { x: 55.751640, y: 37.616565 }
-const tagsArray = ['football', 'TV', 'computer_games', 'poker', 'fishing', 'comics', 'work', 'food', 'rest', 'sex', 'films', 'pizza', 'talk', 'travel']
+const tagsArray = ['football', 'TV', 'games', 'poker', 'fishing', 'comics', 'work', 'food', 'rest', 'sex', 'films', 'pizza', 'talk', 'travel']
 let imageId = 1
 // get random value from min to max
 const getRandomValue = (min, max) => Math.round(min - 0.5 + Math.random() * (max - min + 1))
@@ -43,7 +43,7 @@ const generateUser = () => {
   const age = getRandomValue(18, 55)
   const rating = getRandomValue(0, 1000)
   const preference = randomValueFromArray(genderArray)
-  const biography = randomText(1, 5, sentences)
+  const biography = randomText(1, 5, sentences).slice(0, 200)
   const images = [
     { avatar: true, index: 0, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },
     { avatar: false, index: 1, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },

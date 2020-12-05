@@ -7,7 +7,7 @@
     )
       div.image
         CustomImage.custom_image(
-          :src="user.images.filter(img => img.avatar)[0] ? user.images.filter(img => img.avatar)[0].src : null"
+          :src="user.src"
           @click="paginate"
         )
         RoundedIcon.gender.only_laptop(
@@ -43,17 +43,9 @@
         :size="2"
       )
       Distance.icon(
-        :value="user.calculated"
+        :value="user.distance"
         :size="2"
       )
-      //- div.icon.pref
-      //-   RoundedIcon.pref_icon(
-      //-     :class="['pref_icon']"
-      //-     :key="'pref'+user.login"
-      //-     :icon="gender(user.preference)"
-      //-     :size="3"
-      //-     :mask="false"
-      //-   )
 
 </template>
 

@@ -5,6 +5,7 @@
   "description": "Nuxt.js project",
   "author": "mskiles",
   "scripts": {
+    "heroku-postbuild": "npm run build",
     "build": "nuxt build",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "analize": "nuxt build -a",
@@ -14,7 +15,10 @@
     "server": "node ./server/db/createDB.js; node ./server/index.js;",
     "serverdev": "cd ./server; supervisor ./index.js;",
     "start": "nuxt start",
-    "test": "node ./server/db/clearDB.js; jest"
+    "test": "jest"
+  },
+  "engines": {
+    "node" : "8.4.0"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.15.1",

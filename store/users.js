@@ -5,7 +5,7 @@ export const state = () => ({
   curPage: 1,
   // maxLength: null,
   limit: 3,
-  sortOrder: ['countTags', 'sortRating', 'sortLocation'],
+  sortOrder: new Set(['sortTags', 'sortRating', 'sortLocation']),
   tools: {
     pref: {
       value: null,
@@ -37,28 +37,29 @@ export const state = () => ({
       title: 'Tags',
     },
     sortLocation: {
-      value: 1,
+      value: ['1'],
       title: 'Dist',
-      options: [1, -1],
+      options: ['1', '-1'],
     },
     sortAge: {
-      value: null,
+      value: [],
       title: 'Age',
-      options: [1, -1],
+      options: ['1', '-1'],
     },
     sortRating: {
-      value: -1,
+      value: ['-1'],
       title: 'Rate',
-      options: [1, -1],
+      options: ['1', '-1'],
     },
     sortTags: {
-      value: -1,
+      value: ['-1'],
       title: 'Tags',
-      options: [1, -1],
+      options: ['1', '-1'],
     },
   },
 })
 export const getters = {
+  SORT_ORDER: (state) => state.sortOrder,
   // MAX_LENGTH: (state) => state.maxLength,
   USERS: (state) => state.users,
   // USERS: (state) => state.users.slice(0, state.limit),
@@ -68,6 +69,14 @@ export const getters = {
   // SORT_LIST: (state) => state.sortOrder,
 }
 export const mutations = {
+  CHANGE_SORT_ORDER: (state, [newItem, isChange]) => {
+    if (isChange) {
+      state.sortOrder.delete(newItem)
+      state.sortOrder.add(newItem)
+    } else {
+      state.sortOrder.delete(newItem)
+    }
+  },
   CHANGE_COUNT_PER_PAGE: (state) => {
     state.limit = window.innerWidth <= 480 ? 1 : 3
     state.curPage = 1
@@ -84,18 +93,18 @@ export const mutations = {
   },
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
-  GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
-  CHANGE_SORT_ORDER: (state, { key, val }) => {
-    if (val.length) {
-      const prefix = val[0].split('_')[0]
-      if (!state.sortOrder.includes(prefix)) {
-        state.sortOrder.push(prefix)
-      }
-    } else {
-      const index = state.sortOrder.indexOf(state.tools[key].options[0])
-      state.sortOrder.splice(index, 1)
-    }
-  },
+  // GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
+  // CHANGE_SORT_ORDER: (state, { key, val }) => {
+  //   if (val.length) {
+  //     const prefix = val[0].split('_')[0]
+  //     if (!state.sortOrder.includes(prefix)) {
+  //       state.sortOrder.push(prefix)
+  //     }
+  //   } else {
+  //     const index = state.sortOrder.indexOf(state.tools[key].options[0])
+  //     state.sortOrder.splice(index, 1)
+  //   }
+  // },
 }
 export const actions = {
   // SORT: ({ commit, dispatch }, opt) => {
@@ -117,7 +126,7 @@ export const actions = {
     //   if (cur === 'dist') val = state.tools.sortLocation.value
     //   else if (cur === 'age') val = state.tools.sortAge.value
     //   else if (cur === 'rating') val = state.tools.sortRating.value
-    //   else if (cur === 'countTags') val = state.tools.sortTags.value
+    //   else if (cur === 'sortTags') val = state.tools.sortTags.value
     //   if (val.length) {
     //     sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)
     //   }
@@ -154,6 +163,12 @@ export const actions = {
       // sortRating: tools.sortRating,
       // sortTags: tools.sortTags,
     }
+    
+    state.sortOrder.forEach(fieldName => {
+      console.log(fieldName)
+      // obj[fieldName] = tools[fieldName].value[0]
+      // return obj
+    })
 
   //   console.log(Object.entries(reqParams).map(param => param.join('=')).join('&'))
   //   console.log(state.tools.tags.value, `get-users
@@ -170,9 +185,9 @@ export const actions = {
   //   &limit=${state.limit}
   //   &offset=${(state.curPage - 1) * state.limit}
   // `)
-    // const res = await this.$axios.$get(`get-users?tags=${state.tools.tags.value.join()}&sortAge=1&sortLocation=1&sortRating=1&sortTags=1&ageMin=${state.tools.ageMin.value}&ageMax=${state.tools.ageMax.value}&minRating=${state.tools.minRating.value}&maxRating=${state.tools.maxRating.value}&deltaRadius=${state.tools.maxRating.value}&limit=${state.limit}&offset=${(state.curPage - 1) * state.limit}
-    // `)
-    const res = await this.$axios.$get(`get-users?${Object.entries(reqParams).map(param => param.join('=')).join('&')}`)
+    const res = await this.$axios.$get(`get-users`, {
+      params: reqParams,
+    })
     if (res.type === 'ok') {
       commit('SET_USERS', [...(newList ? [] : state.users), ...res.data])
     }

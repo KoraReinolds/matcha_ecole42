@@ -14,9 +14,9 @@ export const mutations = {
   CLOSE_MSG: (state, index) => {
     state.notifications[index].visible = false
   },
-  SET_HISTORY: (state, list) => state.history = list.reverse(),
+  SET_HISTORY: (state, list) => state.history = list,
   SET_NOTIFICATIONS: (state, list) => {
-    state.notifications = list.reverse()
+    state.notifications = list
     state.notificationsChecked = list.length
   },
   SET_ALL_NOTIF_AS_CHECKED: (state) => {

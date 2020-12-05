@@ -75,7 +75,7 @@ module.exports = async function({
   //   )
   // }
   // filteredDocs.forEach((user) => {
-  //   user.countTags = user.tags.reduce((sum, tag) => {
+  //   user.sortTags = user.tags.reduce((sum, tag) => {
   //     return sum += +options.tags.includes(tag)
   //   }, 0)
   // })

@@ -2,9 +2,9 @@
 import axios from 'axios'
 const { generateUser } = require('../server/dataGeneration/index')
 
-const baseUrl = "http://localhost:4000"
-// const baseUrl = "http://192.168.29.71:4567"
-// const baseUrl = "https://mskiles-matcha-back.herokuapp.com"
+// const baseUrl = "http://localhost:4000"
+// const baseUrl = "http://192.168.29.13:4567"
+const baseUrl = "https://matcha-server.herokuapp.com"
 const tokens = {}
 const successResponce = { type: 'ok' }
 const registerTemplate = {
@@ -76,6 +76,8 @@ const store = {
       }
 
       if (data) {
+        if (data.data.rating) data.data.rating = 0
+        if (data.data.time) delete data.data.time
         expect(data).toEqual(myProfile ? store.getMyProfile(loginFrom) : store.getOtherProfile(loginFrom, loginTo))
       } else if (error) {
         expect(error.status).toEqual(401)
@@ -108,14 +110,15 @@ const store = {
     const request = { ...registerTemplate, login }
 
     test(`register, (${request.login}: Регистрация пользователя ${request.login})`, async () =>  {
-      // console.log(request)
       const { data } = await axios.post(`${baseUrl}/register`, request)
       expect(data).toEqual(successResponce)
     })
     
     this.users[login] = {
       ...request,
-      age: null,
+      age: 0,
+      isBlocked: false,
+
       biography: "",
       gender: 3,
       images: [],
@@ -172,6 +175,8 @@ const store = {
         data = (await axios.post(`${baseUrl}/profile-update`, randomProfile, {
           headers: { "Authorization": tokens[login] }
         })).data
+        randomProfile.geoLoc = randomProfile.location
+        delete randomProfile.location
         this.users[login] = { ...this.users[login], ...randomProfile, isFilled: true }
       } catch({ response }) {
         error = response
@@ -187,17 +192,17 @@ describe('API', () => {
 
   const count = 10
 
-  // test(`clear, (ckear)`, async () => {
-  //   let data
-  //   let error
-  //   try {
-  //     data = (await axios.get(`${baseUrl}/clear`)).data
-  //   } catch({ response }) {
-  //     error = response
-  //   }
-  //   if (data) expect(data).toEqual(successResponce)
-  //   else if (error) expect(error.status).toEqual(401)
-  // })
+  test(`clear, (ckear)`, async () => {
+    let data
+    let error
+    try {
+      data = (await axios.get(`${baseUrl}/clear`)).data
+    } catch({ response }) {
+      error = response
+    }
+    if (data) expect(data).toEqual(successResponce)
+    else if (error) expect(error.status).toEqual(401)
+  })
   
   // register
   Array.from(Array(count).keys()).forEach(num => store.registerUser(`User_${num}`))
@@ -208,9 +213,9 @@ describe('API', () => {
   // profile-get
   Array.from(Array(count).keys()).forEach(num => store.getUserProfile(`User_${num}`, `User_${num}`))
   
-  store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
-  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
-  store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
+  // store.getUserProfile('User_0', 'User_1', 'Получение профиля пользователя User_1')
+  // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (не заполнивший профиль возвращает ошибку)')
+  // store.getUserProfile('User_0', 'User_18', 'Получение профиля пользователя User_18 (не существует и возвращает ошибку)')
 
   // profile-update
   Array.from(Array(count - 2).keys()).forEach(num => {
@@ -219,13 +224,15 @@ describe('API', () => {
     store.getUserProfile(user, user, `${user}: Получение профиля после обновления`)
   })
 
-  store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
+  // // store.getUserProfile('User_0', 'User_8', 'Получение профиля пользователя User_8 (теперь профиль заполнен)')
 
-  store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
-  store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
+  // store.likeUser('User_0', 'User_1', 1, 'User_0: Пользователь поставил лайк User_1')
+  // store.likeUser('User_1', 'User_0', 1, 'User_1: Пользователь поставил лайк User_0')
   // store.getUserProfile('User_0', 'User_1', `User_0: Получение профиля после лайков`)
   // store.getUserProfile('User_1', 'User_0', `User_1: Получение профиля после лайков`)
-
+  
+  // store.likeUser('User_2', 'User_1', 1, 'User_2: Пользователь поставил лайк User_1')
+  // store.likeUser('User_1', 'User_2', 1, 'User_1: Пользователь поставил лайк User_2')
   // store.getUserProfile('User_0', 'User_1', `User_1: Получение профиля после лайков`)
   // store.getUserProfile('User_0', 'User_2', `User_1: Получение профиля после лайков`)
   // store.getUserProfile('User_0', 'User_3', `User_1: Получение профиля после лайков`)

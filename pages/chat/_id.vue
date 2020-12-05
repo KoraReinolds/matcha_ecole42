@@ -14,7 +14,7 @@
             height="36px"
             width="36px"
             rounded
-            :src="curUser.images[curUser.avatar].src"
+            :src="curUser.src"
           )
           span.user-name
             NameLink(
@@ -38,9 +38,9 @@
           div.message(
             v-for="(message, index) in messages"
             :key="'message'+index+curUser.login"
-            :class="{ our: message.who.login !== curUser.login }"
+            :class="{ our: message.toLogin.login !== curUser.login }"
           ) 
-            span.time {{ getDate(message.created) }}
+            span.time {{ getDate(message.time) }}
             span.text_block(
               v-html="message.message"
             )
@@ -81,7 +81,7 @@
               :height="`${mobile ? 48 : 70}px`"
               :width="`${mobile ? 48 : 70}px`"
               rounded
-              :src="user.images.filter(img => img.avatar)[0].src"
+              :src="user.src"
             )
             div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
@@ -105,7 +105,7 @@ export default {
     if (!chatList.length) {
       chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data;
     }
-    user = chatList.find((user) => user.login === route.params.id);
+  user = chatList.find((user) => user.login === route.params.id);
     if (route.params.id) {
       if (!user) return false;
       res = await store.dispatch('chat/GET_MESSAGES', user);
@@ -262,7 +262,8 @@ export default {
             }
             .text_block {
               max-width: 100%;
-              overflow: scroll;
+              color: #fff;
+              // overflow: scroll;
               padding: 20px;
               display: inline-block;
               line-height: 20px;

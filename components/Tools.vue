@@ -68,24 +68,33 @@
       Options.form-field(
         :data="tools.sortLocation"
         v-model="sortLocation"
-        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
+        :icons="{ '1': 'sort-amount-down', '-1': 'sort-amount-up' }"
+        many
       )
       Options.form-field(
         :data="tools.sortAge"
-        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
+        :icons="{ '1': 'sort-amount-down', '-1': 'sort-amount-up' }"
         v-model="sortAge"
+        many
       )
       Options.form-field(
         :data="tools.sortRating"
-        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
+        :icons="{ '1': 'sort-amount-down', '-1': 'sort-amount-up' }"
         v-model="sortRating"
+        many
       )
       Options.form-field(
         v-if="tools.tags.value.length > 1"
         :data="tools.sortTags"
-        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
+        :icons="{ '1': 'sort-amount-down', '-1': 'sort-amount-up' }"
         v-model="sortTags"
+        many
       )
+      div.order
+        font-awesome-icon.icon(
+          v-for="item in sortOrder"
+          :icon="['fas', { sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]]"
+        )
 
 </template>
 
@@ -115,51 +124,64 @@ export default {
   },
   computed: {
     ...mapGetters({
+      sortOrder: 'users/SORT_ORDER',
       mobile: 'IS_MOBILE',
     }),
     pref: {
-      set(value) { this.filterList({ val: value, key: 'pref' }); },
+      set(value) { this.filterList({ val: value, key: 'pref' }) },
       get() { return this.tools.pref.value; },
     },
     ageMin: {
-      set(value) { this.filterList({ val: value, key: 'ageMin' }); },
+      set(value) { this.filterList({ val: value, key: 'ageMin' }) },
       get() { return this.tools.ageMin.value; },
     },
     ageMax: {
-      set(value) { this.filterList({ val: value, key: 'ageMax' }); },
+      set(value) { this.filterList({ val: value, key: 'ageMax' }) },
       get() { return this.tools.ageMax.value; },
     },
     radius: {
-      set(value) { this.changeToolsValue({ val: value, key: 'radius' }); },
+      set(value) { this.changeToolsValue({ val: value, key: 'radius' }) },
       get() { return this.tools.radius.value; },
     },
     maxRating: {
-      set(value) { this.filterList({ val: value, key: 'maxRating' }); },
+      set(value) { this.filterList({ val: value, key: 'maxRating' }) },
       get() { return this.tools.maxRating.value; },
     },
     minRating: {
-      set(value) { this.filterList({ val: value, key: 'minRating' }); },
+      set(value) { this.filterList({ val: value, key: 'minRating' }) },
       get() { return this.tools.minRating.value; },
     },
     tags: {
-      set(value) { this.filterList({ val: value, key: 'tags' }); },
+      set(value) { this.filterList({ val: value, key: 'tags' }) },
       get() { return this.tools.tags.value; },
     },
     sortLocation: {
-      set(value) { this.filterList({ val: value, key: 'sortLocation' }) },
-      get() { return +this.tools.sortLocation.value; },
+      set(value) {
+        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortLocation' })
+        this.changeOrder(['sortLocation', value.length])
+      },
+      get() { return this.tools.sortLocation.value; },
     },
     sortAge: {
-      set(value) { this.filterList({ val: value, key: 'sortAge' }); },
-      get() { return +this.tools.sortAge.value; },
+      set(value) {
+        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortAge' })
+        this.changeOrder(['sortAge', value.length])
+      },
+      get() { return this.tools.sortAge.value; },
     },
     sortRating: {
-      set(value) { this.filterList({ val: value, key: 'sortRating' }); },
-      get() { return +this.tools.sortRating.value; },
+      set(value) {
+        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortRating' })
+        this.changeOrder(['sortRating', value.length])
+      },
+      get() { return this.tools.sortRating.value; },
     },
     sortTags: {
-      set(value) { this.filterList({ val: value, key: 'sortTags' }); },
-      get() { return +this.tools.sortTags.value; },
+      set(value) {
+        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortTags' })
+        this.changeOrder(['sortTags', value.length])
+      },
+      get() { return this.tools.sortTags.value; },
     },
     sortList: {
       set(value) { this.sort(value); },
@@ -175,6 +197,7 @@ export default {
       this.filterUsers();
     },
     ...mapMutations({
+      changeOrder: 'users/CHANGE_SORT_ORDER'
       // changeToolsValue: 'users/CHANGE_TOOLS',
     }),
     ...mapActions({
@@ -216,7 +239,7 @@ export default {
     z-index: 2;
   }
   .tools {
-  @media (max-width: map-get($grid-breakpoints, sm)) {
+    @media (max-width: map-get($grid-breakpoints, sm)) {
       height: 100%;
       overflow: auto;
     }
@@ -234,6 +257,16 @@ export default {
       &.radius,
       &.tags {
         width: 100%
+      }
+    }
+    .order {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      .icon {
+        color: $main-color;
+        margin-right: 10px;
       }
     }
   }

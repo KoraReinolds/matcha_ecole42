@@ -20,10 +20,10 @@ export const actions = {
 
   async SEND_MESSAGE ({ commit, state, rootState, dispatch }, message) {
     const msg = {
-      target: state.curUser.login,
       message: message.replace(/\n/g, '<br />'),
+      toLogin: state.curUser.login,
     }
-    const res = await this.$axios.$post('send-message', msg)
+    const res = await this.$axios.$post('/chat/save', msg)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
         ...res.data,
@@ -34,8 +34,11 @@ export const actions = {
   },
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
-    const res = await this.$axios.$post('get-messages', {
-      login: user.login
+    const res = await this.$axios.$get(`chat/full`, {
+      params: {
+        toLogin: user.login,
+        limit: 50,
+      }
     })
     if (res.type === 'ok') {
       commit('SET_CUR_USER', user)
