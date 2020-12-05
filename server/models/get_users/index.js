@@ -14,12 +14,14 @@ module.exports = async function({
     sortAge,
     sortRating,
     sortTags,
+    limit,
+    offset,
   }
 }) {
   // console.log(ageMin, +ageMin)
   // const users = await this.find()
   // users.forEach(user => console.log(user.login, user.geoLoc))
-  console.log(user)
+  console.log("limit, offset", limit, offset)
   let docs = await this.aggregate([
     {
       $geoNear: {
@@ -43,10 +45,16 @@ module.exports = async function({
       $match: {
         isFilled: true,
         login: { $ne: user.login },
-        gender: +pref,
+        // gender: +pref,
         // age: { $gt: +ageMin - 1, $lt: +ageMax + 1 },
         // rating: { $gt: +minRating - 1, $lt: +maxRating + 1 },
       }
+    },
+    {
+      $skip: +offset,
+    },
+    {
+      $limit: +limit,
     },
   ])
 
@@ -56,7 +64,7 @@ module.exports = async function({
     return userInQuery
   }))
 
-  console.log(docs, "NONONONONO")
+  // console.log(docs, "NONONONONO")
     // .select('-_id -salt -token -hashedPassword -__v -email -created')
   // let filteredDocs = docs
 

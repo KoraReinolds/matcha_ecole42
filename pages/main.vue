@@ -34,11 +34,17 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      page: 'users/CUR_PAGE',
       tools: 'users/TOOLS',
       users: 'users/USERS',
     }),
   },
   methods: {
+    scroll(e) {
+      if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
+        this.getUsers(this.page + 1)
+      }
+    },
     ...mapMutations({
       setSettings: 'users/SET_INIT_TOOLS',
     }),
@@ -46,7 +52,11 @@ export default {
       getUsers: 'users/GET_USERS',
     }),
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.scroll);
+  },
   mounted() {
+    window.addEventListener('scroll', this.scroll);
     this.setSettings(this.$auth.user);
     this.getUsers();
   },

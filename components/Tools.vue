@@ -68,27 +68,23 @@
       Options.form-field(
         :data="tools.sortLocation"
         v-model="sortLocation"
-        :icons="{ dist: 'sort-amount-down-alt', dist_rev: 'sort-amount-down' }"
-        many
+        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
       )
       Options.form-field(
         :data="tools.sortAge"
-        :icons="{ age: 'sort-amount-down-alt', age_rev: 'sort-amount-down' }"
+        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
         v-model="sortAge"
-        many
       )
       Options.form-field(
         :data="tools.sortRating"
-        :icons="{ rating: 'sort-amount-down-alt', rating_rev: 'sort-amount-down' }"
+        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
         v-model="sortRating"
-        many
       )
       Options.form-field(
         v-if="tools.tags.value.length > 1"
         :data="tools.sortTags"
-        :icons="{ countTags: 'sort-amount-down-alt', countTags_rev: 'sort-amount-down' }"
+        :icons="{ 1: 'sort-amount-down-alt', [-1]: 'sort-amount-down' }"
         v-model="sortTags"
-        many
       )
 
 </template>
@@ -150,20 +146,20 @@ export default {
       get() { return this.tools.tags.value; },
     },
     sortLocation: {
-      set(value) { this.sort({ val: value, key: 'sortLocation' }); },
-      get() { return this.tools.sortLocation.value; },
+      set(value) { this.filterList({ val: value, key: 'sortLocation' }) },
+      get() { return +this.tools.sortLocation.value; },
     },
     sortAge: {
-      set(value) { this.sort({ val: value, key: 'sortAge' }); },
-      get() { return this.tools.sortAge.value; },
+      set(value) { this.filterList({ val: value, key: 'sortAge' }); },
+      get() { return +this.tools.sortAge.value; },
     },
     sortRating: {
-      set(value) { this.sort({ val: value, key: 'sortRating' }); },
-      get() { return this.tools.sortRating.value; },
+      set(value) { this.filterList({ val: value, key: 'sortRating' }); },
+      get() { return +this.tools.sortRating.value; },
     },
     sortTags: {
-      set(value) { this.sort({ val: value, key: 'sortTags' }); },
-      get() { return this.tools.sortTags.value; },
+      set(value) { this.filterList({ val: value, key: 'sortTags' }); },
+      get() { return +this.tools.sortTags.value; },
     },
     sortList: {
       set(value) { this.sort(value); },

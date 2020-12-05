@@ -3,9 +3,9 @@ import API from '~/api'
 export const state = () => ({
   users: [],
   curPage: 1,
-  maxLength: null,
+  // maxLength: null,
   limit: 3,
-  sortOrder: ['countTags', 'rating', 'dist'],
+  sortOrder: ['countTags', 'sortRating', 'sortLocation'],
   tools: {
     pref: {
       value: null,
@@ -37,35 +37,35 @@ export const state = () => ({
       title: 'Tags',
     },
     sortLocation: {
-      value: ['dist'],
+      value: 1,
       title: 'Dist',
-      options: ['dist', 'dist_rev'],
+      options: [1, -1],
     },
     sortAge: {
-      value: [],
+      value: null,
       title: 'Age',
-      options: ['age', 'age_rev'],
+      options: [1, -1],
     },
     sortRating: {
-      value: ['rating_rev'],
+      value: -1,
       title: 'Rate',
-      options: ['rating', 'rating_rev'],
+      options: [1, -1],
     },
     sortTags: {
-      value: ['countTags_rev'],
+      value: -1,
       title: 'Tags',
-      options: ['countTags', 'countTags_rev'],
+      options: [1, -1],
     },
   },
 })
 export const getters = {
-  MAX_LENGTH: (state) => state.maxLength,
+  // MAX_LENGTH: (state) => state.maxLength,
   USERS: (state) => state.users,
   // USERS: (state) => state.users.slice(0, state.limit),
   CUR_PAGE: (state) => state.curPage,
-  LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
+  // LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
   TOOLS: (state) => state.tools,
-  SORT_LIST: (state) => state.sortOrder,
+  // SORT_LIST: (state) => state.sortOrder,
 }
 export const mutations = {
   CHANGE_COUNT_PER_PAGE: (state) => {
@@ -104,11 +104,13 @@ export const actions = {
   //   commit('CHANGE_SORT_ORDER', opt)
   //   dispatch('GET_USERS', state.curPage)
   // },
-  FILTER_LIST ({ commit, dispatch }, opt) {
+  FILTER_LIST ({ state, commit, dispatch }, opt) {
+    commit('CHANGE_PAGE', 1)
+    commit('SET_USERS', [])
     commit('CHANGE_TOOLS', opt)
-    dispatch('GET_USERS', state.curPage)
+    dispatch('GET_USERS', state.curPage, true)
   },
-  async GET_USERS ({ commit, state, rootState, dispatch }, page) {
+  async GET_USERS ({ commit, state, rootState, dispatch }, page, newList) {
     commit('CHANGE_PAGE', page || 1)
     // const sortOrder = state.sortOrder.reduce((sum, cur) => {
     //   let val
@@ -145,6 +147,8 @@ export const actions = {
       minRating: tools.minRating.value,
       maxRating: tools.maxRating.value,
       tags: tools.tags.value.join(),
+      limit: state.limit,
+      offset: (state.curPage - 1) * state.limit,
       // sortLocation: tools.sortLocation,
       // sortAge: tools.sortAge,
       // sortRating: tools.sortRating,
@@ -170,7 +174,7 @@ export const actions = {
     // `)
     const res = await this.$axios.$get(`get-users?${Object.entries(reqParams).map(param => param.join('=')).join('&')}`)
     if (res.type === 'ok') {
-      commit('SET_USERS', res.data)
+      commit('SET_USERS', [...(newList ? [] : state.users), ...res.data])
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
