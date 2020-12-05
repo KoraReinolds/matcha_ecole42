@@ -1,9 +1,9 @@
 module.exports = {
 
-  server: {
-    port: 3000,
-    host: '192.168.29.15'
-  },
+  // server: {
+  //   port: 3000,
+  //   host: '192.168.29.15'
+  // },
   /*
   ** Headers of the page
   */
