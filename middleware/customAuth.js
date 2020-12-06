@@ -8,7 +8,7 @@ export default function ({ store, redirect, route, $auth }) {
       )
     }
   } else {
-    if (!['login', 'registration'].includes(route.name)) {
+    if (!['login', 'registration', 'fill-id'].includes(route.name)) {
       return redirect('/login')
     }
   }
