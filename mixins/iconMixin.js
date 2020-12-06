@@ -7,6 +7,7 @@ export default {
       dislike: 'heart-broken',
       visit: 'eye',
       messages: 'comment-alt',
+      connected: 'yin-yang',
       male: 'mars',
       female: 'venus',
       bisexual: 'transgender',

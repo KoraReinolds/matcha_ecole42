@@ -42,10 +42,12 @@ import iconsMixin from '@/mixins/iconMixin';
 
 export default {
   name: 'userShort',
+  data: () => ({
+    action: 'ban',
+  }),
   props: {
     user: Object,
     time: String,
-    action: String,
   },
   components: {
     RoundedIcon,
@@ -61,6 +63,9 @@ export default {
     }),
   },
   methods: {
+    getAction(type) {
+      return [type]
+    },
     getDate(time) {
       return new Date(time).toLocaleString('ru', {
         month: 'long',
@@ -77,6 +82,12 @@ export default {
     }),
   },
   mounted() {
+    this.action = {
+      LIKE: 'like',
+      PROFILE_LOAD: 'visit',
+      CONNECTED: 'connected',
+      SEND_MESSAGE: 'messages',
+    }[this.user.type]
   },
 };
 </script>

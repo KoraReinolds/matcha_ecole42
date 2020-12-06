@@ -169,7 +169,7 @@ export const actions = {
 
   async LOGOUT () {
     await this.$auth.logout()
-    location.reload()
+    setTimeout(() => location.reload(), 500)
   },
 
   async GET_LOCATION ({ commit }) {

@@ -5,10 +5,9 @@
     )
       transition-group(name="list" tag="div")
         UserShort(
-          v-for="({ type, time, ...target }, index) in historyList"
+          v-for="({ time, ...target }, index) in historyList"
           :key="'history'+index+target.login"
           :user="target"
-          :action="getAction(type)"
           :time="time"
         )
     template(
@@ -36,12 +35,6 @@ export default {
     ...mapActions({
       getHistory: 'history/GET_HISTORY',
     }),
-    getAction(type) {
-      return {
-        LIKE: 'like',
-        PROFILE_LOAD: 'visit',
-      }[type]
-    }
   },
   mounted() {
     this.getHistory();
