@@ -16,12 +16,10 @@
         )
         Ban(
           :size="2"
-          :active="true"
           :user="user"
         )
         Block(
           :size="2"
-          :active="true"
           :user="user"
         )
       ChatLink.chat-link(

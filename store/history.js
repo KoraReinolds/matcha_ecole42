@@ -3,36 +3,29 @@ export const state = () => ({
   notifications: [],
   popWindows: [],
   notificationsChecked: 0,
+  unreadedNotifications: 0,
 })
 export const getters = {
   POP_WINDOWS: (state) => state.popWindows,
   HISTORY: (state) => state.history,
   NOTIFICATIONS: (state) => state.notifications,
-  NOTIFICATION_COUNT: (state) => state.notifications.length - state.notificationsChecked,
+  NOTIFICATION_COUNT: (state) => state.unreadedNotifications > 99 ? '+99' : state.unreadedNotifications,
+  // NOTIFICATION_COUNT: (state) => state.notifications.length - state.notificationsChecked,
 }
 export const mutations = {
-  CLOSE_MSG: (state, index) => {
-    state.notifications[index].visible = false
-  },
+  SET_UNREADED_NOTIFICATIONS: (state, count) => state.unreadedNotifications = count,
+  CLOSE_MSG: (state, index) => state.notifications[index].visible = false,
   SET_HISTORY: (state, list) => state.history = list,
   SET_NOTIFICATIONS: (state, list) => {
     state.notifications = list
     state.notificationsChecked = list.length
   },
-  SET_ALL_NOTIF_AS_CHECKED: (state) => {
-    state.notificationsChecked = state.notifications.length
-  },
-  PUSH_NOTIFICATION: (state, notif) => {
-    state.notifications.unshift(notif)
-  },
-  PUSH_POP_WINDOW: (state, msg) => {
-    state.popWindows.push(msg)
-  },
+  SET_ALL_NOTIF_AS_CHECKED: (state) => state.notificationsChecked = state.notifications.length,
+  PUSH_NOTIFICATION: (state, notif) => state.notifications.unshift(notif),
+  PUSH_POP_WINDOW: (state, msg) => state.popWindows.push(msg),
   HIDE_MSG: (state, notif) => {
     const index = state.popWindows.findIndex(
-      mess => {
-        return notif === mess
-      }
+      mess => notif === mess
     )
     state.popWindows[index].visible = false
     state.popWindows = [...state.popWindows]
@@ -77,9 +70,15 @@ export const actions = {
     }
   },
 
+  async GET_UNREADED_NOTIFICATIONS ({ commit }) {
+    const res = await this.$axios.$get('/new-notifications')
+    if (res.type === 'ok') {
+      commit('SET_UNREADED_NOTIFICATIONS', res.data)
+    }
+  },
+
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
     const res = await this.$axios.$get('history?limit=50&offset=0')
-    console.log(res)
     if (res.type === 'ok') {
       commit('SET_HISTORY', res.data)
     }

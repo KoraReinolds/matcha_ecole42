@@ -196,6 +196,7 @@ export const actions = {
     data.location = state.realLocation
     try {
       await this.$auth.loginWith('local', { data })
+      dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
       dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     } catch (e) {
       if (e.message.slice(-3) === '401') {

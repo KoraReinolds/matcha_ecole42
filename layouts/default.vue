@@ -36,6 +36,7 @@ export default {
     ...mapActions({
       getLocation: 'forms/GET_LOCATION',
       pushPopWindow: 'history/PUSH_POP_WINDOW',
+      getUnreadedNotifications: 'history/GET_UNREADED_NOTIFICATIONS',
     }),
   },
   beforeDestroy() {
@@ -43,11 +44,11 @@ export default {
     window.removeEventListener('resize', this.rechangeCount);
   },
   mounted() {
-    this.resize();
-    this.rechangeCount();
-    window.addEventListener('resize', this.resize);
-    window.addEventListener('resize', this.rechangeCount);
-    this.getLocation();
+    this.resize()
+    this.rechangeCount()
+    window.addEventListener('resize', this.resize)
+    window.addEventListener('resize', this.rechangeCount)
+    this.getLocation()
 
     // let socket = new WebSocket(
     //   "ws://192.168.29.71:4567/chat?token=access_token",
@@ -79,6 +80,7 @@ export default {
     // // let socket = new WebSocket("wss://javascript.info/article/websocket/demo/hello");
     // console.log("socket ", socket)
     if (this.$auth.loggedIn) {
+    this.getUnreadedNotifications()
     //   this.socket = this.$nuxtSocket({});
     //   this.socket
     //     .on(this.$auth.user.login, (notif, cb) => {

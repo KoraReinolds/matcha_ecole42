@@ -1,8 +1,8 @@
 <template lang="pug">
   font-awesome-icon.icon.ban(
-    :class="[`fa-${size}x`, { ban_color: active }]"
+    :class="[`fa-${size}x`, { ban_color: true }]"
     icon="ban"
-    @click="ban(user)"
+    @click="ban(user.login)"
   )
 </template>
 
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      ban: 'users/BAN',
+      ban: 'user/BAN',
     }),
   },
   mounted() {
