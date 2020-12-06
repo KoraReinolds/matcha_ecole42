@@ -55,6 +55,8 @@ export default {
 <style scoped lang="scss">
 
 #fill {
+  z-index: 10000;
+  position: relative;
   &.fill {
     color: white;
   }

@@ -44,7 +44,7 @@
           )
 
       div.title.left Gender
-      div.field.gender {{ user ? user.gender : '...' }}
+      div.field.gender {{ ['male', 'female', 'bisexual'][user.gender - 1] }}
 
       div.title.left Preferences
       div.field.preferences

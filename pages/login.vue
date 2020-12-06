@@ -80,6 +80,8 @@ export default {
 
 <style scoped lang="scss">
 .form {
+  position: relative;
+  z-index: 1001;
   .title {
     font-size: 24px;
   }

@@ -1,7 +1,6 @@
 <template lang="pug">
   div#main(v-if="$auth.user && users")
     div.user-list
-      //- div(v-for="user in tools") {{ user }}
       template(v-if="users.length")
         transition-group(tag="p" name="user")
           User(
@@ -11,7 +10,6 @@
           )
       template(v-else)
         div.else Search returned no results
-      //- Paginator.paginator
     Tools.tools
 
   </div>
@@ -20,14 +18,12 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import User from '@/components/User.vue';
-import Paginator from '@/components/Paginator.vue';
 import Tools from '@/components/Tools.vue';
 
 export default {
   name: 'mainPage',
   components: {
     User,
-    Paginator,
     Tools,
   },
   data: () => ({

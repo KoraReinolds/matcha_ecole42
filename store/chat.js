@@ -24,10 +24,13 @@ export const actions = {
       toLogin: state.curUser.login,
     }
     const res = await this.$axios.$post('/chat/save', msg)
+    console.log(rootState.auth)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
-        ...res.data,
-        who: { login: rootState.auth.login },
+        ...msg,
+        time: new Date,
+        read: true,
+        // fromLogin: rootState.auth.login,
       })
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
@@ -43,6 +46,12 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_CUR_USER', user)
       commit('SET_MESSAGES', res.data)
+      setTimeout(() => {
+        res.data.forEach((msg) => {
+          msg.read = true
+        })
+        commit('SET_MESSAGES', res.data)
+      }, 1000)
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     return res

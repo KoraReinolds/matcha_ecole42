@@ -5,7 +5,7 @@
   )
     div.img-container
       RoundedIcon.gender(
-        :icon="['bisexual', 'male', 'female'][user.gender - 1]"
+        :icon="['male', 'female', 'bisexual'][user.gender - 1]"
         :mask="mobile"
         :size="6"
       )
@@ -87,6 +87,7 @@ export default {
       PROFILE_LOAD: 'visit',
       CONNECTED: 'connected',
       SEND_MESSAGE: 'messages',
+      DISCONNECTED: 'dislike',
     }[this.user.type]
   },
 };

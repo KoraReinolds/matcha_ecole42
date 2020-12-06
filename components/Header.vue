@@ -88,7 +88,7 @@ header {
   line-height: $header-height;
   width: 100%;
   background-color: $main-color;
-  z-index: 101;
+  z-index: 1000;
   transition: height 0.5s;
   box-shadow: inset 0 -5px 20px $main-color-shadow;
   .nav {
@@ -120,7 +120,7 @@ header {
     }
   }
   &.fill {
-    z-index: -1;
+    z-index: 1000;
     height: 100%;
   }
 }

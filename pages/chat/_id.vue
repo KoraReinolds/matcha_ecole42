@@ -38,8 +38,8 @@
           div.message(
             v-for="(message, index) in messages"
             :key="'message'+index+curUser.login"
-            :class="{ our: message.toLogin.login !== curUser.login }"
-          ) 
+            :class="{ our: message.toLogin === curUser.login, unreaded: !message.read }"
+          )
             span.time {{ getDate(message.time) }}
             span.text_block(
               v-html="message.message"
@@ -262,17 +262,21 @@ export default {
             }
             .text_block {
               max-width: 100%;
-              color: #fff;
               // overflow: scroll;
-              padding: 20px;
+              margin: 5px;
+              padding: 15px;
               display: inline-block;
               line-height: 20px;
               border-radius: 30px;
               background: $chat-color;
             }
+            &.unreaded {
+              background: rgb(188, 195, 226);
+            }
           }
           .message.our {
             .text_block {
+              color: #fff;
               background: $main-color;
             }
           }

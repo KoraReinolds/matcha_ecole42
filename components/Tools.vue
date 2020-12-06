@@ -22,7 +22,7 @@
         type="number"
         min="18"
         max="99"
-        @blur="filterList({ val: $event.target.value, key: 'ageMin' })"
+        @blur="getUsers({ val: $event.target.value, key: 'ageMin' })"
       )
       TextField.form-field(
         :data="tools.ageMax"
@@ -30,27 +30,27 @@
         type="number"
         min="18"
         max="99"
-        @blur="filterList({ val: $event.target.value, key: 'ageMax' })"
+        @blur="getUsers({ val: $event.target.value, key: 'ageMax' })"
       )
 
       TextField.form-field(
         class="radius"
         :data="tools.radius"
-        @blur="filterList({ val: $event.target.value, key: 'radius' })"
+        @blur="getUsers({ val: $event.target.value, key: 'radius' })"
         v-model="radius"
         type="number"
       )
 
       TextField.form-field(
         :data="tools.minRating"
-        @blur="filterList({ val: $event.target.value, key: 'minRating' })"
+        @blur="getUsers({ val: $event.target.value, key: 'minRating' })"
         v-model="minRating"
         type="number"
         step="10"
       )
       TextField.form-field(
         :data="tools.maxRating"
-        @blur="filterList({ val: $event.target.value, key: 'maxRating' })"
+        @blur="getUsers({ val: $event.target.value, key: 'maxRating' })"
         v-model="maxRating"
         type="number"
         step="10"
@@ -61,8 +61,8 @@
         :data="tools.tags"
         v-model="tags"
         :maxTags="5"
-        @delete="filterList({ val: $event, key: 'tags' })"
-        @add="filterList({ val: $event, key: 'tags' })"
+        @delete="getUsers({ val: $event, key: 'tags' })"
+        @add="getUsers({ val: $event, key: 'tags' })"
       )
 
       Options.form-field(
@@ -128,58 +128,58 @@ export default {
       mobile: 'IS_MOBILE',
     }),
     pref: {
-      set(value) { this.filterList({ val: value, key: 'pref' }) },
+      set(value) { this.getUsers({ val: value, key: 'pref' }) },
       get() { return this.tools.pref.value; },
     },
     ageMin: {
-      set(value) { this.filterList({ val: value, key: 'ageMin' }) },
+      set(value) { this.getUsers({ val: value, key: 'ageMin' }) },
       get() { return this.tools.ageMin.value; },
     },
     ageMax: {
-      set(value) { this.filterList({ val: value, key: 'ageMax' }) },
+      set(value) { this.getUsers({ val: value, key: 'ageMax' }) },
       get() { return this.tools.ageMax.value; },
     },
     radius: {
-      set(value) { this.changeToolsValue({ val: value, key: 'radius' }) },
+      set(value) { this.getUsers({ val: value, key: 'radius' }) },
       get() { return this.tools.radius.value; },
     },
     maxRating: {
-      set(value) { this.filterList({ val: value, key: 'maxRating' }) },
+      set(value) { this.getUsers({ val: value, key: 'maxRating' }) },
       get() { return this.tools.maxRating.value; },
     },
     minRating: {
-      set(value) { this.filterList({ val: value, key: 'minRating' }) },
+      set(value) { this.getUsers({ val: value, key: 'minRating' }) },
       get() { return this.tools.minRating.value; },
     },
     tags: {
-      set(value) { this.filterList({ val: value, key: 'tags' }) },
+      set(value) { this.getUsers({ val: value, key: 'tags' }) },
       get() { return this.tools.tags.value; },
     },
     sortLocation: {
       set(value) {
-        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortLocation' })
         this.changeOrder(['sortLocation', value.length])
+        this.getUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortLocation' })
       },
       get() { return this.tools.sortLocation.value; },
     },
     sortAge: {
       set(value) {
-        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortAge' })
         this.changeOrder(['sortAge', value.length])
+        this.getUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortAge' })
       },
       get() { return this.tools.sortAge.value; },
     },
     sortRating: {
       set(value) {
-        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortRating' })
         this.changeOrder(['sortRating', value.length])
+        this.getUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortRating' })
       },
       get() { return this.tools.sortRating.value; },
     },
     sortTags: {
       set(value) {
-        this.filterList({ val: value.length === 2 ? [value[1]] : value, key: 'sortTags' })
         this.changeOrder(['sortTags', value.length])
+        this.getUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortTags' })
       },
       get() { return this.tools.sortTags.value; },
     },
@@ -202,7 +202,7 @@ export default {
     }),
     ...mapActions({
       addTag: 'users/ADD_TAG',
-      filterList: 'users/FILTER_LIST',
+      getUsers: 'users/GET_USERS',
       sort: 'users/SORT',
     }),
   },

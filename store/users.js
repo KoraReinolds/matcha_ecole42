@@ -1,9 +1,6 @@
-import API from '~/api'
-
 export const state = () => ({
   users: [],
   curPage: 1,
-  // maxLength: null,
   limit: 3,
   sortOrder: new Set(['sortTags', 'sortRating', 'sortLocation']),
   tools: {
@@ -60,13 +57,9 @@ export const state = () => ({
 })
 export const getters = {
   SORT_ORDER: (state) => state.sortOrder,
-  // MAX_LENGTH: (state) => state.maxLength,
   USERS: (state) => state.users,
-  // USERS: (state) => state.users.slice(0, state.limit),
   CUR_PAGE: (state) => state.curPage,
-  // LAST_PAGE: (state) => Math.ceil(state.maxLength / state.limit),
   TOOLS: (state) => state.tools,
-  // SORT_LIST: (state) => state.sortOrder,
 }
 export const mutations = {
   CHANGE_SORT_ORDER: (state, [newItem, isChange]) => {
@@ -93,60 +86,13 @@ export const mutations = {
   },
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
-  // GET_TOOLS: (state, { key, val }) => state.tools[key].value = val,
-  // CHANGE_SORT_ORDER: (state, { key, val }) => {
-  //   if (val.length) {
-  //     const prefix = val[0].split('_')[0]
-  //     if (!state.sortOrder.includes(prefix)) {
-  //       state.sortOrder.push(prefix)
-  //     }
-  //   } else {
-  //     const index = state.sortOrder.indexOf(state.tools[key].options[0])
-  //     state.sortOrder.splice(index, 1)
-  //   }
-  // },
 }
 export const actions = {
-  // SORT: ({ commit, dispatch }, opt) => {
-  //   if (opt.val.length) opt.val = [opt.val[opt.val.length - 1]]
-  //   commit('CHANGE_TOOLS', opt)
-  //   commit('CHANGE_SORT_ORDER', opt)
-  //   dispatch('GET_USERS', state.curPage)
-  // },
-  FILTER_LIST ({ state, commit, dispatch }, opt) {
+
+  async GET_USERS ({ state, commit, dispatch }, opt) {
     commit('CHANGE_PAGE', 1)
     commit('SET_USERS', [])
-    commit('CHANGE_TOOLS', opt)
-    dispatch('GET_USERS', state.curPage, true)
-  },
-  async GET_USERS ({ commit, state, rootState, dispatch }, page, newList) {
-    commit('CHANGE_PAGE', page || 1)
-    // const sortOrder = state.sortOrder.reduce((sum, cur) => {
-    //   let val
-    //   if (cur === 'dist') val = state.tools.sortLocation.value
-    //   else if (cur === 'age') val = state.tools.sortAge.value
-    //   else if (cur === 'rating') val = state.tools.sortRating.value
-    //   else if (cur === 'sortTags') val = state.tools.sortTags.value
-    //   if (val.length) {
-    //     sum[cur] = -1 * Math.min(val[0].indexOf('_'), 1)
-    //   }
-    //   return sum
-    // }, {})
-    // preference:     state.tools.pref.value,
-    // `
-    // ageMin=0&
-    // ageMax=100&
-    // minRating=0&
-    // maxRating=999&
-    // deltaRadius=1000&
-    // limit=100&
-    // offset=0&
-    // sortAge=1&
-    // sortLocation=1&
-    // sortRating-1&
-    // sortTags=1&
-    // needPreference=1
-    // `
+    if (opt) commit('CHANGE_TOOLS', opt)
     const tools = state.tools
     const reqParams = {
       needPreference: { male: 1, female: 2, bisexual: 3 }[tools.pref.value],
@@ -158,38 +104,15 @@ export const actions = {
       tags: tools.tags.value.join(),
       limit: state.limit,
       offset: (state.curPage - 1) * state.limit,
-      // sortLocation: tools.sortLocation,
-      // sortAge: tools.sortAge,
-      // sortRating: tools.sortRating,
-      // sortTags: tools.sortTags,
     }
-    
     state.sortOrder.forEach(fieldName => {
-      console.log(fieldName)
-      // obj[fieldName] = tools[fieldName].value[0]
-      // return obj
+      reqParams[fieldName] = tools[fieldName].value[0]
     })
-
-  //   console.log(Object.entries(reqParams).map(param => param.join('=')).join('&'))
-  //   console.log(state.tools.tags.value, `get-users
-  //   ?tags=${state.tools.tags.value.join()}
-  //   &sortAge=1
-  //   &sortLocation=1
-  //   &sortRating=1
-  //   &sortTags=1
-  //   &ageMin=${state.tools.ageMin.value}
-  //   &ageMax=${state.tools.ageMax.value}
-  //   &minRating=${state.tools.minRating.value}
-  //   &maxRating=${state.tools.maxRating.value}
-  //   &deltaRadius=${state.tools.maxRating.value}
-  //   &limit=${state.limit}
-  //   &offset=${(state.curPage - 1) * state.limit}
-  // `)
     const res = await this.$axios.$get(`get-users`, {
       params: reqParams,
     })
     if (res.type === 'ok') {
-      commit('SET_USERS', [...(newList ? [] : state.users), ...res.data])
+      commit('SET_USERS', res.data)
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
