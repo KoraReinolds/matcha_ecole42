@@ -15,7 +15,7 @@ module.exports = async function(req) {
     action: +req.body.value ? 'like' : 'dislike',
     target: user._id,
   }).save()
-
+  
   return { type: "ok" }
 
   // (err, action) => {

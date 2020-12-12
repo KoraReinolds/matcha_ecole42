@@ -30,13 +30,15 @@ export default {
   },
   methods: {
     ...mapMutations({
+      setUnreadedNotifications: 'history/SET_UNREADED_NOTIFICATIONS',
     }),
     ...mapActions({
       getNotifications: 'history/GET_NOTIFICATIONS',
     }),
   },
   mounted() {
-    this.getNotifications();
+    this.getNotifications()
+    this.setUnreadedNotifications(0)
   },
 };
 </script>

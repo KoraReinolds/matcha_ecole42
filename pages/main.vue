@@ -38,23 +38,27 @@ export default {
   methods: {
     scroll(e) {
       if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-        this.getUsers(this.page + 1)
+        this.setNewPage(this.page + 1)
+        this.getUsers()
       }
     },
     ...mapMutations({
+      setNewPage: 'users/CHANGE_PAGE',
       setSettings: 'users/SET_INIT_TOOLS',
+      setUsers: 'users/SET_USERS',
     }),
     ...mapActions({
       getUsers: 'users/GET_USERS',
+      filterUsers: 'users/FILTER_USERS',
     }),
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.scroll);
+    window.removeEventListener('scroll', this.scroll)
   },
   mounted() {
-    window.addEventListener('scroll', this.scroll);
-    this.setSettings(this.$auth.user);
-    this.getUsers();
+    window.addEventListener('scroll', this.scroll)
+    this.setSettings(this.$auth.user)
+    this.filterUsers()
   },
 };
 </script>

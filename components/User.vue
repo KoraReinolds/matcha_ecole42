@@ -16,6 +16,7 @@
           :mask="false"
         )
         div.like-icon(
+          v-if="user.likedFrom !== undefined"
         )
           Like.like(
             :user="user"
@@ -29,6 +30,9 @@
           span.age {{ `${user.age} y.o.` }}
         div.only_laptop.biography
           div.text {{ `${user.biography}` }}
+        div(v-if="user.tagsCount !== undefined") Match tags: {{ user.tagsCount }}
+        div {{ user.x }}
+        div {{ user.y }}
         div.only_laptop.tags
           Tag(
             v-for="tag in user.tags"

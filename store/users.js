@@ -89,10 +89,17 @@ export const mutations = {
 }
 export const actions = {
 
-  async GET_USERS ({ state, commit, dispatch }, opt) {
-    commit('CHANGE_PAGE', 1)
+  FILTER_USERS ({ commit, dispatch }, opt) {
     commit('SET_USERS', [])
     if (opt) commit('CHANGE_TOOLS', opt)
+    commit('CHANGE_PAGE', 1)
+    dispatch('GET_USERS')
+  },
+
+  async GET_USERS ({ state, commit, dispatch }) {
+    // commit('CHANGE_PAGE', 1)
+    // commit('SET_USERS', [])
+    // if (opt) commit('CHANGE_TOOLS', opt)
     const tools = state.tools
     const reqParams = {
       needPreference: { male: 1, female: 2, bisexual: 3 }[tools.pref.value],
@@ -101,10 +108,10 @@ export const actions = {
       deltaRadius: tools.radius.value,
       minRating: tools.minRating.value,
       maxRating: tools.maxRating.value,
-      tags: tools.tags.value.join(),
       limit: state.limit,
       offset: (state.curPage - 1) * state.limit,
     }
+    if (tools.tags.length) reqParams.tags = tools.tags.value.join(),
     state.sortOrder.forEach(fieldName => {
       reqParams[fieldName] = tools[fieldName].value[0]
     })
@@ -112,7 +119,7 @@ export const actions = {
       params: reqParams,
     })
     if (res.type === 'ok') {
-      commit('SET_USERS', res.data)
+      commit('SET_USERS', [...state.users, ...res.data])
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },

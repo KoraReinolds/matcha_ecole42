@@ -81,6 +81,7 @@ export default {
     // console.log("socket ", socket)
     if (this.$auth.loggedIn) {
     this.getUnreadedNotifications()
+
     //   this.socket = this.$nuxtSocket({});
     //   this.socket
     //     .on(this.$auth.user.login, (notif, cb) => {

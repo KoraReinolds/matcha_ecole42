@@ -34,7 +34,10 @@ export const actions = {
   },
 
   async GET_USER ({ commit, state, rootState, dispatch }, login) {
-    const res = await this.$axios.$get(`profile-get/${login}`, { login })
+    console.log(rootState.auth.user.login)
+    const res = login === rootState.auth.user.login ?
+      { type: 'ok', data: rootState.auth.user } :
+      await this.$axios.$get(`profile-get/${login}`, { login })
     if (res.type === 'ok') {
       commit('SET_USER', res.data)
     }

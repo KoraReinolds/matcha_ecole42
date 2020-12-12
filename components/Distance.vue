@@ -6,7 +6,8 @@
     )
     span(
       :style="{ fontSize: `${size * 10}px` }"
-    ) {{ (myLocation && value !== '0') ? `${Math.floor(value / 1000)} km` : '...' }}
+    ) {{ (myLocation && value !== '0') ? `${Math.floor(value * 10) / 10} km` : '...' }}
+    //- ) {{ (myLocation && value !== '0') ? `${Math.floor(value / 1000)} km` : '...' }}
 </template>
 
 <script>

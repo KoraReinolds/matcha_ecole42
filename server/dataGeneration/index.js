@@ -41,17 +41,17 @@ const generateUser = () => {
   const fname = randomValueFromArray(gender === 1 ? manNames : womanNames)
   const lname = randomValueFromArray(gender === 1 ? manLNames : womanLNames)
   const email = `${fname}@mail.ru`
-  const age = getRandomValue(18, 55)
+  const age = getRandomValue(18, 28)
   const rating = getRandomValue(0, 1000)
   const preference = randomValueFromArray(preferencesArray)
   const biography = randomText(1, 5, sentences).slice(0, 200)
   const images = [
-    { avatar: true, index: 0, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },
-    { avatar: false, index: 1, src: `https://picsum.photos/id/${(imageId++)%1000}/200/300` },
+    { avatar: true, index: 0, src: `https://picsum.photos/id/${getRandomValue(0, 1000)}/200/300` },
+    { avatar: false, index: 1, src: `https://picsum.photos/id/${getRandomValue(0, 1000)}/200/300` },
   ]
   return {
     isFilled: true,
-    location,
+    location: myLocation,
     login: `${fname}-${getRandomValue(0, 100000)}`,
     fname,
     lname,
