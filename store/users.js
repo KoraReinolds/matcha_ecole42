@@ -4,10 +4,16 @@ export const state = () => ({
   limit: 3,
   sortOrder: new Set(['sortTags', 'sortRating', 'sortLocation']),
   tools: {
+    // pref: {
+    //   value: null,
+    //   title: 'Preferences',
+    //   options: ['male', 'female', 'bisexual']
+    // },
     pref: {
-      value: null,
+      value: ["1"],
       title: 'Preferences',
-      options: ['male', 'female', 'bisexual']
+      options: { 'Учитывать мои предпочтения': "1" }
+      // options: ['1']
     },
     ageMin: {
       value: null,
@@ -75,7 +81,7 @@ export const mutations = {
     state.curPage = 1
   },
   SET_INIT_TOOLS: (state, user) => {
-    state.tools.pref.value = ['male', 'female', 'bisexual'][user.preference - 1]
+    // state.tools.pref.value = ['male', 'female', 'bisexual'][user.preference - 1]
     state.tools.ageMin.value = Math.max(+user.age - 5, 18)
     state.tools.ageMax.value = Math.min(+user.age + 5, 99)
     state.tools.tags.value = user.tags
@@ -102,12 +108,12 @@ export const actions = {
     // if (opt) commit('CHANGE_TOOLS', opt)
     const tools = state.tools
     const reqParams = {
-      needPreference: { male: 1, female: 2, bisexual: 3 }[tools.pref.value],
-      ageMin: tools.ageMin.value,
-      ageMax: tools.ageMax.value,
-      deltaRadius: tools.radius.value,
-      minRating: tools.minRating.value,
-      maxRating: tools.maxRating.value,
+      needPreference: tools.pref.value[0] || 0,
+      ageMin: tools.ageMin.value || 0,
+      ageMax: tools.ageMax.value || 0,
+      deltaRadius: tools.radius.value || 0,
+      minRating: tools.minRating.value || 0,
+      maxRating: tools.maxRating.value || 0,
       limit: state.limit,
       offset: (state.curPage - 1) * state.limit,
     }

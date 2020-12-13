@@ -13,9 +13,14 @@
     )
       Options.pref.form-field(
         :data="tools.pref"
-        :icons="prefIcons"
         v-model.trim="pref"
+        many
       )
+      //- Options.pref.form-field(
+      //-   :data="tools.pref"
+      //-   :icons="prefIcons"
+      //-   v-model.trim="pref"
+      //- )
       TextField.form-field(
         :data="tools.ageMin"
         v-model="ageMin"
