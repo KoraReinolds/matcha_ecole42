@@ -1,5 +1,3 @@
-import API from '~/api'
-
 export const state = () => ({
   users: [],
   curUser: null,
@@ -24,7 +22,6 @@ export const actions = {
       toLogin: state.curUser.login,
     }
     const res = await this.$axios.$post('/chat/save', msg)
-    console.log(rootState.auth)
     if (res.type === 'ok') {
       commit('PUSH_MESSAGE', {
         ...msg,
@@ -48,7 +45,9 @@ export const actions = {
       commit('SET_MESSAGES', res.data)
       setTimeout(() => {
         res.data.forEach((msg) => {
-          msg.read = true
+          if (msg.fromLogin !== rootState.auth.user.login) {
+            msg.read = true
+          }
         })
         commit('SET_MESSAGES', res.data)
       }, 1000)

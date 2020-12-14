@@ -1,8 +1,6 @@
 <template lang="pug">
   form.form(
-    v-on:keyup.enter="signIn()"
   )
-    h2.title Login
     TextField(
       :data="fieldsData.login"
       v-model="login"
@@ -11,25 +9,19 @@
       name="login"
     )
     TextField(
-      :data="fieldsData.password"
-      v-model="password"
-      type='password'
+      :data="fieldsData.email"
+      v-model="email"
+      type='email'
       rounded
       filled
-      name="password"
+      name="email"
     )
     div.form-actions
-      nuxt-link.link(
-        to="/registration"
-      ) Registration
-      nuxt-link.link(
-        to="/reset-password"
-      ) Forget password
+      nuxt-link.link(to="/login") Back
       span.btn(
-        :class="{ disabled: !formValid }"
-        @click.prevent="signIn()"
-        
-      ) LogIn
+        :class="{ disabled: !(data_login && data_email) }"
+        @click.prevent="data_login && data_email && getEmail({ login: data_login, email: data_email })"
+      ) Get email
 </template>
 
 <script>
@@ -37,43 +29,36 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
 
 export default {
-  name: 'Login',
+  name: 'Reset-password',
   components: {
     TextField,
   },
   data: () => ({
     data_login: 'User_1',
-    data_password: '123',
+    data_email: '123@mail.ru',
   }),
   computed: {
     ...mapGetters({
       fieldsData: 'forms/FIELDS_DATA',
-      formValid: 'forms/LOGIN_VALID',
     }),
     login: {
       get() { return this.data_login; },
       set(value) { this.setValue({ key: 'login', value }); },
     },
-    password: {
-      get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }); },
+    email: {
+      get() { return this.data_email; },
+      set(value) { this.setValue({ key: 'email', value }); },
     },
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
+      getEmail: 'forms/GET_EMAIL',
     }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
-      this.$store.commit('forms/SET_VALUE', { key, value })
     },
-    signIn() {
-      if (this.formValid) this.$store.dispatch('forms/SIGN_IN', {
-        login: this.data_login,
-        password: this.data_password,
-      });
-    }
   },
   mounted() {
   },

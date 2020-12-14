@@ -60,7 +60,7 @@ export default {
     bottom: 10%;
     display: flex;
     flex-direction: column-reverse;
-    z-index: 10;
+    z-index: 11111111;
     .mess {
       position: relative;
       color: white;

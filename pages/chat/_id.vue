@@ -60,7 +60,7 @@
           v-model="message"
           placeholder="Write message"
         )
-        font-awesome-icon.icon.send.fa-1x(
+        font-awesome-icon.icon.send.fa-2x(
           icon="paper-plane"
           @click="sendMessage"
         )
@@ -278,6 +278,21 @@ export default {
             .text_block {
               color: #fff;
               background: $main-color;
+            }
+            &.unreaded {
+              background: white;
+              &::after {
+                content: '';
+                display: block;
+                width: 10px;
+                height: 10px;
+                background-color: $main-color;
+                border-radius: 50%;
+                position: relative;
+                top: -25px;
+
+              }
+              // background: rgb(66, 75, 117);
             }
           }
           @media (max-width: map-get($grid-breakpoints, sm)) {

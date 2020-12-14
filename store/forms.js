@@ -184,10 +184,11 @@ export const actions = {
     data.location = state.realLocation
     const res = await this.$axios.$post('register', data)
     if (res.type === 'ok') {
-      dispatch('SIGN_IN', {
-        login: data.login,
-        password: data.password,
-      })
+      res.message = 'Для окончания регистрации перейдите по ссылке в почте'
+      // dispatch('SIGN_IN', {
+      //   login: data.login,
+      //   password: data.password,
+      // })
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
@@ -235,6 +236,30 @@ export const actions = {
     }
   },
 
+  async CHANGE_PASSWORD ({ commit, rootState, dispatch }, { password, token }) {
+
+    const res = await this.$axios.$post(`change-reset-password`, { password }, {
+      headers: {
+        Authorization: token,
+      }
+    })
+    
+    if (res.type === 'ok') {
+      res.message = 'Пароль успешно изменен'
+    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+  },
+
+  async GET_EMAIL ({ commit, rootState, dispatch }, data) {
+
+    const res = await this.$axios.$post(`reset-password`, data)
+    
+    if (res.type === 'ok') {
+      res.message = 'На вашу почту отправленна инструкция по смене пароля'
+    }
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+  },
+
   async LIKE ({ commit, rootState, dispatch }, user) {
 
     const { login, likedFrom } = user
@@ -243,7 +268,6 @@ export const actions = {
       login,
       value: likedFrom ? 0 : 1,
     })
-    // this.$set(user, 'likedFrom', !user.likedFrom)
     
     console.log(user, res)
     if (res.type === 'ok') {

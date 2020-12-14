@@ -1,35 +1,18 @@
 <template lang="pug">
   form.form(
-    v-on:keyup.enter="signIn()"
   )
-    h2.title Login
-    TextField(
-      :data="fieldsData.login"
-      v-model="login"
-      rounded
-      filled
-      name="login"
-    )
     TextField(
       :data="fieldsData.password"
       v-model="password"
-      type='password'
       rounded
       filled
       name="password"
     )
     div.form-actions
-      nuxt-link.link(
-        to="/registration"
-      ) Registration
-      nuxt-link.link(
-        to="/reset-password"
-      ) Forget password
       span.btn(
-        :class="{ disabled: !formValid }"
-        @click.prevent="signIn()"
-        
-      ) LogIn
+        :class="{ disabled: !data_password }"
+        @click.prevent="data_password && changePass({ password: data_password, token: $route.query.token })"
+      ) Change pssword
 </template>
 
 <script>
@@ -37,25 +20,19 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
 
 export default {
-  name: 'Login',
+  name: 'Change-password',
   components: {
     TextField,
   },
   data: () => ({
-    data_login: 'User_1',
-    data_password: '123',
+    data_password: '',
   }),
   computed: {
     ...mapGetters({
       fieldsData: 'forms/FIELDS_DATA',
-      formValid: 'forms/LOGIN_VALID',
     }),
-    login: {
-      get() { return this.data_login; },
-      set(value) { this.setValue({ key: 'login', value }); },
-    },
     password: {
-      get() { return this.data_password; },
+      get() { return this.data_password },
       set(value) { this.setValue({ key: 'password', value }); },
     },
   },
@@ -63,17 +40,11 @@ export default {
     ...mapMutations({
     }),
     ...mapActions({
+      changePass: 'forms/CHANGE_PASSWORD',
     }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
-      this.$store.commit('forms/SET_VALUE', { key, value })
     },
-    signIn() {
-      if (this.formValid) this.$store.dispatch('forms/SIGN_IN', {
-        login: this.data_login,
-        password: this.data_password,
-      });
-    }
   },
   mounted() {
   },
