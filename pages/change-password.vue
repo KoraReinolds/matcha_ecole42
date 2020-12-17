@@ -1,14 +1,20 @@
 <template lang="pug">
-  form.form(
+  form(
+    :class="$style.form"
   )
+    h2(
+      :class="$style.form_title"
+    ) Change password
     TextField(
-      :data="fieldsData.password"
+      :data="{ ...fieldsData.password, title: 'New password' }"
       v-model="password"
       rounded
       filled
       name="password"
     )
-    div.form-actions
+    div(
+      :class="$style.form_actions"
+    )
       span.btn(
         :class="{ disabled: !data_password }"
         @click.prevent="data_password && changePass({ password: data_password, token: $route.query.token })"
@@ -51,21 +57,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.form {
-  position: relative;
-  z-index: 1001;
-  .title {
-    font-size: 24px;
-  }
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    .form-actions {
-      display: flex;
-      flex-direction: column;
-      .link {
-        margin-bottom: 20px;
-      }
-    }
-  }
-}
+<style module lang="scss">
+
+@import '@/assets/css/form.scss';
+
 </style>

@@ -1,8 +1,11 @@
 <template lang="pug">
-  form.form(
+  form(
+    :class="$style.form"
     v-on:keyup.enter="signIn()"
   )
-    h2.title Login
+    h2(
+      :class="$style.form_title"
+    ) Login
     TextField(
       :data="fieldsData.login"
       v-model="login"
@@ -18,11 +21,15 @@
       filled
       name="password"
     )
-    div.form-actions
-      nuxt-link.link(
+    div(
+      :class="$style.form_actions"
+    )
+      nuxt-link(
+        :class="$style.form_action_link"
         to="/registration"
       ) Registration
-      nuxt-link.link(
+      nuxt-link(
+        :class="$style.form_action_link"
         to="/reset-password"
       ) Forget password
       span.btn(
@@ -66,7 +73,7 @@ export default {
     }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
-      this.$store.commit('forms/SET_VALUE', { key, value })
+      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
     signIn() {
       if (this.formValid) this.$store.dispatch('forms/SIGN_IN', {
@@ -80,21 +87,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.form {
-  position: relative;
-  z-index: 1001;
-  .title {
-    font-size: 24px;
-  }
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    .form-actions {
-      display: flex;
-      flex-direction: column;
-      .link {
-        margin-bottom: 20px;
-      }
-    }
-  }
-}
+<style lang="scss" module>
+
+@import '@/assets/css/form.scss';
+
 </style>

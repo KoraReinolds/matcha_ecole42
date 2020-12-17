@@ -1,6 +1,10 @@
 <template lang="pug">
-  form.form(
+  form(
+    :class="$style.form"
   )
+    h2(
+      :class="$style.form_title"
+    ) Remind password
     TextField(
       :data="fieldsData.login"
       v-model="login"
@@ -16,8 +20,13 @@
       filled
       name="email"
     )
-    div.form-actions
-      nuxt-link.link(to="/login") Back
+    div(
+      :class="$style.form_actions"
+    )
+      nuxt-link(
+        :class="$style.form_action_link"
+        to="/login"
+      ) Back
       span.btn(
         :class="{ disabled: !(data_login && data_email) }"
         @click.prevent="data_login && data_email && getEmail({ login: data_login, email: data_email })"
@@ -65,21 +74,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.form {
-  position: relative;
-  z-index: 1001;
-  .title {
-    font-size: 24px;
-  }
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    .form-actions {
-      display: flex;
-      flex-direction: column;
-      .link {
-        margin-bottom: 20px;
-      }
-    }
-  }
-}
+<style module lang="scss">
+
+@import '@/assets/css/form.scss';
+
 </style>

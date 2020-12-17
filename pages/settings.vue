@@ -134,7 +134,7 @@ export default {
   },
   mounted() {
     Object.entries(this.$auth.user).forEach(([key, value]) => {
-      this.$store.commit('forms/SET_VALUE', { key, value })
+      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     })
   },
 };

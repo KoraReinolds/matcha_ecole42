@@ -129,7 +129,7 @@ export const getters = {
 export const mutations = {
   TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
-  SET_VALUE: (state, { key, value }) => {
+  VALIDATE_VALUE: (state, { key, value }) => {
     let field = state.formFields[key]
     if (field && field.rules) {
       let msg = null
@@ -152,82 +152,107 @@ export const mutations = {
 export const actions = {
 
   CHANGE_USER_FIELD ({ commit, rootState }, { key, value }) {
-    const newUser = { ...rootState.auth.user }
-    newUser[key] = value
-    commit('auth/SET', { key: 'user', value: newUser }, { root: true })
-    commit('SET_VALUE', { key, value })
+
+    // обновляем информацию пользователя
+    commit('auth/SET', {
+      key: 'user',
+      value: { ...rootState.auth.user, [key]: value },
+    }, { root: true })
+
+    commit('VALIDATE_VALUE', { key, value }) // производим валидацию
+
   },
 
-  async UPDATE_USER ({ commit, state, dispatch }, user) {
+  async UPDATE_USER ({ dispatch }, user) {
+
     let res = await this.$axios.$post('profile-update', user)
+
     if (res.type === 'ok') {
+
+      // устанавливаем запоненность профиля для доступа ко всему сайту
       dispatch('CHANGE_USER_FIELD', { key: 'isFilled', value: true })
-      res = { type: 'ok', message: 'Данные успешно обновлены' }
+
+      res.message = 'Данные успешно обновлены'
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+
   },
 
   async LOGOUT () {
+
     await this.$auth.logout()
+
+    // дожидаемся окончания анимации и сбрасываем хранилище, перезагружая страницу
     setTimeout(() => location.reload(), 500)
+
   },
 
   async GET_LOCATION ({ commit }) {
+
     let location =
-      await API.getLocationByGPS().catch((e) => {}) ||
-      await API.getLocationByIP().catch((e) => {}) ||
+      await API.getLocationByGPS().catch((e) => {}) || // пытаемся получить локацию по gps
+      await API.getLocationByIP().catch((e) => {}) || // иначе по ip
       { x: 0, y: 0 }
+
     commit('SET_LOCATION', location)
+
   },
 
+  // регистрация пользователя
   async REGISTRATION ({ dispatch, state }, data) {
-    data.location = state.realLocation
+
+    data.location = state.realLocation // отправляем текущую локацию
+
     const res = await this.$axios.$post('register', data)
+
     if (res.type === 'ok') {
       res.message = 'Для окончания регистрации перейдите по ссылке в почте'
-      // dispatch('SIGN_IN', {
-      //   login: data.login,
-      //   password: data.password,
-      // })
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+
   },
   
+  // авторизация пользователя
   async SIGN_IN ({ dispatch, state }, data) {
-    data.location = state.realLocation
-    try {
-      await this.$auth.loginWith('local', { data })
+
+    data.location = state.realLocation // отправляем текущую локацию
+
+    let { data: { type } } = await this.$auth.loginWith('local', { data })
+
+    if (type === 'ok') {
+      // получаем непрочитанные уведомления
       dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
-      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
-    } catch (e) {
-      if (e.message.slice(-3) === '401') {
-        dispatch('history/PUSH_POP_WINDOW', {
-          type: 'error',
-          message: 'Неправильное имя логина или пароль'
-        }, { root: true })
-      }
     }
+
     this.$router.push({ path: 
-      this.$auth.user.isFilled ?
-      '/main' :
-      '/settings'
+      this.$auth.user.isFilled ? // если информация о пользователе запонена перенаправляем его
+      '/main' : // на страницу поиска
+      '/settings' // иначе на страницу заполнения профиля
     })
+
   },
 
   LOAD_IMAGE ({ dispatch, rootState }, files) {
-    const images = [ ...rootState.auth.user.images ]
+
+    const images = rootState.auth.user.images // ссылка на существующие изображения
+
+    // если картинка и их количество не больше 5
     if (files[0].type === 'image/jpeg' && Object.keys(images).length < 5) {
-      const img = { src: '' }
+
+      const img = { src: '' } // создаем изображение
       const reader = new FileReader()
+
       reader.readAsDataURL(files[0])
       reader.onload = async () => {
         img.src = reader.result
-        img.index = images.length
-        img.avatar = !img.index
-        const fd = new FormData()
+        img.index = images.length // устанавливаем индекс последовательности
+        img.avatar = !img.index // если изображение единственное, то присваевем ему статус основного
+        const fd = new FormData() // создаем форму для отправки изображения в хранилище изображений
         fd.append('image', reader.result.split(',')[1])
-        const res = await API.uploadImage(fd)
-        img.src = res.data.data.display_url
+        const res = await API.uploadImage(fd) // отправляем изображение в хранилище
+        img.src = res.data.data.display_url // устнавливаем ссылку на изображение в src
+        // изменяем состояние новым массивом изображений
         dispatch('CHANGE_USER_FIELD', {
           key: 'images',
           value: [...images, img],
@@ -239,9 +264,7 @@ export const actions = {
   async CHANGE_PASSWORD ({ commit, rootState, dispatch }, { password, token }) {
 
     const res = await this.$axios.$post(`change-reset-password`, { password }, {
-      headers: {
-        Authorization: token,
-      }
+      headers: { Authorization: token },
     })
     
     if (res.type === 'ok') {
@@ -260,19 +283,18 @@ export const actions = {
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
-  async LIKE ({ commit, rootState, dispatch }, user) {
+  async LIKE ({ commit }, user) {
 
     const { login, likedFrom } = user
 
     const res = await this.$axios.$post(`like-user`, {
       login,
-      value: likedFrom ? 0 : 1,
+      value: likedFrom ? 0 : 1, // 0 - unlike, 1 - like
     })
     
-    console.log(user, res)
     if (res.type === 'ok') {
-      commit('TOGGLE_LIKE', user)
+      commit('TOGGLE_LIKE', user) // переключить состояние лайка у пользователя
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+    
   }
 }

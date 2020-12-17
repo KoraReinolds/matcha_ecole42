@@ -37,6 +37,13 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    loaders: {
+      cssModules: {
+        modules: {
+          localIdentName: "[local]--[Frida]_[hash:base64:4]",
+        }
+      }
+    },
     /*
     ** Run ESLint on save
     */
@@ -57,7 +64,7 @@ module.exports = {
   },
   css: [
     // global for project
-    '~assets/css/main.scss'
+    // '~assets/css/main.scss'
   ],
   modules: [
     'nuxt-socket-io',
@@ -113,7 +120,7 @@ module.exports = {
     }]
   },
   styleResources: {
-    scss: ['./assets/css/*.scss']
+    scss: ['./assets/css/main.scss']
   },
   plugins: [
     { src: '~/plugins/ymapPlugin.js',  mode: 'client' },

@@ -1,8 +1,11 @@
 
 export default function ({ $axios, redirect, store }) {
-  $axios.onRequest(({ data }) => {
+  $axios.onError((err) => {})
+  $axios.onRequestError((err) => {})
+  $axios.onResponseError((err) => {})
+  $axios.onResponse(({ data }) => {
     if (process.client) {
-      console.log(data);
+      store.dispatch('history/PUSH_POP_WINDOW', data, { root: true }) // устанавливаем всплывающее окно
     }
   })
 }

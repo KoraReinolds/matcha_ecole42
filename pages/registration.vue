@@ -1,6 +1,10 @@
 <template lang="pug">
-  form.form
-      h2.title Registration
+  form(
+    :class="$style.form"
+  )
+      h2(
+        :class="$style.form_title"
+      ) Registration
       TextField(
         :data="fieldsData.login"
         v-model="login"
@@ -24,8 +28,13 @@
         type="email"
         name="email"
       )
-      div.form-actions
-        nuxt-link.link(to="/login") Back
+      div(
+        :class="$style.form_actions"
+      )
+        nuxt-link(
+          :class="$style.form_action_link"
+          to="/login"
+        ) Back
         span.btn(
           :class="{ disabled: !formValid }"
           @click.prevent="register"
@@ -82,7 +91,7 @@ export default {
       }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
-      this.$store.commit('forms/SET_VALUE', { key, value })
+      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
     register() {
       if (this.formValid) this.$store.dispatch('forms/REGISTRATION', {
@@ -99,12 +108,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.form {
-  position: relative;
-  z-index: 1001;
-  .title {
-    font-size: 24px;
-  }
-}
+<style module lang="scss">
+
+@import '@/assets/css/form.scss';
+
 </style>
