@@ -85,9 +85,9 @@ export default {
       height: 0;
       &:checked + .label:after {
         top: 10px;
-        left: -25px;
-        width: 10px;
-        height: 10px;
+        left: -26px;
+        width: 11px;
+        height: 11px;
       }
     }
     .label {

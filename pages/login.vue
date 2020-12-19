@@ -32,21 +32,22 @@
         :class="$style.form_action_link"
         to="/reset-password"
       ) Forget password
-      span.btn(
-        :class="{ disabled: !formValid }"
-        @click.prevent="signIn()"
-        
+      Button(
+        @click.prevent="signIn"
+        :disabled="!formValid"
       ) LogIn
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
+import Button from '@/components/Button.vue';
 
 export default {
   name: 'Login',
   components: {
     TextField,
+    Button,
   },
   data: () => ({
     data_login: 'User_1',
@@ -59,11 +60,11 @@ export default {
     }),
     login: {
       get() { return this.data_login; },
-      set(value) { this.setValue({ key: 'login', value }); },
+      set(value) { this.setValue({ key: 'login', value }) },
     },
     password: {
       get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }); },
+      set(value) { this.setValue({ key: 'password', value }) },
     },
   },
   methods: {
@@ -72,14 +73,14 @@ export default {
     ...mapActions({
     }),
     setValue({ key, value }) {
-      this[`data_${key}`] = value;
+      this[`data_${key}`] = value
       this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
     signIn() {
-      if (this.formValid) this.$store.dispatch('forms/SIGN_IN', {
+      this.$store.dispatch('forms/SIGN_IN', {
         login: this.data_login,
         password: this.data_password,
-      });
+      })
     }
   },
   mounted() {

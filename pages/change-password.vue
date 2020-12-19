@@ -15,20 +15,23 @@
     div(
       :class="$style.form_actions"
     )
-      span.btn(
-        :class="{ disabled: !data_password }"
-        @click.prevent="data_password && changePass({ password: data_password, token: $route.query.token })"
+      Button(
+        @click.prevent="changePass({ password: data_password, token: $route.query.token })"
+        :disabled="!data_password"
       ) Change pssword
+      
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
+import Button from '@/components/Button.vue';
 
 export default {
   name: 'Change-password',
   components: {
     TextField,
+    Button,
   },
   data: () => ({
     data_password: '',
@@ -39,7 +42,7 @@ export default {
     }),
     password: {
       get() { return this.data_password },
-      set(value) { this.setValue({ key: 'password', value }); },
+      set(value) { this.setValue({ key: 'password', value }) },
     },
   },
   methods: {

@@ -19,10 +19,10 @@
         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
         cluster-name="1"
       )
-      div.btn.curCoord(
-        v-if="value"
-        @click="$emit('input', null);"
-      ) set my curent place
+      //- div.btn.curCoord(
+      //-   v-if="value"
+      //-   @click="$emit('input', null);"
+      //- ) set my curent place
 </template>
 
 <script>

@@ -27,20 +27,23 @@
         :class="$style.form_action_link"
         to="/login"
       ) Back
-      span.btn(
-        :class="{ disabled: !(data_login && data_email) }"
-        @click.prevent="data_login && data_email && getEmail({ login: data_login, email: data_email })"
+      Button(
+        @click.prevent="getEmail({ login: data_login, email: data_email })"
+        :disabled="!(data_login && data_email)"
       ) Get email
+      
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
+import Button from '@/components/Button.vue';
 
 export default {
   name: 'Reset-password',
   components: {
     TextField,
+    Button,
   },
   data: () => ({
     data_login: 'User_1',
@@ -52,11 +55,11 @@ export default {
     }),
     login: {
       get() { return this.data_login; },
-      set(value) { this.setValue({ key: 'login', value }); },
+      set(value) { this.setValue({ key: 'login', value }) },
     },
     email: {
       get() { return this.data_email; },
-      set(value) { this.setValue({ key: 'email', value }); },
+      set(value) { this.setValue({ key: 'email', value }) },
     },
   },
   methods: {

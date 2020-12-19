@@ -35,9 +35,10 @@
           :class="$style.form_action_link"
           to="/login"
         ) Back
-        span.btn(
-          :class="{ disabled: !formValid }"
+        Button(
+          :class="$style.btns"
           @click.prevent="register"
+          :disabled="!formValid"
         ) SignUp
 
 </template>
@@ -45,11 +46,13 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import TextField from '@/components/TextField.vue';
+import Button from '@/components/Button.vue';
 
 export default {
   name: 'Registration',
   components: {
     TextField,
+    Button,
   },
   data: () => ({
     data_login: '',
@@ -65,23 +68,23 @@ export default {
     }),
     login: {
       get() { return this.data_login; },
-      set(value) { this.setValue({ key: 'login', value }); },
+      set(value) { this.setValue({ key: 'login', value }) },
     },
     password: {
       get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }); },
+      set(value) { this.setValue({ key: 'password', value }) },
     },
     firstName: {
       get() { return this.data_fname; },
-      set(value) { this.setValue({ key: 'fname', value }); },
+      set(value) { this.setValue({ key: 'fname', value }) },
     },
     lastName: {
       get() { return this.data_lname; },
-      set(value) { this.setValue({ key: 'lname', value }); },
+      set(value) { this.setValue({ key: 'lname', value }) },
     },
     mail: {
       get() { return this.data_email; },
-      set(value) { this.setValue({ key: 'email', value }); },
+      set(value) { this.setValue({ key: 'email', value }) },
     },
   },
   methods: {
@@ -111,5 +114,9 @@ export default {
 <style module lang="scss">
 
 @import '@/assets/css/form.scss';
+
+.btns {
+  width: 100%;
+}
 
 </style>

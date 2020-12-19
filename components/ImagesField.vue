@@ -28,10 +28,10 @@
             :key="'user_image'+img.index"
             @click="setAsMainImg(img)"
           )
-          font-awesome-icon.icon.main_mark.fa-2x(
-            v-if="img.avatar"
-            icon="check"
-          )
+          //- font-awesome-icon.icon.main_mark.fa-2x(
+          //-   v-if="img.avatar"
+          //-   icon="check"
+          //- )
     div.tooltip-field {{ data.errorMsg }}
 </template>
 
@@ -61,7 +61,7 @@ export default {
       let newImages = this.value
         .filter(val => val !== img) // удаляем изображение
         .map((val, index) => ({ ...val, index })) // сохраняем порядок для сервера
-      if (img.avatar) {
+      if (img.avatar && newImages.length) {
         newImages[0].avatar = true // если удалили аватар устанавливаем первое изображение в качестве аватара
       }
       this.$emit('input', newImages)
