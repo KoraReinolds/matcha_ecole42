@@ -1,11 +1,11 @@
 <template lang="pug">
 
   InputWrapper(
-    v-show="showField"
     :class="[modesClasses, stateClasses]"
     :error="data.errorMsg"
   )
     fieldset(
+      v-show="showField"
       :class="$style.input_field"
       align="left"
       aria-hidden="true"
@@ -43,7 +43,10 @@
         :min="min || 0"
         :max="max || ''"
       )
-
+    fieldset(
+      v-show="!showField"
+      :class="$style.skeleton"
+    )
 </template>
 
 <script>
@@ -136,17 +139,32 @@ export default {
       this.outlinedMode = true
       this.regularMode = null
     }
+    this.showField = true
     this.$nextTick(() => {
       if (this.value) this.legendLen = this.$refs.label.offsetWidth
       else this.legendLen = this.$refs.label.offsetWidth * 0.75
       this.setHeight(this.$refs.textarea)
     });
-    this.showField = true
   },
 };
 </script>
 
 <style module lang="scss">
+
+  .skeleton {
+    @keyframes changeColor {
+      from {
+        background: rgba($color: black, $alpha: 0.05);
+      }
+      to {
+        background: rgba($color: black, $alpha: 0.15);
+      }
+    }
+    animation: changeColor 1s infinite alternate;
+    height: 56px;
+    width: 100%;
+    border: none;
+  }
 
   @mixin errorMixin() {
     &.error {

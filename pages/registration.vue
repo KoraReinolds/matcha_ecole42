@@ -36,7 +36,6 @@
           to="/login"
         ) Back
         Button(
-          :class="$style.btns"
           @click.prevent="register"
           :disabled="!formValid"
         ) SignUp
@@ -114,9 +113,5 @@ export default {
 <style module lang="scss">
 
 @import '@/assets/css/form.scss';
-
-.btns {
-  width: 100%;
-}
 
 </style>

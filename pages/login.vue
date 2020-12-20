@@ -9,7 +9,7 @@
     TextField(
       :data="fieldsData.login"
       v-model="login"
-      rounded
+      outlined
       filled
       name="login"
     )
@@ -18,7 +18,7 @@
       v-model="password"
       type='password'
       many
-      rounded
+      outlined
       filled
       name="password"
     )
