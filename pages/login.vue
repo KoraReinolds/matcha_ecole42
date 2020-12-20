@@ -17,6 +17,7 @@
       :data="fieldsData.password"
       v-model="password"
       type='password'
+      many
       rounded
       filled
       name="password"

@@ -1,10 +1,15 @@
 <template lang="pug">
-  div.option-field(
-    :class="{ empty: !value, error: data.errorMsg }"
+
+  //- div(
+  //-   :class="[$style.option_field, { [$style.error]: data.errorMsg }]"
+  //- )
+  InputWrapper(
+    :class="[$style.text_field, { [$style.error]: data.errorMsg }]"
+    :error="data.errorMsg"
   )
     div.title.left {{ data.title }}
-    div.options(
-      :class="{ many: type === 'checkbox', icons }"
+    div(
+      :class="[$style.options, { [$style.many]: type === 'checkbox', [$style.icons]: icons }]"
     )
       div(
         v-for="[opt, value] in Object.entries(data.options)"
@@ -19,16 +24,18 @@
           :checked="optionChecked(value)"
         )
         label(
-          :class="{ label: !icons }"
+          :class="{ [$style.label]: !icons }"
           :for="data.title+value"
         )
           font-awesome-icon.icon.fa-2x(
             v-if="icons"
             :icon="['fas', icons[value]]"
-            :class="{ active: optionChecked(value) }"
+            :class="{ [$style.active]: optionChecked(value) }"
           )
           template(v-else) {{ opt }}
-      div.tooltip-field {{ data.errorMsg }}
+      div(
+        :class="$style.tooltip_field"
+      ) {{ data.errorMsg }}
 </template>
 
 <script>
@@ -70,11 +77,11 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.option-field {
+<style module lang="scss">
+.option_field {
   text-align: left;
   .options {
-    .tooltip-field {
+    .tooltip_field {
       height: 30px;
     }
     input {
@@ -168,7 +175,7 @@ export default {
     }
   }
   &.error {
-    .tooltip-field {
+    .tooltip_field {
       color: $error-color !important;
     }
     .label:before {
