@@ -1,0 +1,11 @@
+@mixin skeleton-mixin() {
+  @keyframes changeColor {
+    from {
+      background: rgba($color: black, $alpha: 0.05);
+    }
+    to {
+      background: rgba($color: black, $alpha: 0.15);
+    }
+  }
+  animation: changeColor 1s infinite alternate;
+}

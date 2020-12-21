@@ -1,13 +1,11 @@
 <template lang="pug">
 
-  //- div(
-  //-   :class="[$style.option_field, { [$style.error]: data.errorMsg }]"
-  //- )
   InputWrapper(
-    :class="[$style.text_field, { [$style.error]: data.errorMsg }]"
+    :class="{ [$style.error]: data.errorMsg }"
     :error="data.errorMsg"
   )
-    div.title.left {{ data.title }}
+    template(v-slot:title)
+      div.title.left {{ data.title }}
     div(
       :class="[$style.options, { [$style.many]: type === 'checkbox', [$style.icons]: icons }]"
     )
@@ -33,14 +31,17 @@
             :class="{ [$style.active]: optionChecked(value) }"
           )
           template(v-else) {{ opt }}
-      div(
-        :class="$style.tooltip_field"
-      ) {{ data.errorMsg }}
+
 </template>
 
 <script>
+import InputWrapper from '@/components/InputWrapper.vue'
+
 export default {
   name: 'Options',
+  components: {
+    InputWrapper,
+  },
   props: {
     value: [Number, String, Array],
     data: Object,
@@ -61,10 +62,10 @@ export default {
     },
     change(event) {
       if (Array.isArray(this.value)) {
-        const { value } = event.target;
-        let newVal = [...this.value];
-        if (!this.value.includes(value)) newVal.push(value);
-        else newVal = newVal.filter(val => val !== value);
+        const { value } = event.target
+        let newVal = [...this.value]
+        if (!this.value.includes(value)) newVal.push(value)
+        else newVal = newVal.filter(val => val !== value)
         this.$emit('input', newVal)
       } else {
         this.$emit('input', event.target.value)
@@ -72,14 +73,13 @@ export default {
     },
   },
   mounted() {
-    this.type = this.many ? 'checkbox' : 'radio';
+    this.type = this.many ? 'checkbox' : 'radio'
   },
 };
 </script>
 
 <style module lang="scss">
-.option_field {
-  text-align: left;
+
   .options {
     .tooltip_field {
       height: 30px;
@@ -173,7 +173,6 @@ export default {
         }
       }
     }
-  }
   &.error {
     .tooltip_field {
       color: $error-color !important;

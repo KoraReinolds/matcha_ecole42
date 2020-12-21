@@ -1,5 +1,6 @@
 <template lang="pug">
-  div.tag-field
+
+  div
     TextField(
       v-if="value && value.length < maxTags"
       v-model.trim="newTag"
@@ -9,7 +10,9 @@
       @keyup.enter="addTag"
     )
     div.title.left(v-else) Tags
-    div.tags
+    div(
+      :class="$style.tags"
+    )
       Tag(
         v-for="tag in value"
         :key="data.title+tag"
@@ -17,11 +20,13 @@
         canDelete
         @click="deleteTag(tag)"
       ) canDelete
+
 </template>
 
 <script>
-import TextField from '@/components/TextField.vue';
-import Tag from '@/components/Tag.vue';
+import TextField from '@/components/TextField.vue'
+import InputWrapper from '@/components/InputWrapper.vue'
+import Tag from '@/components/Tag.vue'
 
 export default {
   name: 'tagsFielld',
@@ -31,6 +36,7 @@ export default {
   components: {
     TextField,
     Tag,
+    InputWrapper,
   },
   props: {
     data: Object,
@@ -39,30 +45,27 @@ export default {
   },
   methods: {
     deleteTag(tag) {
-      const newVal = this.value.filter(val => val !== tag);
-      this.$emit('input', newVal);
-      this.$emit('delete', newVal);
+      const newVal = this.value.filter(val => val !== tag)
+      this.$emit('input', newVal)
+      this.$emit('delete', newVal)
     },
     addTag() {
       if (this.newTag && !this.value.includes(this.newTag)) {
-        const newVal = [...this.value, this.newTag];
-        this.$emit('input', newVal);
-        this.$emit('add', newVal);
+        const newVal = [...this.value, this.newTag]
+        this.$emit('input', newVal)
+        this.$emit('add', newVal)
       }
-      this.newTag = null;
+      this.newTag = null
     },
   },
 };
 </script>
 
-<style scoped lang="scss">
-.tag-field {
+<style module lang="scss">
+
   .tags {
     padding-bottom: 20px;
     text-align: left;
-    .tag {
-      margin: 5px 10px 5px 0px;
-    }
   }
-}
+
 </style>

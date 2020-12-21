@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import TextField from '@/components/TextField.vue';
-import Button from '@/components/Button.vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import TextField from '@/components/TextField.vue'
+import Button from '@/components/Button.vue'
 
 export default {
   name: 'Login',

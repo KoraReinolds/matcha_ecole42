@@ -1,7 +1,7 @@
 <template lang="pug">
   div
+    slot(name="title")
     slot
-    //- div.title.left {{ data.title }}
     div(
       :class="$style.tooltip_field"
     ) {{ error }}
@@ -11,6 +11,7 @@
 export default {
   name: 'InputWrapper',
   props: {
+    title: String,
     error: String,
   },
   data: () => ({

@@ -1,32 +1,44 @@
 <template lang="pug">
-  div.map-field(
-    v-if="showMap && (realLocation)"
-  )
-    span.title.left {{ data.title }}
-    yandex-map.map(
-      :coords="mark"
-      @click="getCoord"
-      zoom="15"
-      :cluster-options="{ 1: { clusterDisableClickZoom: true } }"
-      :behaviors="['drag', 'scrollZoom']"
-      :controls="[]"
+
+  InputWrapper
+    template(v-slot:title)
+      div.title.left {{ data.title }}
+    template(
+      v-if="showMap && (realLocation)"
     )
-      ymap-marker(
-        markerId="1"
-        marker-type="placemark"
+      yandex-map(
+        :class="$style.map"
         :coords="mark"
-        hint-content="Your markplace"
-        :balloon="{header: 'header', body: 'body', footer: 'footer'}"
-        cluster-name="1"
+        @click="getCoord"
+        zoom="15"
+        :cluster-options="{ 1: { clusterDisableClickZoom: true } }"
+        :behaviors="['drag', 'scrollZoom']"
+        :controls="[]"
       )
-      //- div.btn.curCoord(
-      //-   v-if="value"
-      //-   @click="$emit('input', null);"
-      //- ) set my curent place
+        ymap-marker(
+          markerId="1"
+          marker-type="placemark"
+          :coords="mark"
+          hint-content="Your markplace"
+          :balloon="{header: 'header', body: 'body', footer: 'footer'}"
+          cluster-name="1"
+        )
+        //- Button(
+        //-   v-if="value"
+        //-   :class="$style.curCoord"
+        //-   @click="$emit('input', null);"
+        //- ) Set my curent place
+    div(
+      :class="$style.skeleton"
+      v-else
+    )
+
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import InputWrapper from '@/components/InputWrapper.vue'
+import Button from '@/components/Button.vue'
 
 export default {
   name: 'MapField',
@@ -39,29 +51,39 @@ export default {
     realLocation: Object,
   },
   components: {
+    InputWrapper,
+    Button,
   },
   computed: {
     ...mapGetters({
     }),
     mark: function() {
-      let loc = this.value || this.realLocation;
-      return [loc.x, loc.y];
+      let loc = this.value || this.realLocation
+      return [loc.x, loc.y]
     },
   },
   methods: {
     getCoord(e) {
-      let coords = e.get('coords');
-      this.$emit('input', { x: coords[0], y: coords[1] });
+      let coords = e.get('coords')
+      this.$emit('input', { x: coords[0], y: coords[1] })
     }
   },
   mounted() {
-    this.showMap = true;
+    this.showMap = true
   }
 };
 </script>
 
-<style scoped lang="scss">
-.map-field {
+<style module lang="scss">
+
+  @import '@/assets/css/skeleton-animation.scss';
+
+  .skeleton {
+    @include skeleton-mixin();
+    width: 100%;
+    height: 500px;
+  }
+
   .map {
     position: relative;
     padding: 10px 0;
@@ -73,5 +95,4 @@ export default {
       left: 10px;
     }
   }
-}
 </style>

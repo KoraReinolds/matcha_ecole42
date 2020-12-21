@@ -1,25 +1,35 @@
 <template lang="pug">
-  div.image-field(:class="{ error: data.errorMsg }")
-    div.title.left {{ data.title }}
-    div.content
-      div.images
-        label.image.add(
+
+  InputWrapper(
+    :class="{ [$style.error]: data.errorMsg }"
+    :error="data.errorMsg"
+  )
+    template(v-slot:title)
+      div.title.left {{ data.title }}
+    div(:class="$style.content")
+      div(:class="$style.images")
+        label(
+          :class="[$style.image, $style.add]"
           v-if="value && value.length < 5"
           for="file"
         )
-          font-awesome-icon.fa-2x.choose_file(
+          font-awesome-icon.fa-2x(
+            :class="$style.choose_file"
             icon="plus"
           )
-          input.inputfile(
+          input(
+            :class="$style.inputfile"
             type="file"
             id="file"
             @change="loadImage($event.target.files)"
           )
-        div.image(
+        div(
+          :class="$style.image"
           v-for="(img, index) in value"
           :key="'img'+img.index"
         )
-          font-awesome-icon.fa-2x.delete_mark(
+          font-awesome-icon.fa-2x(
+            :class="$style.delete_mark"
             icon="times-circle"
             @click="deleteImg(img)"
           )
@@ -28,22 +38,24 @@
             :key="'user_image'+img.index"
             @click="setAsMainImg(img)"
           )
-          //- font-awesome-icon.icon.main_mark.fa-2x(
-          //-   v-if="img.avatar"
-          //-   icon="check"
-          //- )
-    div.tooltip-field {{ data.errorMsg }}
+          font-awesome-icon.fa-2x(
+            :class="[$style.icon, $style.main_mark]"
+            v-if="img.avatar"
+            icon="check"
+          )
+
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import CustomImage from '@/components/CustomImage.vue';
-import axios from 'axios';
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import CustomImage from '@/components/CustomImage.vue'
+import InputWrapper from '@/components/InputWrapper.vue'
 
 export default {
   name: 'imagesFielld',
   components: {
     CustomImage,
+    InputWrapper,
   },
   data: () => ({
   }),
@@ -75,8 +87,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.image-field {
+<style module lang="scss">
+
   .content {
     padding: 10px 0 20px 0;
     .inputfile {
@@ -140,7 +152,7 @@ export default {
       transform: translate(-50%, -50%);
     }
   }
-  &.error {
+  .error {
     .images .image.add {
       border: 2px solid $error-color;
     }
@@ -152,5 +164,5 @@ export default {
       background: rgba($color: $error-color, $alpha: 0.75) !important;
     }
   }
-}
+
 </style>

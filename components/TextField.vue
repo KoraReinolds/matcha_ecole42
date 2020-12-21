@@ -151,16 +151,10 @@ export default {
 
 <style module lang="scss">
 
+  @import '@/assets/css/skeleton-animation.scss';
+  
   .skeleton {
-    @keyframes changeColor {
-      from {
-        background: rgba($color: black, $alpha: 0.05);
-      }
-      to {
-        background: rgba($color: black, $alpha: 0.15);
-      }
-    }
-    animation: changeColor 1s infinite alternate;
+    @include skeleton-mixin();
     height: 56px;
     width: 100%;
     border: none;
