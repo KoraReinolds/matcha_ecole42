@@ -26,7 +26,7 @@ export const actions = {
       commit('PUSH_MESSAGE', {
         ...msg,
         time: new Date,
-        read: true,
+        read: false,
         // fromLogin: rootState.auth.login,
       })
     }

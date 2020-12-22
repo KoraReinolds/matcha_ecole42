@@ -36,7 +36,6 @@ import { mapGetters, mapMutations, mapActions } from 'vuex';
 import NameLink from '@/components/NameLink.vue';
 import RoundedIcon from '@/components/RoundedIcon.vue';
 import CustomImage from '@/components/CustomImage.vue';
-import ChatLink from '@/components/ChatLink.vue';
 import Like from '@/components/Like.vue';
 import iconsMixin from '@/mixins/iconMixin';
 
@@ -53,7 +52,6 @@ export default {
     RoundedIcon,
     CustomImage,
     NameLink,
-    ChatLink,
     Like,
   },
   mixins: [iconsMixin],

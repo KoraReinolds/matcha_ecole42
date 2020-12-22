@@ -67,11 +67,9 @@ export const getters = {
   MOBILE_PAGE: (state) => state.mobilePage, 
   SORT_ORDER: (state) => state.sortOrder,
   USERS: (state, _, rootState) => {
-    const users = rootState.mobile ? 
+    return rootState.mobile ? 
       state.users.length ? [state.users[state.mobilePage]] : [] :
       state.users
-    console.log("users ", users)
-    return users
   },
   CUR_PAGE: (state) => state.curPage,
   TOOLS: (state) => state.tools,

@@ -86,7 +86,6 @@ export default {
         padding: 0px;
         position: relative;
         width: 800px;
-        height: 10000px;
       }
     }
 

@@ -22,10 +22,12 @@
           :size="2"
           :user="user"
         )
-      ChatLink.chat-link(
+      Button.chat-link(
         v-if="chatAvailable"
+        @click="() => $router.push(`/chat/${user.login}`)"
         :user="user"
-      )
+      ) Join to chat
+      
     div.info
       div.field
         span.fio
@@ -84,7 +86,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CustomImage from '@/components/CustomImage.vue';
 import NameLink from '@/components/NameLink.vue';
-import ChatLink from '@/components/ChatLink.vue';
+import Button from '@/components/Button.vue';
 import Tag from '@/components/Tag.vue';
 import Ban from '@/components/Ban.vue';
 import Block from '@/components/Block.vue';
@@ -103,7 +105,7 @@ export default {
   components: {
     CustomImage,
     NameLink,
-    ChatLink,
+    Button,
     Tag,
     Ban,
     Block,
