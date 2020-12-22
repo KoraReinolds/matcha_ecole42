@@ -116,7 +116,8 @@ module.exports = {
   io: {
     // module options
     sockets: [{
-      url: 'ws://192.168.29.71:4567/chat'
+      // url: 'ws://localhost:4567/chat'
+      // url: 'ws://192.168.29.71:4567/chat'
     }]
   },
   styleResources: {

@@ -17,7 +17,6 @@
       :data="fieldsData.password"
       v-model="password"
       type='password'
-      many
       outlined
       filled
       name="password"
