@@ -30,9 +30,9 @@
           span.age {{ `${user.age} y.o.` }}
         div.only_laptop.biography
           div.text {{ `${user.biography}` }}
-        div(v-if="user.tagsCount !== undefined") Match tags: {{ user.tagsCount }}
-        div {{ user.x }}
-        div {{ user.y }}
+        div(v-if="user.tagsCount !== undefined") Match tags: {{ user.tagsCount || '0' }}
+        //- div {{ user.x }}
+        //- div {{ user.y }}
         div.only_laptop.tags
           Tag(
             v-for="tag in user.tags"
@@ -82,6 +82,7 @@ export default {
       mobile: 'IS_MOBILE',
       curPage: 'users/CUR_PAGE',
       maxLength: 'users/MAX_LENGTH',
+      mobilePage: 'users/MOBILE_PAGE',
     }),
   },
   methods: {
@@ -89,9 +90,11 @@ export default {
     paginate(e) {
       if (this.mobile) {
         if (e.clientX > window.innerWidth * 0.8) {
-          this.getUsers((this.curPage + 1) % this.maxLength || this.maxLength);
+          this.changeMobileUser(this.mobilePage + 1)
+          // this.nextUser((this.curPage + 1) % this.maxLength || this.maxLength);
         } else if (e.clientX < window.innerWidth * 0.2) {
-          this.getUsers((this.curPage - 1) % this.maxLength || this.maxLength);
+          this.changeMobileUser(this.mobilePage - 1)
+          // this.prevUser((this.curPage - 1) % this.maxLength || this.maxLength);
         }
       }
     },
@@ -99,7 +102,7 @@ export default {
       }),
     ...mapActions({
       like: 'users/LIKE',
-      getUsers: 'users/GET_USERS',
+      changeMobileUser: 'users/CHANGE_MOBILE_USER',
     }),
   },
   mounted() {

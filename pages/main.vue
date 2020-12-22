@@ -41,9 +41,11 @@ export default {
   },
   methods: {
     scroll(e) {
-      if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-        this.setNewPage(this.page + 1)
-        this.getUsers()
+      if ((window.innerHeight + window.scrollY) + 5 >= document.documentElement.scrollHeight) {
+        if (this.page * 4 === this.users.length) {
+          this.setNewPage(this.page + 1)
+          this.getUsers()
+        }
       }
     },
     ...mapMutations({

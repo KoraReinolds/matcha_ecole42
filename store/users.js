@@ -1,8 +1,9 @@
 export const state = () => ({
+  mobilePage: 0,
   loading: false,
   users: [],
   curPage: 1,
-  limit: 3,
+  limit: 4,
   sortOrder: new Set(['sortTags', 'sortRating', 'sortLocation']),
   tools: {
     // pref: {
@@ -25,7 +26,7 @@ export const state = () => ({
       title: "Max_age",
     },
     radius: {
-      value: 10,
+      value: 10000,
       title: "Radius",
     },
     minRating: {
@@ -63,8 +64,15 @@ export const state = () => ({
   },
 })
 export const getters = {
+  MOBILE_PAGE: (state) => state.mobilePage, 
   SORT_ORDER: (state) => state.sortOrder,
-  USERS: (state) => state.users,
+  USERS: (state, _, rootState) => {
+    const users = rootState.mobile ? 
+      state.users.length ? [state.users[state.mobilePage]] : [] :
+      state.users
+    console.log("users ", users)
+    return users
+  },
   CUR_PAGE: (state) => state.curPage,
   TOOLS: (state) => state.tools,
 }
@@ -78,10 +86,6 @@ export const mutations = {
     }
   },
   SET_LOADING: (state, value) => state.loading = value,
-  CHANGE_COUNT_PER_PAGE: (state) => {
-    state.limit = window.innerWidth <= 480 ? 1 : 3
-    state.curPage = 1
-  },
   SET_INIT_TOOLS: (state, user) => {
     // state.tools.pref.value = ['male', 'female', 'bisexual'][user.preference - 1]
     state.tools.ageMin.value = Math.max(+user.age - 5, 18)
@@ -90,12 +94,29 @@ export const mutations = {
   },
   SET_USERS: (state, users) => {
     state.users = users
-    state.maxLength = 1
   },
+  CHANGE_MOBILE_PAGE: (state, newPage) => state.mobilePage = newPage,
   CHANGE_PAGE: (state, newPage) => state.curPage = newPage,
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
 }
 export const actions = {
+
+  async CHANGE_MOBILE_USER ({ commit, state, dispatch }, page) {
+
+    if (page === -1) {
+      page = state.users.length - 1
+    }
+    else if (state.users[page] === undefined) {
+      commit('CHANGE_PAGE', state.curPage + 1)
+      await dispatch('GET_USERS')
+    }
+    if (state.users[page]) {
+      commit('CHANGE_MOBILE_PAGE', page)
+    } else {
+      commit('CHANGE_MOBILE_PAGE', 0)
+    }
+
+  },
 
   FILTER_USERS ({ commit, dispatch }, opt) {
     commit('SET_USERS', [])
@@ -105,9 +126,7 @@ export const actions = {
   },
 
   async GET_USERS ({ state, commit, dispatch }) {
-    // commit('CHANGE_PAGE', 1)
-    // commit('SET_USERS', [])
-    // if (opt) commit('CHANGE_TOOLS', opt)
+
     if (!state.loading) {
 
       commit('SET_LOADING', true)
@@ -122,7 +141,7 @@ export const actions = {
         limit: state.limit,
         offset: (state.curPage - 1) * state.limit,
       }
-      if (tools.tags.length) reqParams.tags = tools.tags.value.join(),
+      if (tools.tags.value.length) reqParams.tags = tools.tags.value.join()
       state.sortOrder.forEach(fieldName => {
         reqParams[fieldName] = tools[fieldName].value[0]
       })
@@ -138,4 +157,5 @@ export const actions = {
 
     }
   },
+
 }

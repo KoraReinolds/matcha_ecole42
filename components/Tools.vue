@@ -106,7 +106,6 @@
       )
       Options(
         :class="$style.form_field"
-        v-if="tools.tags.value.length > 1"
         :data="tools.sortTags"
         :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
         v-model="sortTags"
