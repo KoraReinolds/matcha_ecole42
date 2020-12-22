@@ -1,24 +1,28 @@
 <template lang="pug">
-  div#main(v-if="$auth.user && users")
-    div.user-list
-      template(v-if="users.length")
-        transition-group(tag="p" name="user")
-          User(
-            v-for="(user, index) in users"
-            :key="user.login"
-            :user="user"
-          )
-      template(v-else)
-        div.else Search returned no results
-    Tools.tools
+  div(
+    v-if="$auth.user && users"
+    :class="$style.main"
+  )
+    template(v-if="users.length")
+      transition-group(tag="p" name="user")
+        User(
+          v-for="(user, index) in users"
+          :key="user.login"
+          :user="user"
+        )
+    template(v-else)
+      div(
+        :class="$style.else"
+      ) Search returned no results
+    Tools
 
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import User from '@/components/User.vue';
-import Tools from '@/components/Tools.vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import User from '@/components/User.vue'
+import Tools from '@/components/Tools.vue'
 
 export default {
   name: 'mainPage',
@@ -63,21 +67,27 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-#main {
-  display: flex;
-  @media (min-width: map-get($grid-breakpoints, sm)) {
-    padding: 50px 20px;
-  }
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    flex-direction: column;
-  }
-.user-list {
+<style module lang="scss">
+
+  .main {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    @media (min-width: map-get($grid-breakpoints, sm)) {
+      padding: 50px 20px;
+    }
+    
     .else {
+      position: absolute;
+      padding: 50px 20px;
       @media (min-width: map-get($grid-breakpoints, sm)) {
+        padding: 0px;
+        position: relative;
         width: 800px;
+        height: 10000px;
       }
     }
+
   }
-}
+
 </style>

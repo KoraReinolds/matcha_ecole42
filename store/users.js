@@ -1,4 +1,5 @@
 export const state = () => ({
+  loading: false,
   users: [],
   curPage: 1,
   limit: 3,
@@ -76,6 +77,7 @@ export const mutations = {
       state.sortOrder.delete(newItem)
     }
   },
+  SET_LOADING: (state, value) => state.loading = value,
   CHANGE_COUNT_PER_PAGE: (state) => {
     state.limit = window.innerWidth <= 480 ? 1 : 3
     state.curPage = 1
@@ -106,27 +108,34 @@ export const actions = {
     // commit('CHANGE_PAGE', 1)
     // commit('SET_USERS', [])
     // if (opt) commit('CHANGE_TOOLS', opt)
-    const tools = state.tools
-    const reqParams = {
-      needPreference: tools.pref.value[0] || 0,
-      ageMin: tools.ageMin.value || 0,
-      ageMax: tools.ageMax.value || 0,
-      deltaRadius: tools.radius.value || 0,
-      minRating: tools.minRating.value || 0,
-      maxRating: tools.maxRating.value || 0,
-      limit: state.limit,
-      offset: (state.curPage - 1) * state.limit,
+    if (!state.loading) {
+
+      commit('SET_LOADING', true)
+      const tools = state.tools
+      const reqParams = {
+        needPreference: tools.pref.value[0] || 0,
+        ageMin: tools.ageMin.value || 0,
+        ageMax: tools.ageMax.value || 0,
+        deltaRadius: tools.radius.value || 0,
+        minRating: tools.minRating.value || 0,
+        maxRating: tools.maxRating.value || 0,
+        limit: state.limit,
+        offset: (state.curPage - 1) * state.limit,
+      }
+      if (tools.tags.length) reqParams.tags = tools.tags.value.join(),
+      state.sortOrder.forEach(fieldName => {
+        reqParams[fieldName] = tools[fieldName].value[0]
+      })
+      const res = await this.$axios.$get(`get-users`, {
+        params: reqParams,
+      })
+      if (res.type === 'ok') {
+        commit('SET_USERS', [...state.users, ...res.data])
+      }
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+
+      commit('SET_LOADING', false)
+
     }
-    if (tools.tags.length) reqParams.tags = tools.tags.value.join(),
-    state.sortOrder.forEach(fieldName => {
-      reqParams[fieldName] = tools[fieldName].value[0]
-    })
-    const res = await this.$axios.$get(`get-users`, {
-      params: reqParams,
-    })
-    if (res.type === 'ok') {
-      commit('SET_USERS', [...state.users, ...res.data])
-    }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 }

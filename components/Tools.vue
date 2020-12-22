@@ -1,27 +1,36 @@
 <template lang="pug">
-  div.tools_box(
+
+  div(
     v-if="tools"
-    :class="{ hide: !show }"
+    :class="$style.tools_box"
   )
-    RoundedIcon.icon.close.only_mobile(
-      :icon="show ? 'times' : 'cog'"
-      @click="show=!show"
-      :size="3"
+    div(
+      :class="$style.toggle_state_box"
     )
-    div.tools(
-      v-if="show"
+      RoundedIcon(
+        :class="[$style.icon, $style.toggle_state]"
+        :icon="show ? 'times' : 'cog'"
+        @click="show=!show"
+        :size="3"
+      )
+    div(
+      :class="$style.tools"
+      v-show="show"
     )
-      Options.pref.form-field(
+      Options(
+        :class="[$style.form_field, $style.full_width]"
         :data="tools.pref"
         v-model.trim="pref"
         many
       )
-      //- Options.pref.form-field(
+      //- Options(
+      //-   :class="[$style.form_field, $style.full_width]"
       //-   :data="tools.pref"
       //-   :icons="prefIcons"
       //-   v-model.trim="pref"
       //- )
-      TextField.form-field(
+      TextField(
+        :class="$style.form_field"
         :data="tools.ageMin"
         v-model="ageMin"
         type="number"
@@ -29,7 +38,8 @@
         max="99"
         @blur="filterUsers({ val: $event.target.value, key: 'ageMin' })"
       )
-      TextField.form-field(
+      TextField(
+        :class="$style.form_field"
         :data="tools.ageMax"
         v-model="ageMax"
         type="number"
@@ -38,22 +48,24 @@
         @blur="filterUsers({ val: $event.target.value, key: 'ageMax' })"
       )
 
-      TextField.form-field(
-        class="radius"
+      TextField(
+        :class="[$style.form_field, $style.full_width]"
         :data="tools.radius"
         @blur="filterUsers({ val: $event.target.value, key: 'radius' })"
         v-model="radius"
         type="number"
       )
 
-      TextField.form-field(
+      TextField(
+        :class="$style.form_field"
         :data="tools.minRating"
         @blur="filterUsers({ val: $event.target.value, key: 'minRating' })"
         v-model="minRating"
         type="number"
         step="10"
       )
-      TextField.form-field(
+      TextField(
+        :class="$style.form_field"
         :data="tools.maxRating"
         @blur="filterUsers({ val: $event.target.value, key: 'maxRating' })"
         v-model="maxRating"
@@ -62,7 +74,8 @@
         max="1000"
       )
 
-      TagsField.tags.form-field(
+      TagsField(
+        :class="[$style.form_field, $style.full_width]"
         :data="tools.tags"
         v-model="tags"
         :maxTags="5"
@@ -70,33 +83,40 @@
         @add="filterUsers({ val: $event, key: 'tags' })"
       )
 
-      Options.form-field(
+      Options(
+        :class="$style.form_field"
         :data="tools.sortLocation"
         v-model="sortLocation"
         :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
         many
       )
-      Options.form-field(
+      Options(
+        :class="$style.form_field"
         :data="tools.sortAge"
         :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
         v-model="sortAge"
         many
       )
-      Options.form-field(
+      Options(
+        :class="$style.form_field"
         :data="tools.sortRating"
         :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
         v-model="sortRating"
         many
       )
-      Options.form-field(
+      Options(
+        :class="$style.form_field"
         v-if="tools.tags.value.length > 1"
         :data="tools.sortTags"
         :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
         v-model="sortTags"
         many
       )
-      div.order
-        font-awesome-icon.icon(
+      div(
+        :class="$style.order"
+      )
+        font-awesome-icon(
+          :class="$style.icon"
           v-for="item in sortOrder"
           :icon="['fas', { sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]]"
         )
@@ -203,7 +223,6 @@ export default {
     },
     ...mapMutations({
       changeOrder: 'users/CHANGE_SORT_ORDER'
-      // changeToolsValue: 'users/CHANGE_TOOLS',
     }),
     ...mapActions({
       addTag: 'users/ADD_TAG',
@@ -222,61 +241,83 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.tools_box {
-  position: relative;
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    background-color: rgba($color: lighten($main-color, 20%), $alpha: 0.9);
-  }
-  width: 260px;
-  margin: 0 auto;
-  height: calc(100%);
-  display: flex;
-  flex-direction: column;
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    width: calc(100%);
-  }
-  .close {
-    position: fixed;
-    color: $main-color;
-    top: 40px;
-    right: 10px;
-    z-index: 2;
-  }
-  .tools {
-    @media (max-width: map-get($grid-breakpoints, sm)) {
-      height: 100%;
-      overflow: auto;
-    }
-    @media (min-width: map-get($grid-breakpoints, sm)) {
+<style module lang="scss">
+
+@mixin toolsMixin(
+  $width: 100%,
+  $position-tools: absolute,
+  $position-tools-box: absolute,
+  $tools-height: 90%,
+  $toggle-btn-viisibility: block,
+) {
+
+  .tools_box {
+    width: $width;
+    position: $position-tools-box;
+
+    .toggle_state_box {
+      display: $toggle-btn-viisibility;
+      cursor: pointer;
       position: fixed;
-      width: 260px;
-    }
-    padding: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .form-field {
-      width: 45%;
-      &.pref,
-      &.radius,
-      &.tags {
-        width: 100%
-      }
-    }
-    .order {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-      .icon {
+      width: $width;
+      z-index: 2;
+      .toggle_state {
+        position: absolute;
+        right: 0;
         color: $main-color;
-        margin-right: 10px;
+        transform: translate(-10px, 10px);
       }
     }
+
+    .tools {
+      background: #fff;
+      width: $width;
+      position: fixed;
+      height: $tools-height;
+      overflow: scroll;
+      padding: 30px 30px 90px 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .form_field {
+        width: 45%;
+        &.full_width {
+          width: 100%
+        }
+      }
+      .order {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        .icon {
+          color: $main-color;
+          margin-right: 10px;
+        }
+      }
+    }
+
   }
-  &.hide {
-    height: 0;
-  }
+
 }
+
+@include toolsMixin(
+  $width: 260px,
+  $position-tools: fixed,
+  $position-tools-box: relative,
+  $tools-height: auto,
+  $toggle-btn-viisibility: none,
+);
+
+@media (max-width: 600px) {
+  @include toolsMixin(
+    $width: 100%,
+    $position-tools: absolute,
+    $position-tools-box: absolute,
+    $tools-height: 100%,
+  );
+}
+
+
 </style>

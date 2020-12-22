@@ -25,10 +25,10 @@
           :class="{ [$style.label]: !icons }"
           :for="data.title+value"
         )
-          font-awesome-icon.icon.fa-2x(
+          font-awesome-icon.fa-2x(
             v-if="icons"
             :icon="['fas', icons[value]]"
-            :class="{ [$style.active]: optionChecked(value) }"
+            :class="[$style.icon, { [$style.active]: optionChecked(value) }]"
           )
           template(v-else) {{ opt }}
 
