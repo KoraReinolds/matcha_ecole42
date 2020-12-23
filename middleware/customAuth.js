@@ -9,13 +9,8 @@ export default async function ({ store, redirect, route, $auth, $axios }) {
       )
     }
   } else {
-    if (route.name === 'change-password') {
-    }
-    else if (route.name === 'reset-password') {
-      
-    } else if (route.name === 'confirm-registration') {
-      // await $axios.post('/confirm-registration', { token: route.query.token })
-      // return redirect('/registration')
+    if (['change-password', 'reset-password', 'confirm-registration', 'verification'].includes(route.name)) {
+
     } else if (!['login', 'registration', 'fill-id'].includes(route.name)) {
       return redirect('/login')
     }
