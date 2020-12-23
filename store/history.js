@@ -33,7 +33,52 @@ export const mutations = {
 }
 export const actions = {
 
+  PUSH_NOTIFICATION ({ commit, state, rootState, dispatch }, notif) {
+
+    // console.log('!!!!!notif ', notif)
+
+    const msgs = {
+      LIKE: {
+        type: 'like',
+        message: `${notif.login} like you`,
+      },
+      PROFILE_LOAD: {
+        type: 'visit',
+        message: `${notif.login} visit you`,
+      },
+      CONNECTED: {
+        type: 'connected',
+        message: `${notif.login} connect with you`,
+      },
+      SEND_MESSAGE: {
+        type: 'messages',
+        message: `${notif.login} send you message`,
+      },
+      DISCONNECTED: {
+        type: 'dislike',
+        message: `${notif.login} unlike you`,
+      },
+    }
+
+    if (notif.type === 'SEND_MESSAGE') {
+      // console.log('get messages')
+      // dispatch('chat/GET_MESSAGES', rootState.chat.curUser, {root: true})
+      // commit('chat/PUSH_MESSAGE', {
+      //   message: "message.replace(/\n/g, '<br />')",
+      //   toLogin: rootState.auth.login,
+      //   time: new Date,
+      //   read: false,
+      //   // fromLogin: rootState.auth.login,
+      // }, { root: true })
+    }
+
+    commit('SET_UNREADED_NOTIFICATIONS', state.unreadedNotifications + 1)
+    dispatch('PUSH_POP_WINDOW', msgs[notif.type])
+    
+  },
+
   PUSH_POP_WINDOW ({ commit, state, rootState }, res) {
+    // console.log('res ', res)
     if (res.message && !res.action) {
       const msg = {
         action: res.type,

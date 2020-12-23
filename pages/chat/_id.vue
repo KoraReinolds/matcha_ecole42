@@ -105,10 +105,11 @@ export default {
     if (!chatList.length) {
       chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data;
     }
-  user = chatList.find((user) => user.login === route.params.id);
+    user = chatList.find((user) => user.login === route.params.id);
     if (route.params.id) {
       if (!user) return false;
-      res = await store.dispatch('chat/GET_MESSAGES', user);
+      store.commit('chat/SET_CUR_USER', user);
+      res = await store.dispatch('chat/GET_MESSAGES');
       return res.type === "ok" ? true : false;
     }
     return true;
@@ -119,6 +120,7 @@ export default {
   },
   data() {
     return {
+      intervalId: '',
       message: '',
       show: true,
       today: new Date(Date.now()).toLocaleString('ru', {
@@ -164,6 +166,7 @@ export default {
       });
     },
     ...mapMutations({
+      setCurUser: 'chat/SET_CUR_USER',
     }),
     sendMessage() {
       if (this.message.trim()) {
@@ -190,11 +193,19 @@ export default {
         true
       }
   },
+  beforeDestroy() {
+    clearInterval(this.intervalId)
+  },
   mounted() {
     this.scroll();
     this.show = this.mobile ?
       (this.$route.params.id ? false : true) :
       true
+    this.intervalId = setInterval(function() {
+      if (this.$route.params.id) {
+        this.$store.dispatch('chat/GET_MESSAGES')
+      }
+    }.bind(this), 3000)
   },
 };
 </script>

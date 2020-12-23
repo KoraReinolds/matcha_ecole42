@@ -1,8 +1,8 @@
 import axios from 'axios'
 const { generateUser } = require('../../server/dataGeneration/index')
 
-const baseUrl = "https://matcha-server.herokuapp.com"
-// const baseUrl = 'http://localhost:4567'
+// const baseUrl = "https://matcha-server.herokuapp.com"
+const baseUrl = 'http://localhost:4567'
 const tokens = {}
 const successResponce = { type: 'ok' }
 const registerTemplate = {

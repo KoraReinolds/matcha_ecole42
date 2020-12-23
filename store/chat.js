@@ -13,6 +13,7 @@ export const mutations = {
   SET_CUR_USER: (state, user) => state.curUser = user,
   PUSH_MESSAGE: (state, message) => state.messages.push(message),
   SET_MESSAGES: (state, messages) => state.messages = messages,
+  SET_MSG_AS_READED: (state, msg) => msg.read = true,
 }
 export const actions = {
 
@@ -20,6 +21,7 @@ export const actions = {
     const msg = {
       message: message.replace(/\n/g, '<br />'),
       toLogin: state.curUser.login,
+      // fromLogin: rootState.auth.login,
     }
     const res = await this.$axios.$post('/chat/save', msg)
     if (res.type === 'ok') {
@@ -29,27 +31,27 @@ export const actions = {
         read: false,
         // fromLogin: rootState.auth.login,
       })
+      // setTimeout(() => dispatch('GET_MESSAGES', state.curUser), 1000)
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
-  async GET_MESSAGES ({ commit, state, rootState, dispatch }, user) {
+  async GET_MESSAGES ({ commit, state, rootState, dispatch }) {
     const res = await this.$axios.$get(`chat/full`, {
       params: {
-        toLogin: user.login,
+        toLogin: state.curUser.login,
         limit: 50,
       }
     })
     if (res.type === 'ok') {
-      commit('SET_CUR_USER', user)
       commit('SET_MESSAGES', res.data)
       setTimeout(() => {
-        res.data.forEach((msg) => {
+
+        state.messages.forEach((msg) => {
           if (msg.fromLogin !== rootState.auth.user.login) {
-            msg.read = true
+            commit('SET_MSG_AS_READED', msg)
           }
         })
-        commit('SET_MESSAGES', res.data)
       }, 1000)
     }
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
