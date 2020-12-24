@@ -1,39 +1,56 @@
 <template lang="pug">
-  div.user(
-    :class="[gender(user.gender)]"
+  div(
+    :class="[$style.user, gender(user.gender)]"
   )
-    div.main(
-      :class="[`${gender(user.gender)}_background-light`]"
+    div(
+      :class="[$style.main, `${gender(user.gender)}_background-light`]"
     )
-      div.image
-        CustomImage.custom_image(
+      div(
+        :class="$style.image"
+      )
+        CustomImage(
+          :class="$style.custom_image"
           :src="user.src"
           @click="paginate"
         )
-        RoundedIcon.gender.only_laptop(
+        RoundedIcon.only_laptop(
+          :class="$style.gender"
           :icon="gender(user.preference)"
           :size="4"
           :mask="false"
         )
-        div.like-icon(
+        div(
           v-if="user.likedFrom !== undefined"
+          :class="$style.like_icon"
         )
-          Like.like(
+          Like(
+            :class="$style.like"
             :user="user"
             :size="2"
           )
-      div.content
-        span.fio
-          NameLink.age(
+      div(
+        :class="$style.content"
+      )
+        span(
+          :class="$style.fio"
+        )
+          NameLink(
+            :class="$style.age"
             :user="user"
           )
-          span.age {{ `${user.age} y.o.` }}
-        div.only_laptop.biography
-          div.text {{ `${user.biography}` }}
+          span(
+            :class="$style.age"
+          ) {{ `${user.age} y.o.` }}
+        div.only_laptop(
+          :class="$style.biography"
+        )
+          div(
+            :class="$style.text"
+          ) {{ `${user.biography}` }}
         div(v-if="user.tagsCount !== undefined") Match tags: {{ user.tagsCount || '0' }}
-        //- div {{ user.x }}
-        //- div {{ user.y }}
-        div.only_laptop.tags
+        div.only_laptop(
+          :class="$style.tags"
+        )
           Tag(
             v-for="tag in user.tags"
             :class="[`${gender(user.gender)}_background`]"
@@ -41,12 +58,16 @@
             :name="tag"
           )
 
-    div.sidebar.only_laptop
-      Raiting.icon(
+    div.only_laptop(
+      :class="$style.sidebar"
+    )
+      Raiting(
+        :class="$style.icon"
         :value="user.rating"
         :size="2"
       )
-      Distance.icon(
+      Distance(
+        :class="$style.icon"
         :value="user.distance"
         :size="2"
       )
@@ -54,14 +75,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import RoundedIcon from '@/components/RoundedIcon.vue';
-import CustomImage from '@/components/CustomImage.vue';
-import Distance from '@/components/Distance.vue';
-import NameLink from '@/components/NameLink.vue';
-import Raiting from '@/components/Raiting.vue';
-import Tag from '@/components/Tag.vue';
-import Like from '@/components/Like.vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import RoundedIcon from '@/components/RoundedIcon.vue'
+import CustomImage from '@/components/CustomImage.vue'
+import Distance from '@/components/Distance.vue'
+import NameLink from '@/components/NameLink.vue'
+import Raiting from '@/components/Raiting.vue'
+import Tag from '@/components/Tag.vue'
+import Like from '@/components/Like.vue'
 
 export default {
   name: 'user',
@@ -91,10 +112,8 @@ export default {
       if (this.mobile) {
         if (e.clientX > window.innerWidth * 0.8) {
           this.changeMobileUser(this.mobilePage + 1)
-          // this.nextUser((this.curPage + 1) % this.maxLength || this.maxLength);
         } else if (e.clientX < window.innerWidth * 0.2) {
           this.changeMobileUser(this.mobilePage - 1)
-          // this.prevUser((this.curPage - 1) % this.maxLength || this.maxLength);
         }
       }
     },
@@ -106,16 +125,15 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.user)
   }
 };
 </script>
 
-<style scoped lang="scss">
+<style module lang="scss">
 
 @media (max-width: map-get($grid-breakpoints, sm)) {
   .user {
-    .like-icon {
+    .like_icon {
       bottom: 40px;
       right: 0;
       right: 10%;
@@ -197,7 +215,7 @@ export default {
           top: 30px;
           left: 30px;
         }
-        .like-icon {
+        .like_icon {
           position: absolute;
           bottom: 30px;
           right: 30px;
