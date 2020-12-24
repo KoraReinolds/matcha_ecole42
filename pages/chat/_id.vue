@@ -99,18 +99,20 @@ import NameLink from '@/components/NameLink.vue';
 export default {
   name: 'chat',
   async validate({ route, store }) {
-    let res = {};
-    let chatList = store.getters['chat/CHAT_LIST'];
-    let user;
+    let res = {}
+    let chatList = store.getters['chat/CHAT_LIST']
+    let user
     if (!chatList.length) {
-      chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data;
+      chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data
     }
-    user = chatList.find((user) => user.login === route.params.id);
+    store.commit('chat/SET_CUR_USER', null)
+    store.commit('chat/SET_MESSAGES', [])
+    user = chatList.find((user) => user.login === route.params.id)
     if (route.params.id) {
-      if (!user) return false;
-      store.commit('chat/SET_CUR_USER', user);
-      res = await store.dispatch('chat/GET_MESSAGES');
-      return res.type === "ok" ? true : false;
+      if (!user) return false
+      store.commit('chat/SET_CUR_USER', user)
+      res = await store.dispatch('chat/GET_MESSAGES')
+      return res.type === "ok" ? true : false
     }
     return true;
   },

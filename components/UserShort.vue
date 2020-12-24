@@ -1,48 +1,55 @@
 <template lang="pug">
 
-  div.user(
+  div(
     v-if="user"
+    :class="$style.user"
   )
-    div.img-container
-      RoundedIcon.gender(
+    div(
+      :class="$style.img_container"
+    )
+      CustomImage(
+        height="96px"
+        width="96px"
+        rounded
+        :src="user.src"
+      )
+      RoundedIcon(
+        :class="$style.gender"
         :icon="['male', 'female', 'bisexual'][user.gender - 1]"
         :mask="mobile"
         :size="6"
       )
-      span.image
-        CustomImage(
-          height="96px"
-          width="96px"
-          rounded
-          :src="user.src"
-        )
-    div.info-container(
-      :class="[$route.name]"
+    div(
+      :class="$style.info_container"
     )
-      div.info-line
-        font-awesome-icon.icon.fa-2x(
-          :class="[`${action}_color`, action]"
+      div(
+        :class="$style.info_line"
+      )
+        font-awesome-icon.fa-2x(
+          v-if="action"
+          :class="[$style.icon, `${action}_color`, action]"
           :icon="icons[action]"
         )
         NameLink(
           :user="user"
         )
-      span.time {{ getDate(time) }} {{ action }}
+      span(
+        :class="$style.time"
+      ) {{ getDate(time) }}
 
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
-import NameLink from '@/components/NameLink.vue';
-import RoundedIcon from '@/components/RoundedIcon.vue';
-import CustomImage from '@/components/CustomImage.vue';
-import Like from '@/components/Like.vue';
-import iconsMixin from '@/mixins/iconMixin';
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import NameLink from '@/components/NameLink.vue'
+import RoundedIcon from '@/components/RoundedIcon.vue'
+import CustomImage from '@/components/CustomImage.vue'
+import iconsMixin from '@/mixins/iconMixin'
 
 export default {
   name: 'userShort',
   data: () => ({
-    action: 'ban',
+    action: '',
   }),
   props: {
     user: Object,
@@ -52,7 +59,6 @@ export default {
     RoundedIcon,
     CustomImage,
     NameLink,
-    Like,
   },
   mixins: [iconsMixin],
   computed: {
@@ -61,9 +67,6 @@ export default {
     }),
   },
   methods: {
-    getAction(type) {
-      return [type]
-    },
     getDate(time) {
       return new Date(time).toLocaleString('ru', {
         month: 'long',
@@ -74,7 +77,6 @@ export default {
       });
     },
     ...mapMutations({
-      like: 'users/LIKE',
     }),
     ...mapActions({
     }),
@@ -91,53 +93,55 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style module lang="scss">
 
-.user {
-  height: 96px;
-  display: flex;
-  max-width: 600px;
-  width: 100%;
-  margin-bottom: 12px;
-  .img-container {
-    position: relative;
-    @media (max-width: map-get($grid-breakpoints, sm)) { min-width: 120px; };
-    @media (min-width: map-get($grid-breakpoints, sm)) { width: 200px; };
-    .gender {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      @media (max-width: map-get($grid-breakpoints, sm)) {
-        opacity: 0.7;
-        color: $font-color;
-      };
-    }
-    .image {
-      display: inline-block;
-      position: relative;
-      width: 96px;
-      height: 96px;
-      @media (min-width: map-get($grid-breakpoints, sm)) { left: 70px; };
-    }
-  }
-  .info-container {
-    position: relative;
-    width: 300px;
+@mixin userMixin(
+  $gender-display: none,
+) {
+
+  .user {
+    height: 96px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    .info-line {
+    width: 100%;
+    margin-bottom: 20px;
+    .img_container {
       display: flex;
-      .icon {
-        margin-right: 10px;
+      position: relative;
+      margin-right: 15px;
+      .gender {
+        display: $gender-display;
+        position: relative;
+        z-index: 1;
+        opacity: 0.7;
+        right: 15px;
       }
     }
-    .time {
-      font-size: 0.8em;
-      color: gray;
+    .info_container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .info_line {
+        display: flex;
+        .icon {
+          margin-right: 10px;
+        }
+      }
+      .time {
+        font-size: 0.8em;
+        color: gray;
+      }
     }
   }
+
+}
+
+@include userMixin(
+  $gender-display: block,
+);
+
+@media (max-width: 600px) {
+  @include userMixin(
+  );
 }
 
 </style>

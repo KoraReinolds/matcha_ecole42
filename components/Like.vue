@@ -1,6 +1,6 @@
 <template lang="pug">
-  font-awesome-icon.icon.like(
-    :class="[`fa-${size}x`, { like_color: user.likedFrom }]"
+  font-awesome-icon(
+    :class="[$style.like, `fa-${size}x`, { [$style.active]: user.likedFrom }]"
     :style="{ cursor: disabled === '' ? 'default' : 'pointer' }"
     icon="heart"
     @click="disabled !== '' && like(user)"
@@ -33,10 +33,13 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style module lang="scss">
 .like {
   transition: all 0.2s;
   color: lightgray;
   cursor: pointer;
+}
+.active {
+  color: $like-color;
 }
 </style>

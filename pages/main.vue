@@ -4,12 +4,19 @@
     :class="$style.main"
   )
     template(v-if="users.length")
-      transition-group(tag="p" name="user")
-        User(
+      template(v-if="mobile")
+        UserMobile(
           v-for="(user, index) in users"
-          :key="user.login"
+          :key="'mobile-'+user.login"
           :user="user"
         )
+      template(v-else)
+        transition-group(tag="p" name="user")
+          User(
+            v-for="(user, index) in users"
+            :key="user.login"
+            :user="user"
+          )
     template(v-else)
       div(
         :class="$style.else"
@@ -23,17 +30,20 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import User from '@/components/User.vue'
 import Tools from '@/components/Tools.vue'
+import UserMobile from '@/components/UserMobile.vue'
 
 export default {
   name: 'mainPage',
   components: {
     User,
     Tools,
+    UserMobile,
   },
   data: () => ({
   }),
   computed: {
     ...mapGetters({
+      mobile: 'IS_MOBILE',
       page: 'users/CUR_PAGE',
       tools: 'users/TOOLS',
       users: 'users/USERS',
