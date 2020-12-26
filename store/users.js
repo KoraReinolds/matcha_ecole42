@@ -78,7 +78,7 @@ export const mutations = {
   CHANGE_SORT_ORDER: (state, [newItem, isChange]) => {
     if (isChange) {
       state.sortOrder.delete(newItem)
-      state.sortOrder.add(newItem)
+      state.sortOrder = new Set([newItem, ...state.sortOrder])
     } else {
       state.sortOrder.delete(newItem)
     }

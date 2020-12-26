@@ -1,36 +1,38 @@
 <template lang="pug">
-  form(
-    :class="$style.form"
-  )
-    h2(
-      :class="$style.form_title"
-    ) Remind password
-    TextField(
-      :data="fieldsData.login"
-      v-model="login"
-      rounded
-      filled
-      name="login"
+
+  div
+    form(
+      :class="$style.form"
     )
-    TextField(
-      :data="fieldsData.email"
-      v-model="email"
-      type='email'
-      rounded
-      filled
-      name="email"
-    )
-    div(
-      :class="$style.form_actions"
-    )
-      nuxt-link(
-        :class="$style.form_action_link"
-        to="/login"
-      ) Back
-      Button(
-        @click.prevent="getEmail({ login: data_login, email: data_email })"
-        :disabled="!(data_login && data_email)"
-      ) Get email
+      h2(
+        :class="$style.form_title"
+      ) Remind password
+      TextField(
+        :data="fieldsData.login"
+        v-model="login"
+        rounded
+        filled
+        name="login"
+      )
+      TextField(
+        :data="fieldsData.email"
+        v-model="email"
+        type='email'
+        rounded
+        filled
+        name="email"
+      )
+      div(
+        :class="$style.form_actions"
+      )
+        nuxt-link(
+          :class="$style.form_action_link"
+          to="/login"
+        ) Back
+        Button(
+          @click.prevent="getEmail({ login: data_login, email: data_email })"
+          :disabled="!(data_login && data_email)"
+        ) Get email
       
 </template>
 
@@ -46,8 +48,8 @@ export default {
     Button,
   },
   data: () => ({
-    data_login: 'User_1',
-    data_email: '123@mail.ru',
+    data_login: '',
+    data_email: '',
   }),
   computed: {
     ...mapGetters({

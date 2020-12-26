@@ -48,51 +48,14 @@ export default {
 
     let socket = new WebSocket(
       `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
-      // "ws://192.168.29.71:4567/chat?token=access_token",
-      // `ws://matcha-server.herokuapp.com:4567/chat?token=access_token`,
     );
-    socket.onopen = function(e) {
-      console.log("[open] Соединение установлено");
-      console.log("Отправляем данные на сервер");
-      // socket.send("Меня зовут Джон");
-    };
 
     socket.onmessage = function(event) {
-      // console.log(`[message] Данные получены с сервера: ${event.data}`);
       this.pushNotification(JSON.parse(event.data))
     }.bind(this)
 
-    socket.onclose = function(event) {
-      // if (event.wasClean) {
-      //   console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
-      // } else {
-      //   console.log('[close] Соединение прервано');
-      // }
-    };
-
-    socket.onerror = function(error) {
-      alert(`[error] ${error.message}`);
-    };
-
-
     if (this.$auth.loggedIn) {
-    this.getUnreadedNotifications()
-
-    //   this.socket = this.$nuxtSocket({});
-    //   this.socket
-    //     .on(this.$auth.user.login, (notif, cb) => {
-    //       if (notif.action === 'messages') {
-    //         if (notif.who.login === this.$route.params.id) {
-    //           this.pushMessage(notif);
-    //         }
-    //       }
-    //       this.pushPopWindow(notif);
-    //       this.pushNotification(notif);
-    //       if (this.$router.currentRoute.name === 'notifications') {
-    //         this.setAllNotifAsChecked();
-    //       }
-    //     })
-    //   conosle.log(this.socket)
+      this.getUnreadedNotifications()
     }
   }
 }
@@ -163,17 +126,10 @@ export default {
     padding-top: $header-height;
     flex-grow: 1;
     display: flex;
-    // margin-bottom: $footer-height;
+    @media (max-width: 600px) {
+      margin-bottom: $footer-height;
+    }
   }
-
-  // @include layoutMixin(
-  // );
-
-  // @media (max-width: 600px) {
-  //   @include layoutMixin(
-  //   );
-  // }
-
 
 </style>
 

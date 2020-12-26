@@ -28,7 +28,10 @@ export default {
         message: 'Ошибка верификации',
       })
     } else {
-      this.$auth.setUserToken(this.$route.query.token, '')
+      this.$store.dispatch('history/PUSH_POP_WINDOW', {
+        type: 'ok',
+        message: 'Верификация прошла успешно',
+      })
       this.$router.push('/settings')
     }
   },

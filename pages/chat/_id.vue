@@ -13,7 +13,8 @@
         template(
           v-if="curUser"
         )
-          CustomImage.image(
+          CustomImage(
+            :class="$style.image"
             v-if="!mobile"
             class="image"
             height="36px"
@@ -27,13 +28,14 @@
             NameLink(
               :user="curUser"
             )
-            font-awesome-icon.list-toggle(
+            font-awesome-icon(
+              :class="$style.list_toggle"
               v-if="mobile"
               size="1x"
               :icon="show ? 'caret-down' : 'caret-left'" @click="show = !show"
             )
-            //- :class="$style.user_name"
         span(
+          :class="$style.user_name"
           v-else
         ) Choose conversation
 
@@ -41,26 +43,33 @@
         :class="$style.messages_box"
         ref="messageBox"
       )
-        div.messages(
+        div(
           v-if="messages.length"
+          :class="$style.messages"
         )
-          div.message(
+          div(
             v-for="(message, index) in messages"
             :key="'message'+index+curUser.login"
-            :class="{ our: message.toLogin === curUser.login, unreaded: !message.read }"
+            :class="[$style.message, { [$style.our]: message.toLogin === curUser.login, [$style.unreaded]: !message.read }]"
           )
-            span.time {{ getDate(message.time) }}
-            span.text_block(
+            span(
+              :class="$style.time"
+            ) {{ getDate(message.time) }}
+            span(
               v-html="message.message"
+              :class="$style.text_block"
             )
-        div.messages(
+        div(
+          :class="$style.messages"
           v-else-if="curUser"
         )
-          div.else Send first message
+          div(
+            :class="$style.else"
+          ) Send first message
 
 
-      //- v-if="curUser"
       div(
+        v-if="curUser"
         :class="$style.input_field"
       )
         textarea(
@@ -77,25 +86,32 @@
           @click="sendMessage"
         )
 
-    //- div.side-bar
-    //-   div.fixed-box(
-    //-     v-if="show"
-    //-   )
-    //-     div.side-bar_item(
-    //-       v-for="user in chatList"
-    //-       :key="'chat'+user.login"
-    //-       @click="changeChat(user)"
-    //-     )
-    //-       nuxt-link.link(
-    //-         :to="`/chat/${user.login}`"
-    //-       )
-    //-         CustomImage.image(
-    //-           :height="`${mobile ? 48 : 70}px`"
-    //-           :width="`${mobile ? 48 : 70}px`"
-    //-           rounded
-    //-           :src="user.src"
-    //-         )
-    //-         div.only_mobile {{ `${user.fname} ${user.lname}` }}
+    div(
+      :class="$style.side_bar"
+    )
+
+      div(
+        v-if="show"
+        :class="$style.fixed_box"
+      )
+        div(
+          v-for="user in chatList"
+          :class="$style.side_bar_item"
+          :key="'chat'+user.login"
+          @click="changeChat(user)"
+        )
+          nuxt-link(
+            :class="$style.link"
+            :to="`/chat/${user.login}`"
+          )
+            CustomImage(
+              :class="$style.image"
+              :height="`${mobile ? 48 : 70}px`"
+              :width="`${mobile ? 48 : 70}px`"
+              rounded
+              :src="user.src"
+            )
+            div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
   div(
     :class="$style.chat"
@@ -229,9 +245,6 @@ export default {
 @mixin chatMixin(
   $info-height: 50px,
   $chat-margin: 50px,
-  // $input-height,
-  // $chat-color: #dddddd,
-  // $chat-color-light: rgb(182, 182, 182),
 ) {
 
   .chat {
@@ -240,10 +253,9 @@ export default {
     margin: $chat-margin auto;
     display: flex;
     .window {
+      border: 1px solid lightgray;
       flex-grow: 1;
-      // max-height: 800px;
-      // height: 100%;
-      // width: 100%;
+      max-height: 800px;
       display: flex;
       flex-direction: column;
       .info {
@@ -253,93 +265,87 @@ export default {
         width: 100%;
         display: flex;
         align-items: center;
-      //   .user_name {
-      //     font-family: 'Lobster', cursive;
-      //     .list-toggle {
-      //       margin-left: 12px;
-      //     }
-      //   }
+        .list_toggle {
+          margin-left: 12px;
+        }
       }
 
       .messages_box {
         flex-grow: 1;
         position: relative;
-        // height: 100%;
         width: 100%;
         overflow: scroll;
-        background: rgb(248, 255, 235);
-        // .messages {
-        //   position: absolute;
-        //   width: 100%;
-        //   bottom: 0;
-        //   padding: 20px 0;
-        //   max-height: 100%;
+        .messages {
+          position: absolute;
+          width: 100%;
+          bottom: 0;
+          padding: 20px 0;
+          max-height: 100%;
 
-      //     .else {
-      //       text-align: center;
-      //       color: gray;
-      //       font-size: 0.8em;
-      //     }
+          .else {
+            text-align: center;
+            color: gray;
+            font-size: 0.8em;
+          }
 
-      //     .message {
-      //       display: flex;
-      //       justify-content: flex-end;
-      //       align-items: flex-end;
-      //       margin: 6px 10px;
-      //       text-align: left;
-      //       .time {
-      //         font-size: 0.8em;
-      //         color:gray;
-      //         margin-right: 10px;
-      //         transform: translateY(-5px);
-      //       }
-      //       .text_block {
-      //         max-width: 100%;
-      //         // overflow: scroll;
-      //         margin: 5px;
-      //         padding: 15px;
-      //         display: inline-block;
-      //         line-height: 20px;
-      //         border-radius: 30px;
-      //         background: $chat-color;
-      //       }
-      //       &.unreaded {
-      //         background: rgb(188, 195, 226);
-      //       }
-      //     }
-      //     .message.our {
-      //       .text_block {
-      //         color: #fff;
-      //         background: $main-color;
-      //       }
-      //       &.unreaded {
-      //         background: white;
-      //         &::after {
-      //           content: '';
-      //           display: block;
-      //           width: 10px;
-      //           height: 10px;
-      //           background-color: $main-color;
-      //           border-radius: 50%;
-      //           position: relative;
-      //           top: -25px;
+          .message {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin: 6px 10px;
+            text-align: left;
+            .time {
+              font-size: 0.8em;
+              color:gray;
+              margin-right: 10px;
+              transform: translateY(-5px);
+            }
+            .text_block {
+              max-width: 100%;
+              // overflow: scroll;
+              margin: 5px;
+              padding: 15px;
+              display: inline-block;
+              line-height: 20px;
+              border-radius: 30px;
+              // background: $chat-color;
+            }
+            &.unreaded {
+              background: rgb(188, 195, 226);
+            }
+          }
+          .message.our {
+            .text_block {
+              color: #fff;
+              background: $main-color;
+            }
+            &.unreaded {
+              background: white;
+              &::after {
+                content: '';
+                display: block;
+                width: 10px;
+                height: 10px;
+                background-color: $main-color;
+                border-radius: 50%;
+                position: relative;
+                top: -25px;
 
-      //         }
-      //         // background: rgb(66, 75, 117);
-      //       }
-      //     }
-      //     @media (max-width: map-get($grid-breakpoints, sm)) {
-      //       .message {
-      //         margin: 4px 8px;
-      //         .text_block {
-      //           padding: 15px;
-      //           display: inline-block;
-      //           line-height: 20px;
-      //           border-radius: 30px 0 0 30px;
-      //         }
-      //       }
-      //     }
-      //   }
+              }
+            }
+          }
+          @media (max-width: map-get($grid-breakpoints, sm)) {
+            .message {
+              margin: 4px 8px;
+              .text_block {
+                padding: 15px;
+                display: inline-block;
+                line-height: 20px;
+                border-radius: 30px 0 0 30px;
+              }
+            }
+          }
+        }
       }
 
       .input_field {
@@ -369,93 +375,66 @@ export default {
       }
 
     }
+
+    @media (min-width: map-get($grid-breakpoints, sm)) {
+
+      .side_bar {
+        padding: 0px 25px 0px 10px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100%;
+        right: -100px;
+        top: 0px;
+        .image {
+          cursor: pointer;
+          z-index: 2;
+          border-radius: 50px;
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          left: 70px;
+        }
+      }
+
+    }
+
+    @media (max-width: map-get($grid-breakpoints, sm)) {
+
+      .side_bar {
+        position: absolute;
+        top: $info-height;
+        width: 100%;
+        .fixed_box {
+          position: fixed;
+          width: 100%;
+          max-height: 180px;
+          overflow: auto;
+          border-bottom: solid 1px $font-color;
+          .side_bar_item:not(:last-child) {
+            border-bottom: 1px solid $font-color;
+          }
+          .side_bar_item .link {
+            position: relative;
+            width: 100%;
+            background: #fff;
+            cursor: pointer;
+            font-family: 'Lobster', cursive;
+            height: 60px;
+            display: flex;
+            padding-left: 30px;
+            align-items: center;
+            text-decoration: none;
+            color: $font-color;
+            .image {
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+    }
+
   }
 }
-
-// @media (max-width: map-get($grid-breakpoints, sm)) {
-//   $chat-color: rgb(221, 221, 221);
-//   $chat-color-light: rgb(207, 207, 207);
-//   $info-height: 30px;
-//   @include chat(
-//     $info-height: $info-height,
-//     $input-height: 40px,
-//   );
-//   .chat {
-//     width: 100%;
-//     height: calc(100vh - #{$header-height-mobile} - #{$footer-height-mobile});
-//     .side-bar {
-//       position: absolute;
-//       top: $info-height;
-//       width: 100%;
-//       .fixed-box {
-//         position: fixed;
-//         width: 100%;
-//         max-height: 180px;
-//         overflow: auto;
-//         border-bottom: solid 1px $font-color;
-//         .side-bar_item:not(:last-child) {
-//           border-bottom: 1px solid $font-color;
-//         }
-//         .side-bar_item .link {
-//           position: relative;
-//           width: 100%;
-//           background: #fff;
-//           cursor: pointer;
-//           font-family: 'Lobster', cursive;
-//           height: 60px;
-//           display: flex;
-//           padding-left: 30px;
-//           align-items: center;
-//           text-decoration: none;
-//           color: $font-color;
-//           .image {
-//             margin-right: 20px;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @media (min-width: map-get($grid-breakpoints, sm)) {
-//   $chat-color: rgb(221, 221, 221);
-//   $chat-color-light: rgb(207, 207, 207);
-//   $info-height: 50px;
-//   @include chat(
-//     $info-height: $info-height,
-//     $input-height: 50px,
-//   );
-//   .chat {
-//     width: 100%;
-//     display: flex;
-//     height: 900px;
-//     padding: 50px 0;
-//     position: relative;
-//     .window {
-//       border: solid 1px $chat-color-light;
-//       .image {
-//         margin-right: 10px;
-//       }
-//     }
-//     .side-bar {
-//       padding: 0px 25px 0px 10px;
-//       overflow-x: hidden;
-//       overflow-y: auto;
-//       height: 100%;
-//       right: -100px;
-//       top: 0px;
-//       .image {
-//         cursor: pointer;
-//         z-index: 2;
-//         border-radius: 50px;
-//         width: 100px;
-//         height: 100px;
-//         object-fit: cover;
-//         left: 70px;
-//       }
-//     }
-//   }
-// }
 
 @include chatMixin(
   

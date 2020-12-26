@@ -117,6 +117,7 @@
         font-awesome-icon(
           :class="$style.icon"
           v-for="item in sortOrder"
+          :key="'item'+item"
           :icon="['fas', { sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]]"
         )
 

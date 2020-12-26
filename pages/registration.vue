@@ -1,44 +1,46 @@
 <template lang="pug">
-  form(
-    :class="$style.form"
-  )
-      h2(
-        :class="$style.form_title"
-      ) Registration
-      TextField(
-        :data="fieldsData.login"
-        v-model="login"
-        name="login"
-      )
-      TextField(
-        :data="fieldsData.password"
-        v-model="password"
-      )
-      TextField(
-        :data="fieldsData.fname"
-        v-model="firstName"
-      )
-      TextField(
-        :data="fieldsData.lname"
-        v-model="lastName"
-      )
-      TextField(
-        :data="fieldsData.email"
-        v-model="mail"
-        type="email"
-        name="email"
-      )
-      div(
-        :class="$style.form_actions"
-      )
-        nuxt-link(
-          :class="$style.form_action_link"
-          to="/login"
-        ) Back
-        Button(
-          @click.prevent="register"
-          :disabled="!formValid"
-        ) SignUp
+
+  div
+    form(
+      :class="$style.form"
+    )
+        h2(
+          :class="$style.form_title"
+        ) Registration
+        TextField(
+          :data="fieldsData.login"
+          v-model="login"
+          name="login"
+        )
+        TextField(
+          :data="fieldsData.password"
+          v-model="password"
+        )
+        TextField(
+          :data="fieldsData.fname"
+          v-model="firstName"
+        )
+        TextField(
+          :data="fieldsData.lname"
+          v-model="lastName"
+        )
+        TextField(
+          :data="fieldsData.email"
+          v-model="mail"
+          type="email"
+          name="email"
+        )
+        div(
+          :class="$style.form_actions"
+        )
+          nuxt-link(
+            :class="$style.form_action_link"
+            to="/login"
+          ) Back
+          Button(
+            @click.prevent="register"
+            :disabled="!formValid"
+          ) SignUp
 
 </template>
 

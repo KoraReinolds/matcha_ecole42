@@ -1,24 +1,26 @@
 <template lang="pug">
-  form(
-    :class="$style.form"
-  )
-    h2(
-      :class="$style.form_title"
-    ) Change password
-    TextField(
-      :data="{ ...fieldsData.password, title: 'New password' }"
-      v-model="password"
-      rounded
-      filled
-      name="password"
+
+  div
+    form(
+      :class="$style.form"
     )
-    div(
-      :class="$style.form_actions"
-    )
-      Button(
-        @click.prevent="changePass({ password: data_password, token: $route.query.token })"
-        :disabled="!data_password"
-      ) Change pssword
+      h2(
+        :class="$style.form_title"
+      ) Change password
+      TextField(
+        :data="{ ...fieldsData.password, title: 'New password' }"
+        v-model="password"
+        rounded
+        filled
+        name="password"
+      )
+      div(
+        :class="$style.form_actions"
+      )
+        Button(
+          @click.prevent="changePass({ password: data_password, token: $route.query.token })"
+          :disabled="!data_password"
+        ) Change pssword
       
 </template>
 

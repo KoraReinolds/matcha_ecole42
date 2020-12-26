@@ -144,8 +144,9 @@ module.exports = {
         endpoints: {
           login: { url: 'login', method: 'post', propertyName: 'token' },
           user: { url: 'profile-get', method: 'get', propertyName: 'data' },
+          logout: false,
+          // logout: { url: 'logout', method: 'post', propertyName: 'data' },
           // user: false
-          // logout: false
         },
         tokenType: "",
       }

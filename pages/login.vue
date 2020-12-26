@@ -1,41 +1,44 @@
 <template lang="pug">
-  form(
-    :class="$style.form"
-    v-on:keyup.enter="signIn()"
-  )
-    h2(
-      :class="$style.form_title"
-    ) Login
-    TextField(
-      :data="fieldsData.login"
-      v-model="login"
-      outlined
-      filled
-      name="login"
+
+  div
+    form(
+      :class="$style.form"
+      v-on:keyup.enter="signIn()"
     )
-    TextField(
-      :data="fieldsData.password"
-      v-model="password"
-      type='password'
-      outlined
-      filled
-      name="password"
-    )
-    div(
-      :class="$style.form_actions"
-    )
-      nuxt-link(
-        :class="$style.form_action_link"
-        to="/registration"
-      ) Registration
-      nuxt-link(
-        :class="$style.form_action_link"
-        to="/reset-password"
-      ) Forget password
-      Button(
-        @click.prevent="signIn"
-        :disabled="!formValid"
-      ) LogIn
+      h2(
+        :class="$style.form_title"
+      ) Login
+      TextField(
+        :data="fieldsData.login"
+        v-model="login"
+        outlined
+        filled
+        name="login"
+      )
+      TextField(
+        :data="fieldsData.password"
+        v-model="password"
+        type='password'
+        outlined
+        filled
+        name="password"
+      )
+      div(
+        :class="$style.form_actions"
+      )
+        nuxt-link(
+          :class="$style.form_action_link"
+          to="/registration"
+        ) Registration
+        nuxt-link(
+          :class="$style.form_action_link"
+          to="/reset-password"
+        ) Forget password
+        Button(
+          @click.prevent="signIn"
+          :disabled="!formValid"
+        ) LogIn
+        
 </template>
 
 <script>
