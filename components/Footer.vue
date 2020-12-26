@@ -2,28 +2,36 @@
   footer(
     v-if="$auth.loggedIn"
   )
-    div.footer_content
-      div.only_laptop Made by mskiles (s.shurn94@gmail.com)
-      div.only_mobile
-        nuxt-link.link(
+    div.wrapper(
+      :class="$style.footer_content"
+    )
+      div.only_laptop Dating website form 21 School
+      div.only_mobile(
+        :class="$style.mobile_nav"
+      )
+        nuxt-link(
+          :class="$style.link"
           :to="`/user/${$auth.user.login}`"
         )
           font-awesome-icon.icon(
             icon="user"
           )
-        nuxt-link.link(
+        nuxt-link(
+          :class="$style.link"
           to='/history'
         )
           font-awesome-icon.icon(
             icon="history"
           )
-        nuxt-link.link(
+        nuxt-link(
+          :class="$style.link"
           to='/main'
         )
           font-awesome-icon.icon(
             icon="search"
           )
-        nuxt-link.link(
+        nuxt-link(
+          :class="$style.link"
           to='/chat'
         )
           font-awesome-icon.icon(
@@ -35,7 +43,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'footer-component',
+  name: 'Footer',
   data: () => ({
   }),
   components: {
@@ -55,47 +63,60 @@ export default {
 };
 </script>
 
-<style lang="scss">
-footer {
-  left: 0;
-  z-index: 3;
-  position: absolute;
-  bottom: 0;
-  margin-top: -$footer-height;
-  height: $footer-height;
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    position: fixed;
-    margin-top: -$footer-height-mobile;
-    height: $footer-height-mobile;
-    .footer_content {
-      justify-content: space-around;
-    }
-  }
-  width: 100vw;
-  background-color: $main-color;
-  .footer_content {
-    // position: absolute;
-    font-family: 'Oswald', sans-serif;
-    font-size: 18px;
-    text-align: right;
-    color: white;
-    margin: 0 auto;
-    padding: 0 $padding-content;
-    height: 100%;
-    max-width: 100%;
-    width: $wrapper-width;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    .only_mobile {
-      width: 100%;
+<style module lang="scss">
+
+  @mixin footerMixin(
+    $position: relative,
+  ) {
+
+    footer {
+      z-index: 3;
+      height: $footer-height;
+      position: $position;
+      bottom: 0;
+      width: 100vw;
+      background-color: $main-color;
       display: flex;
-      justify-content: space-around;
-      .icon {
+      align-items: center;
+      .footer_content {
+        margin: 0 20px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
         color: white;
+        width: 100%;
+        div {
+          text-align: right;
+        }
+        // width: 100%;
+        // margin: auto 0;
+        // margin: 0 auto;
+        // padding: 0 $padding-content;
+        // height: 100%;
+        // max-width: 100%;
+        // width: $wrapper-width;
+        // display: flex;
+        // align-items: center;
+        // align-items: center;
+        // justify-content: flex-end;
+        .mobile_nav {
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+          a {
+            color: white;
+          }
+        }
       }
     }
+
   }
-}
+
+  @include footerMixin();
+
+  @media (max-width: 600px) {
+    @include footerMixin(
+      $position: fixed,
+    );
+  }
 
 </style>

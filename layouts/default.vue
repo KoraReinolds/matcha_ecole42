@@ -1,10 +1,10 @@
 <template lang="pug">
   div.app
-    div.wrapper
-      Header
-      nuxt.content
-      PopWindow
+    Header
+    main
+      nuxt.wrapper
     Footer
+    PopWindow
 </template>
 
 <script>
@@ -112,18 +112,29 @@ html {
 }
 .app {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
+main {
+  padding-top: $header-height;
+  flex-grow: 1;
+  display: flex;
+// .footer_bottom {
+  // padding-top: $header-height;
+  // height: calc(100vh - #{$footer-height});
+  // min-height: calc(100vh - #{$footer-height});
+}
+
+// .infinity-scroll {
+//   padding-top: $header-height;
+//   // height: calc(100vh - #{$footer-height});
+//   min-height: calc(100vh - #{$footer-height});
+// }
+// }
 .wrapper {
-  position: relative;
   max-width: $wrapper-width;
   width: 100%;
   margin: 0 auto;
-  @media (max-width: map-get($grid-breakpoints, sm)) {
-    padding-top: $header-height-mobile;
-    padding-bottom: $footer-height-mobile;
-  }
-  padding-top: $header-height;
-  padding-bottom: $footer-height;
 }
 body,
 html {

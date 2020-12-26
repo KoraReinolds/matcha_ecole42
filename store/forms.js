@@ -110,7 +110,7 @@ export const state = () => ({
       ],
     },
   },
-  realLocation: null,
+  realLocation: null, // реальное местоположение пользователя
 })
 export const getters = {
   INFO_FILLED: (state) => state.isFilled,
@@ -261,7 +261,7 @@ export const actions = {
     }
   },
 
-  async CHANGE_PASSWORD ({ commit, rootState, dispatch }, { password, token }) {
+  async CHANGE_PASSWORD ({ dispatch }, { password, token }) {
 
     const res = await this.$axios.$post(`change-reset-password`, { password }, {
       headers: { Authorization: token },
@@ -273,7 +273,7 @@ export const actions = {
     dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
-  async GET_EMAIL ({ commit, rootState, dispatch }, data) {
+  async GET_EMAIL ({ dispatch }, data) {
 
     const res = await this.$axios.$post(`reset-password`, data)
     

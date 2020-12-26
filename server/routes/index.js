@@ -66,7 +66,7 @@ module.exports = function(io) {
   router.post('/history', errorHandleWrapper(async (req, res) => {
     res.json(await Actions.getHistory(req))
   }))
-  
+
   router.post('/notifications', errorHandleWrapper(async (req, res) => {
     res.json(await Actions.getNotifications(req))
   }))

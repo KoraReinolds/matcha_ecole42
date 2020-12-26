@@ -1,6 +1,6 @@
 <template lang="pug">
   div(
-    :class="$style.user_page"
+    :class="[$style.user_page, 'footer_bottom']"
   )
     div(
       :class="$style.main_images"
