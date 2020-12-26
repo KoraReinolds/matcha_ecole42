@@ -70,6 +70,7 @@ export default {
   ) {
 
     footer {
+      // margin-bottom: -20px;
       z-index: 3;
       height: $footer-height;
       position: $position;
@@ -87,17 +88,6 @@ export default {
         div {
           text-align: right;
         }
-        // width: 100%;
-        // margin: auto 0;
-        // margin: 0 auto;
-        // padding: 0 $padding-content;
-        // height: 100%;
-        // max-width: 100%;
-        // width: $wrapper-width;
-        // display: flex;
-        // align-items: center;
-        // align-items: center;
-        // justify-content: flex-end;
         .mobile_nav {
           width: 100%;
           display: flex;

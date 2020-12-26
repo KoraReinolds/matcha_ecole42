@@ -228,6 +228,7 @@ export default {
 
 @mixin chatMixin(
   $info-height: 50px,
+  $chat-margin: 50px,
   // $input-height,
   // $chat-color: #dddddd,
   // $chat-color-light: rgb(182, 182, 182),
@@ -236,13 +237,13 @@ export default {
   .chat {
     position: relative;
     max-width: 600px;
-    margin: 50px auto;
+    margin: $chat-margin auto;
     display: flex;
     .window {
       flex-grow: 1;
-      max-height: 800px;
+      // max-height: 800px;
       // height: 100%;
-      width: 100%;
+      // width: 100%;
       display: flex;
       flex-direction: column;
       .info {
@@ -263,7 +264,7 @@ export default {
       .messages_box {
         flex-grow: 1;
         position: relative;
-        height: 100%;
+        // height: 100%;
         width: 100%;
         overflow: scroll;
         background: rgb(248, 255, 235);
@@ -460,9 +461,10 @@ export default {
   
 );
 
-// @media (max-width: 600px) {
-//   @include chatMixin(
-//   );
-// }
+@media (max-width: 600px) {
+  @include chatMixin(
+    $chat-margin: 0,
+  );
+}
 
 </style>
