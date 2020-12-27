@@ -127,7 +127,10 @@ export const getters = {
   MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
-  CANGE_PASSWORD_VALID: (state, value) => state.formFields.password.valid = value,
+  CANGE_PASSWORD_VALID: (state, value) => {
+    state.formFields.password.valid = value
+    state.formFields.password.errorMsg = value ? '' : 'Пароль слишком простой'
+  },
   TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
   VALIDATE_VALUE: (state, { key, value }) => {
