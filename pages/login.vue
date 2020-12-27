@@ -17,7 +17,6 @@
       )
       TextField(
         :data="fieldsData.password"
-        @blur="checkSimplify(data_password)"
         v-model="password"
         type='password'
         outlined
@@ -68,7 +67,10 @@ export default {
     },
     password: {
       get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }) },
+      set(value) {
+        this.setValue({ key: 'password', value })
+        this.checkSimplify(value)
+      },
     },
   },
   methods: {
