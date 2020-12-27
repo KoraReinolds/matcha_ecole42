@@ -5,13 +5,12 @@
     template(
       v-if="historyList.length"
     )
-      transition-group(name="list" tag="div")
-        UserShort(
-          v-for="({ time, ...target }, index) in historyList"
-          :key="'history'+index+target.login"
-          :user="target"
-          :time="time"
-        )
+      UserShort(
+        v-for="({ time, ...target }, index) in historyList"
+        :key="'history'+index+target.login"
+        :user="target"
+        :time="time"
+      )
     template(
       v-else
     ) History list is empty

@@ -50,7 +50,7 @@ export default {
       this.innitSocketConection()
     }
 
-    if (this.$auth.loggedIn) {
+    if (this.$auth.loggedIn && this.$store.state.auth.user.isFilled) {
       this.getUnreadedNotifications()
     }
   }

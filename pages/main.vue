@@ -10,13 +10,12 @@
           :key="'mobile-'+user.login"
           :user="user"
         )
-      template(v-else)
-        transition-group(tag="p" name="user")
-          User(
-            v-for="(user, index) in users"
-            :user="user"
-            :key="user.login"
-          )
+      div(v-else)
+        User(
+          v-for="(user, index) in users"
+          :user="user"
+          :key="user.login"
+        )
     template(v-else)
       div(
         :class="$style.else"

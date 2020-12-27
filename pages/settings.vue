@@ -84,6 +84,14 @@ import Button from '@/components/Button.vue';
 
 export default {
   name: 'Settings',
+  async validate({ route, store }) {
+    let res = await store.dispatch('user/GET_USER', store.state.auth.user.login)
+    store.commit('auth/SET', {
+      key: 'user',
+      value: res.data,
+    }, { root: true })
+    return true
+  },
   components: {
     MapField,
     ImagesField,

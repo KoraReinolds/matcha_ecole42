@@ -239,7 +239,7 @@ export const actions = {
   },
 
   // авторизация пользователя
-  async SIGN_IN ({ dispatch, state }, data) {
+  async SIGN_IN ({ dispatch, state, rootState }, data) {
 
     data.location = state.realLocation // отправляем текущую локацию
 
@@ -247,8 +247,10 @@ export const actions = {
 
     if (type === 'ok') {
       dispatch('INIT_SOCKETS')
-      // получаем непрочитанные уведомления
-      dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
+      if (rootState.auth.user.isFilled) {
+        // получаем непрочитанные уведомления
+        dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
+      }
     }
 
     this.$router.push({ path: 
