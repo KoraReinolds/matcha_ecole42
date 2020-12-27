@@ -127,6 +127,7 @@ export const getters = {
   MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
+  CANGE_PASSWORD_VALID: (state, value) => state.formFields.password.valid = value,
   TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
   VALIDATE_VALUE: (state, { key, value }) => {
@@ -259,6 +260,19 @@ export const actions = {
         })
       }
     }
+  },
+
+  async CHECK_SIMPLIFY ({ dispatch, commit }, password) {
+
+    const res = {
+      type: 'error',
+      message: 'Пароль слишком простой',
+    }
+
+    commit('CANGE_PASSWORD_VALID', res.type === 'ok')
+    // const res = await this.$axios.$get(`/password-validate?${password}`)
+    // console.log(res)
+    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async CHANGE_PASSWORD ({ dispatch }, { password, token }) {

@@ -50,6 +50,15 @@ export default {
       `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
     );
 
+    socket.onopen = function(e) {
+    };
+
+    socket.onclose = function(event) {
+    };
+
+    socket.onerror = function(error) {
+    };
+    
     socket.onmessage = function(event) {
       this.pushNotification(JSON.parse(event.data))
     }.bind(this)

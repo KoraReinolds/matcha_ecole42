@@ -17,6 +17,7 @@
       )
       TextField(
         :data="fieldsData.password"
+        @blur="checkSimplify(data_password)"
         v-model="password"
         type='password'
         outlined
@@ -38,7 +39,7 @@
           @click.prevent="signIn"
           :disabled="!formValid"
         ) LogIn
-        
+
 </template>
 
 <script>
@@ -74,7 +75,9 @@ export default {
     ...mapMutations({
     }),
     ...mapActions({
+      checkSimplify: 'forms/CHECK_SIMPLIFY',
     }),
+
     setValue({ key, value }) {
       this[`data_${key}`] = value
       this.$store.commit('forms/VALIDATE_VALUE', { key, value })
@@ -87,6 +90,7 @@ export default {
     }
   },
   mounted() {
+    this.$auth.logout()
   },
 };
 </script>
