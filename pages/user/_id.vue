@@ -3,6 +3,7 @@
     :class="[$style.user_page, 'footer_bottom']"
   )
     div(
+      v-if="user.images.length"
       :class="$style.main_images"
     )
       CustomImage(
@@ -122,8 +123,7 @@ import Online from '@/components/Online.vue'
 export default {
   name: 'UserPage',
   async validate({ route, store }) {
-    let res = await 
-      store.dispatch('user/GET_USER', route.params.id)
+    let res = await store.dispatch('user/GET_USER', route.params.id)
     return res.type === "ok" ? true : false;
   },
   components: {

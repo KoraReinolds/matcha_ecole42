@@ -129,11 +129,9 @@ export default {
   name: 'Chat',
   async validate({ route, store }) {
     let res = {}
-    let chatList = store.getters['chat/CHAT_LIST']
     let user
-    if (!chatList.length) {
-      chatList = (await store.dispatch('chat/GET_CHAT_LIST', route.params.id)).data
-    }
+    await store.dispatch('chat/GET_CHAT_LIST', route.params.id)
+    let chatList = store.getters['chat/CHAT_LIST']
     store.commit('chat/SET_CUR_USER', null)
     store.commit('chat/SET_MESSAGES', [])
     user = chatList.find((user) => user.login === route.params.id)

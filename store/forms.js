@@ -289,13 +289,15 @@ export const actions = {
 
   async CHECK_SIMPLIFY ({ dispatch, commit }, password) {
     
-    const res = await this.$axios.$get(`/password-validate/${password}`)
-    // const res = {
-    //   type: 'error',
-    //   message: 'Пароль слишком простой',
-    // }
-
-    commit('CANGE_PASSWORD_VALID', res.type === 'ok')
+    if (password) {
+      const res = await this.$axios.$get(`/password-validate/${password}`)
+      // const res = {
+      //   type: 'error',
+      //   message: 'Пароль слишком простой',
+      // }
+  
+      commit('CANGE_PASSWORD_VALID', res.type === 'ok')
+    }
   },
 
   async CHANGE_PASSWORD ({ dispatch }, { password, token }) {

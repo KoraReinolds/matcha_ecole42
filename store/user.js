@@ -1,5 +1,3 @@
-import API from '~/api'
-
 export const state = () => ({
   user: null,
 })
@@ -35,12 +33,16 @@ export const actions = {
 
   async GET_USER ({ commit, state, rootState, dispatch }, login) {
     const res = login === rootState.auth.user.login ?
-      { type: 'ok', data: rootState.auth.user } :
+      { type: 'ok',
+        data: {
+          ...rootState.auth.user,
+          time: new Date(),
+        }
+      } :
       await this.$axios.$get(`profile-get/${login}`, { login })
     if (res.type === 'ok') {
       commit('SET_USER', res.data)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     return res
   },
 }
