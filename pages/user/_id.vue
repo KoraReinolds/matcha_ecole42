@@ -46,6 +46,7 @@
           NameLink(
             :user="user"
           )
+          span {{ `, ${user.age}` }} y.o.
           Raiting(
             :class="$style.rate"
             :value="user ? user.rating : undefined"

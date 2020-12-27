@@ -58,7 +58,7 @@ export default {
     optionChecked(opt) {
       return this.many ?
         this.value.includes(opt) :
-        this.value === opt
+        +this.value === +opt
     },
     change(event) {
       if (Array.isArray(this.value)) {
