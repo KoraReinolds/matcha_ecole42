@@ -271,7 +271,6 @@ export const actions = {
     // }
 
     commit('CANGE_PASSWORD_VALID', res.type === 'ok')
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async CHANGE_PASSWORD ({ dispatch }, { password, token }) {
@@ -283,7 +282,6 @@ export const actions = {
     if (res.type === 'ok') {
       res.message = 'Пароль успешно изменен'
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async GET_EMAIL ({ dispatch }, data) {
@@ -293,7 +291,6 @@ export const actions = {
     if (res.type === 'ok') {
       res.message = 'На вашу почту отправленна инструкция по смене пароля'
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async LIKE ({ commit }, user) {

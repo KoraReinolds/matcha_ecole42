@@ -30,7 +30,7 @@
           to="/login"
         ) Back
         Button(
-          @click.prevent="getEmail({ login: data_login, email: data_email })"
+          @click="getEmail({ login: data_login, email: data_email })"
           :disabled="!(data_login && data_email)"
         ) Get email
       

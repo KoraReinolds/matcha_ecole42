@@ -165,7 +165,7 @@ export default {
 
   .settings {
     padding: 0 10px;
-    margin: 50px 0;
+    margin: 50px auto;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
