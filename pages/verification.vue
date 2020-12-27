@@ -32,7 +32,7 @@ export default {
         type: 'ok',
         message: 'Верификация прошла успешно',
       })
-      this.$router.push('/settings')
+      this.$router.push('/login')
     }
   },
 };

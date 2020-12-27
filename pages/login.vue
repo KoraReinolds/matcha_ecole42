@@ -67,17 +67,13 @@ export default {
     },
     password: {
       get() { return this.data_password; },
-      set(value) {
-        this.setValue({ key: 'password', value })
-        this.checkSimplify(value)
-      },
+      set(value) { this.setValue({ key: 'password', value }) },
     },
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
-      checkSimplify: 'forms/CHECK_SIMPLIFY',
     }),
 
     setValue({ key, value }) {

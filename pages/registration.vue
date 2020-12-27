@@ -73,7 +73,10 @@ export default {
     },
     password: {
       get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }) },
+      set(value) {
+        this.setValue({ key: 'password', value })
+        this.checkSimplify(value)
+      },
     },
     firstName: {
       get() { return this.data_fname; },
@@ -92,7 +95,8 @@ export default {
     ...mapMutations({
       }),
     ...mapActions({
-      }),
+      checkSimplify: 'forms/CHECK_SIMPLIFY',
+    }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
       this.$store.commit('forms/VALIDATE_VALUE', { key, value })
