@@ -28,40 +28,27 @@ export default {
   methods: {
     ...mapMutations({
       resize: 'RESIZE',
-      // pushNotification: 'history/PUSH_NOTIFICATION',
       pushMessage: 'chat/PUSH_MESSAGE',
       setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
     }),
     ...mapActions({
       getLocation: 'forms/GET_LOCATION',
-      pushNotification: 'history/PUSH_NOTIFICATION',
       getUnreadedNotifications: 'history/GET_UNREADED_NOTIFICATIONS',
+      innitSocketConection: 'forms/INIT_SOCKETS',
     }),
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.resize);
   },
   mounted() {
+    // console.log = function() {}
     this.resize()
     window.addEventListener('resize', this.resize)
     this.getLocation()
 
-    let socket = new WebSocket(
-      `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
-    );
-
-    socket.onopen = function(e) {
-    };
-
-    socket.onclose = function(event) {
-    };
-
-    socket.onerror = function(error) {
-    };
-    
-    socket.onmessage = function(event) {
-      this.pushNotification(JSON.parse(event.data))
-    }.bind(this)
+    if (this.$auth.getToken('local')) {
+      this.innitSocketConection()
+    }
 
     if (this.$auth.loggedIn) {
       this.getUnreadedNotifications()

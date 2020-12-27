@@ -14,8 +14,8 @@
         transition-group(tag="p" name="user")
           User(
             v-for="(user, index) in users"
-            :key="user.login"
             :user="user"
+            :key="user.login"
           )
     template(v-else)
       div(

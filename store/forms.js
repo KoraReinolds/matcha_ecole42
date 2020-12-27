@@ -217,6 +217,27 @@ export const actions = {
 
   },
   
+  async INIT_SOCKETS ({ dispatch }) {
+
+    let socket = new WebSocket(
+      `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
+    )
+
+    socket.onopen = function(e) {
+    }
+
+    socket.onclose = function(event) {
+    }
+
+    socket.onerror = function(error) {
+    }
+
+    socket.onmessage = function(event) {
+      dispatch('history/PUSH_NOTIFICATION', JSON.parse(event.data), { root: true })
+    }.bind(this)
+
+  },
+
   // авторизация пользователя
   async SIGN_IN ({ dispatch, state }, data) {
 
@@ -225,6 +246,7 @@ export const actions = {
     let { data: { type } } = await this.$auth.loginWith('local', { data })
 
     if (type === 'ok') {
+      dispatch('INIT_SOCKETS')
       // получаем непрочитанные уведомления
       dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
     }
