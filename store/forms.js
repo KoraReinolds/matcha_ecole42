@@ -229,10 +229,12 @@ export const actions = {
 
     socket.onclose = function(event) {
       console.log('socket ', event)
+      dispatch('INIT_SOCKETS')
     }
 
     socket.onerror = function(error) {
       console.log('socket ', error)
+      dispatch('INIT_SOCKETS')
     }
 
     socket.onmessage = function(event) {
