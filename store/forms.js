@@ -228,9 +228,11 @@ export const actions = {
     }
 
     socket.onclose = function(event) {
+      console.log('socket ', event)
     }
 
     socket.onerror = function(error) {
+      console.log('socket ', error)
     }
 
     socket.onmessage = function(event) {

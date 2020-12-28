@@ -18,7 +18,6 @@ export default {
             resolve({ y: long, x: lat });
           },
           (err) => reject(err.message),
-          { timeout: 1 }
         );
       }
       return reject(new Error('No support for geolocation'));

@@ -26,7 +26,7 @@ export const state = () => ({
       title: "Max_age",
     },
     radius: {
-      value: 10000,
+      value: 100,
       title: "Radius",
     },
     minRating: {
@@ -149,7 +149,6 @@ export const actions = {
       if (res.type === 'ok') {
         commit('SET_USERS', [...state.users, ...res.data])
       }
-      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
 
       commit('SET_LOADING', false)
 

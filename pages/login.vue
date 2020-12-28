@@ -36,7 +36,7 @@
         ) Forget password
         Button(
           @click.prevent="signIn"
-          :disabled="!formValid"
+          :disabled="!formValid || !location"
         ) LogIn
 
 </template>
@@ -60,6 +60,7 @@ export default {
     ...mapGetters({
       fieldsData: 'forms/FIELDS_DATA',
       formValid: 'forms/LOGIN_VALID',
+      location: 'forms/MY_LOCATION',
     }),
     login: {
       get() { return this.data_login; },

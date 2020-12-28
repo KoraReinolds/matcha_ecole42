@@ -38,8 +38,6 @@ export const actions = {
     const res = login === rootState.auth.user.login ?
       await this.$axios.$get(`profile-get`, { login }) :
       await this.$axios.$get(`profile-get/${login}`, { login })
-    console.log('res')
-    console.log(res)
     if (res.type === 'ok') {
       commit('SET_USER', res.data)
     } else {

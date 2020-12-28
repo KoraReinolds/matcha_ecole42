@@ -307,7 +307,7 @@ export default {
               display: inline-block;
               line-height: 20px;
               border-radius: 30px;
-              // background: $chat-color;
+              background-color: lightgrey;
             }
             &.unreaded {
               background: rgb(188, 195, 226);
@@ -315,6 +315,7 @@ export default {
           }
           .message.our {
             .text_block {
+
               color: #fff;
               background: $main-color;
             }

@@ -51,7 +51,7 @@ const generateUser = () => {
   ]
   return {
     isFilled: true,
-    location: myLocation,
+    location: location,
     login: `${fname}-${getRandomValue(0, 100000)}`,
     fname,
     lname,
