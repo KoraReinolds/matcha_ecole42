@@ -101,14 +101,17 @@ export default {
       this[`data_${key}`] = value;
       this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
-    register() {
-      if (this.formValid) this.$store.dispatch('forms/REGISTRATION', {
-        login: this.data_login,
-        password: this.data_password,
-        fname: this.data_fname,
-        lname: this.data_lname,
-        email: this.data_email,
-      });
+    async register() {
+      if (this.formValid) {
+        await this.$store.dispatch('forms/REGISTRATION', {
+          login: this.data_login,
+          password: this.data_password,
+          fname: this.data_fname,
+          lname: this.data_lname,
+          email: this.data_email,
+        })
+        this.$router.push('/login')
+      }
     }
   },
   mounted() {

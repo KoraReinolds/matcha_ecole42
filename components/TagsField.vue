@@ -2,7 +2,7 @@
 
   div
     TextField(
-      v-if="value && value.length < maxTags"
+      v-if="value"
       v-model.trim="newTag"
       outlined
       :data="data"

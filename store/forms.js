@@ -92,6 +92,8 @@ export const state = () => ({
       valid: false,
       rules: [
         "!!value.length || 'Required'",
+        "value.every(val => val.length < 10) || 'Max 10 characters'",
+        "value.length < 6 || 'Max 5 tags'",
       ],
     },
     images: {

@@ -78,7 +78,6 @@
         :class="[$style.form_field, $style.full_width]"
         :data="tools.tags"
         v-model="tags"
-        :maxTags="5"
         @delete="filterUsers({ val: $event, key: 'tags' })"
         @add="filterUsers({ val: $event, key: 'tags' })"
       )
@@ -249,6 +248,7 @@ export default {
   $position-tools-box: absolute,
   $tools-height: 90%,
   $toggle-btn-viisibility: block,
+  $overflow: hidden,
 ) {
 
   .tools_box {
@@ -274,7 +274,7 @@ export default {
       width: $width;
       position: fixed;
       height: $tools-height;
-      overflow: scroll;
+      overflow: $overflow;
       padding: 30px 30px 90px 30px;
       display: flex;
       flex-wrap: wrap;
@@ -316,6 +316,7 @@ export default {
     $position-tools: absolute,
     $position-tools-box: absolute,
     $tools-height: 100%,
+    $overflow: scroll,
   );
 }
 
