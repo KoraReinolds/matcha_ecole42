@@ -33,7 +33,6 @@ export const actions = {
       })
       // setTimeout(() => dispatch('GET_MESSAGES', state.curUser), 1000)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
   },
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }) {
@@ -54,7 +53,6 @@ export const actions = {
         })
       }, 1000)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     return res
   },
 
@@ -64,7 +62,7 @@ export const actions = {
     if (res.type === 'ok') {
       commit('SET_USERS', res.data)
     }
-    dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+    
     return res
   },
 }

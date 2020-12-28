@@ -25,7 +25,7 @@ export const state = () => ({
       rules: [
         "!!value || 'Required'",
         "(value && value.length >= 3) || 'Min 3 characters'",
-        "(value && value.length <= 10) || 'Max 10 characters'",
+        "(value && value.length <= 20) || 'Max 20 characters'",
       ],
     },
     lname: {
@@ -35,7 +35,7 @@ export const state = () => ({
       rules: [
         "!!value || 'Required'",
         "(value && value.length >= 3) || 'Min 3 characters'",
-        "(value && value.length <= 10) || 'Max 10 characters'",
+        "(value && value.length <= 20) || 'Max 20 characters'",
       ],
     },
     age: {
@@ -56,6 +56,7 @@ export const state = () => ({
       rules: [
         "!!value || 'Required'",
         "value.match(/[^@]+@[^.]+\..+/) !== null || 'Must be properly formatted'",
+        "(value && value.length <= 30) || 'Max 30 characters'",
       ],
     },
     biography: {
@@ -64,7 +65,7 @@ export const state = () => ({
       valid: false,
       rules: [
         "!!value || 'Required'",
-        "(value && value.length <= 1024) || 'Max 1024 characters'",
+        "(value && value.length <= 200) || 'Max 200 characters'",
       ],
     },
     gender: {

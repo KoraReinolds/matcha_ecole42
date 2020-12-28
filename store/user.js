@@ -20,10 +20,13 @@ export const actions = {
     }
   },
 
-  async BLOCK ({ commit, dispatch }, data) {
+  async BLOCK ({ state, commit, dispatch }, data) {
     const res = await this.$axios.$post(`/blacklist/save`, data)
     if (res.type === 'ok') {
       commit('TOGGLE_BLOCK')
+      if (state.user.likedFrom) {
+        commit('forms/TOGGLE_LIKE', state.user, { root: true })
+      }
       dispatch('history/PUSH_POP_WINDOW', {
         ...res,
         message: `Пользователь ${ data.isBlocked ? 'за' : 'раз' }блокирован`,
@@ -35,8 +38,12 @@ export const actions = {
     const res = login === rootState.auth.user.login ?
       await this.$axios.$get(`profile-get`, { login }) :
       await this.$axios.$get(`profile-get/${login}`, { login })
+    console.log('res')
+    console.log(res)
     if (res.type === 'ok') {
       commit('SET_USER', res.data)
+    } else {
+      
     }
     return res
   },

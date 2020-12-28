@@ -35,8 +35,6 @@ export const actions = {
 
   PUSH_NOTIFICATION ({ commit, state, rootState, dispatch }, notif) {
 
-    // console.log('!!!!!notif ', notif)
-
     const msgs = {
       LIKE: {
         type: 'like',
@@ -56,12 +54,11 @@ export const actions = {
       },
       DISCONNECTED: {
         type: 'dislike',
-        message: `${notif.login} unlike you`,
+        message: `${notif.login} disconect with you`,
       },
     }
 
     if (notif.type === 'SEND_MESSAGE') {
-      // console.log('get messages')
       // dispatch('chat/GET_MESSAGES', rootState.chat.curUser, {root: true})
       // commit('chat/PUSH_MESSAGE', {
       //   message: "message.replace(/\n/g, '<br />')",
@@ -78,7 +75,6 @@ export const actions = {
   },
 
   PUSH_POP_WINDOW ({ commit, state, rootState }, res) {
-    // console.log('res ', res)
     if (res.message && !res.action) {
       const msg = {
         action: res.type,

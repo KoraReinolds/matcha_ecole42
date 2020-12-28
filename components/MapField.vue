@@ -10,7 +10,7 @@
         :class="$style.map"
         :coords="mark"
         @click="getCoord"
-        zoom="15"
+        zoom="10"
         :cluster-options="{ 1: { clusterDisableClickZoom: true } }"
         :behaviors="['drag', 'scrollZoom']"
         :controls="[]"

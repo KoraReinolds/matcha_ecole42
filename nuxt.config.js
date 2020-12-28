@@ -1,5 +1,13 @@
 module.exports = {
 
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue')
+      })
+    }
+  },
   // server: {
   //   port: 3000,
   //   host: '192.168.29.15'

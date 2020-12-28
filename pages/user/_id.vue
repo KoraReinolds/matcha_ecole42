@@ -123,9 +123,9 @@ import Online from '@/components/Online.vue'
 
 export default {
   name: 'UserPage',
-  async validate({ route, store }) {
+  async validate({ route, store, redirect }) {
     let res = await store.dispatch('user/GET_USER', route.params.id)
-    return res.type === "ok" ? true : false;
+    return res.type === "ok" ? true : redirect('/404')
   },
   components: {
     CustomImage,

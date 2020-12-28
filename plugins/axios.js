@@ -8,7 +8,11 @@ export default function ({ $axios, redirect, store }) {
       redirect('/404')
     }
     if (process.client) {
-      store.dispatch('history/PUSH_POP_WINDOW', data, { root: true }) // устанавливаем всплывающее окно
+      if (data.message === 'Ошибка авторизации') {
+        store.dispatch('forms/LOGOUT', null, { root: true })
+      } else {
+        store.dispatch('history/PUSH_POP_WINDOW', data, { root: true }) // устанавливаем всплывающее окно
+      }
     }
   })
 }
