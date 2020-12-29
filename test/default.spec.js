@@ -9,7 +9,7 @@ const tokens = {}
 const successResponce = { type: 'ok' }
 const registerTemplate = {
   login: 'User_',
-  password: '123',
+  password: '123456q',
   email: "reinoldskora@gmail.com",
   fname: "maslyn",
   lname: "skiles",
