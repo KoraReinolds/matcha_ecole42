@@ -70,7 +70,8 @@
         @blur="filterUsers({ val: $event.target.value, key: 'maxRating' })"
         v-model="maxRating"
         type="number"
-        step="10"
+        step="1"
+        min="0"
         max="1000"
       )
 

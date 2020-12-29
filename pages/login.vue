@@ -3,7 +3,7 @@
   div
     form(
       :class="$style.form"
-      v-on:keyup.enter="signIn()"
+      v-on:keyup.enter="data_login && data_password && location && signIn()"
     )
       h2(
         :class="$style.form_title"
@@ -36,7 +36,7 @@
         ) Forget password
         Button(
           @click.prevent="signIn"
-          :disabled="!formValid || !location"
+          :disabled="!(data_login && data_password) || !location"
         ) LogIn
 
 </template>
@@ -73,14 +73,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      clearFields: 'forms/CLEAR_FIELDS',
     }),
     ...mapActions({
     }),
 
     setValue({ key, value }) {
       this[`data_${key}`] = value
-      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
     signIn() {
       this.$store.dispatch('forms/SIGN_IN', {
@@ -90,7 +88,6 @@ export default {
     }
   },
   mounted() {
-    this.clearFields()
   },
 };
 </script>

@@ -26,7 +26,7 @@ export const state = () => ({
       title: "Max_age",
     },
     radius: {
-      value: 100,
+      value: 20,
       title: "Radius",
     },
     minRating: {
@@ -34,7 +34,7 @@ export const state = () => ({
       title: "Min_rate",
     },
     maxRating: {
-      value: 500,
+      value: 50,
       title: "Max_rate",
     },
     tags: {
