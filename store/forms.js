@@ -8,6 +8,7 @@ export const state = () => ({
       valid: false,
       rules: [
         "!!value || 'Required'",
+        "(value && value.length <= 20) || 'Max 20 characters'",
       ],
     },
     password: {
@@ -16,6 +17,8 @@ export const state = () => ({
       valid: false,
       rules: [
         "!!value || 'Required'",
+        "(value && value.length >= 6) || 'Min 6 characters'",
+        "(value && value.length <= 20) || 'Max 20 characters'",
       ],
     },
     fname: {
@@ -137,8 +140,10 @@ export const mutations = {
   }),
   SET_POPULAR_TAGS: (state, tag_list) => state.popular_tags = tag_list,
   CANGE_PASSWORD_VALID: (state, value) => {
-    state.formFields.password.valid = value
-    state.formFields.password.errorMsg = value ? '' : 'Пароль слишком простой'
+    if (!state.formFields.password.errorMsg) {
+      state.formFields.password.valid = value
+      state.formFields.password.errorMsg = value ? '' : 'Пароль слишком простой'
+    }
   },
   TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
@@ -332,6 +337,7 @@ export const actions = {
     
     if (res.type === 'ok') {
       res.message = 'Пароль успешно изменен'
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     }
   },
 
@@ -341,6 +347,7 @@ export const actions = {
     
     if (res.type === 'ok') {
       res.message = 'На вашу почту отправленна инструкция по смене пароля'
+      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     }
   },
 

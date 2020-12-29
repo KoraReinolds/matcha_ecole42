@@ -20,7 +20,7 @@
       )
         Button(
           @click.prevent="changePass({ password: data_password, token: $route.query.token })"
-          :disabled="!data_password"
+          :disabled="!$store.state.forms.formFields.password.valid"
         ) Change pssword
       
 </template>
@@ -45,20 +45,27 @@ export default {
     }),
     password: {
       get() { return this.data_password },
-      set(value) { this.setValue({ key: 'password', value }) },
+      set(value) {
+        this.setValue({ key: 'password', value })
+        this.checkSimplify(value)
+      },
     },
   },
   methods: {
     ...mapMutations({
+      clearFields: 'forms/CLEAR_FIELDS',
     }),
     ...mapActions({
       changePass: 'forms/CHANGE_PASSWORD',
+      checkSimplify: 'forms/CHECK_SIMPLIFY',
     }),
     setValue({ key, value }) {
       this[`data_${key}`] = value;
+      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
     },
   },
   mounted() {
+    this.clearFields()
   },
 };
 </script>
