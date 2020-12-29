@@ -15,6 +15,7 @@
         TextField(
           :data="fieldsData.password"
           v-model="password"
+          type="password"
         )
         TextField(
           :data="fieldsData.fname"
@@ -93,7 +94,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      }),
+      clearFields: 'forms/CLEAR_FIELDS',
+    }),
     ...mapActions({
       checkSimplify: 'forms/CHECK_SIMPLIFY',
     }),
@@ -115,6 +117,7 @@ export default {
     }
   },
   mounted() {
+    this.clearFields()
   },
 };
 </script>

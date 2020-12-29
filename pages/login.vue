@@ -53,8 +53,8 @@ export default {
     Button,
   },
   data: () => ({
-    data_login: 'User_1',
-    data_password: '123',
+    data_login: '',
+    data_password: '',
   }),
   computed: {
     ...mapGetters({
@@ -73,6 +73,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      clearFields: 'forms/CLEAR_FIELDS',
     }),
     ...mapActions({
     }),
@@ -89,6 +90,7 @@ export default {
     }
   },
   mounted() {
+    this.clearFields()
   },
 };
 </script>

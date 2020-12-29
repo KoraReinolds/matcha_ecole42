@@ -5,7 +5,7 @@ export const state = () => ({
     login: {
       errorMsg: '',
       title: 'Login',
-      valid: true,
+      valid: false,
       rules: [
         "!!value || 'Required'",
       ],
@@ -13,7 +13,7 @@ export const state = () => ({
     password: {
       errorMsg: '',
       title: 'Password',
-      valid: true,
+      valid: false,
       rules: [
         "!!value || 'Required'",
       ],
@@ -132,6 +132,9 @@ export const getters = {
   MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
+  CLEAR_FIELDS: (state) => Object.values(state.formFields).forEach(field => {
+    field.valid = false
+  }),
   SET_POPULAR_TAGS: (state, tag_list) => state.popular_tags = tag_list,
   CANGE_PASSWORD_VALID: (state, value) => {
     state.formFields.password.valid = value
@@ -220,13 +223,14 @@ export const actions = {
   },
 
   // регистрация пользователя
-  async REGISTRATION ({ dispatch, state }, data) {
+  async REGISTRATION ({ dispatch, state, commit }, data) {
 
     data.location = state.realLocation // отправляем текущую локацию
 
     const res = await this.$axios.$post('register', data)
 
     if (res.type === 'ok') {
+      commit('CLEAR_FIELDS')
       res.message = 'Для окончания регистрации перейдите по ссылке в почте'
       dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     }
@@ -267,6 +271,7 @@ export const actions = {
     let { data: { type } } = await this.$auth.loginWith('local', { data })
 
     if (type === 'ok') {
+
       dispatch('INIT_SOCKETS')
       if (rootState.auth.user.isFilled) {
         // получаем непрочитанные уведомления

@@ -13,6 +13,7 @@
         rounded
         filled
         name="password"
+        type="password"
       )
       div(
         :class="$style.form_actions"
