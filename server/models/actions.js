@@ -58,7 +58,6 @@ module.exports = function(io) {
       {},
       { sort: { 'created' : -1 } }
     )
-    // console.log(likeAction, likeAction ? likeAction.action === "like" : false, curUser.login, targetUser.login)
     return likeAction ? likeAction.action === "like" : false
   }
 

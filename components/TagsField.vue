@@ -18,8 +18,8 @@
         :key="data.title+tag"
         :name="tag"
         canDelete
-        @click="deleteTag(tag)"
-      ) canDelete
+        @delete="deleteTag(tag)"
+      )
 
 </template>
 

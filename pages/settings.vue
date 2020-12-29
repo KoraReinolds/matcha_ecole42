@@ -50,8 +50,13 @@
     TagsField(
       :class="$style.form_field"
       :data="fieldsData.tags"
-    v-model="tags"
+      v-model="tags"
       :maxTags="5"
+    )
+    ReusableTagsField(
+      v-if="reusableTags.length"
+      :class="$style.form_field"
+      v-model="reusableTags"
     )
     ImagesField(
       :class="[$style.form_field, $style.full_width]"
@@ -81,10 +86,12 @@ import TagsField from '@/components/TagsField.vue';
 import TextField from '@/components/TextField.vue';
 import Options from '@/components/Options.vue';
 import Button from '@/components/Button.vue';
+import ReusableTagsField from '@/components/ReusableTagsField.vue';
 
 export default {
   name: 'Settings',
   async validate({ route, store }) {
+    await store.dispatch('forms/GET_POPULAR_TAGS')
     let res = await store.dispatch('user/GET_USER', store.state.auth.user.login)
     store.commit('auth/SET', {
       key: 'user',
@@ -99,49 +106,58 @@ export default {
     TextField,
     Options,
     Button,
+    ReusableTagsField,
   },
   computed: {
     fname: {
-      get() { return this.$auth.user.fname; },
+      get() { return this.$auth.user.fname },
       set(value) { this.changeUserField({ key: 'fname', value }) },
     },
     lname: {
-      get() { return this.$auth.user.lname; },
+      get() { return this.$auth.user.lname },
       set(value) { this.changeUserField({ key: 'lname', value }) },
     },
     age: {
-      get() { return this.$auth.user.age || ''; },
+      get() { return this.$auth.user.age || '' },
       set(value) { this.changeUserField({ key: 'age', value }) },
     },
     email: {
-      get() { return this.$auth.user.email; },
+      get() { return this.$auth.user.email },
       set(value) { this.changeUserField({ key: 'email', value }) },
     },
     biography: {
-      get() { return this.$auth.user.biography; },
+      get() { return this.$auth.user.biography },
       set(value) { this.changeUserField({ key: 'biography', value }) },
     },
     gender: {
-      get() { return this.$auth.user.gender; },
+      get() { return this.$auth.user.gender },
       set(value) { this.changeUserField({ key: 'gender', value }) },
     },
     preference: {
-      get() { return this.$auth.user.preference; },
+      get() { return this.$auth.user.preference },
       set(value) { this.changeUserField({ key: 'preference', value }) },
     },
     tags: {
-      get() { return this.$auth.user.tags; },
+      get() { return this.$auth.user.tags },
       set(value) { this.changeUserField({ key: 'tags', value }) },
     },
+    reusableTags: {
+      get() { return this.popularTagList },
+      set(value) { this.changeUserField({
+        key: 'tags',
+        value: [...new Set([...this.$auth.user.tags, value])]
+      }) },
+    },
     images: {
-      get() { return this.$auth.user.images; },
+      get() { return this.$auth.user.images },
       set(value) { this.changeUserField({ key: 'images', value }) },
     },
     location: {
-      get() { return this.$auth.user.location; },
+      get() { return this.$auth.user.location },
       set(value) { this.changeUserField({ key: 'location', value }) },
     },
     ...mapGetters({
+      popularTagList: 'forms/POPULAR_TAGS',
       fieldsData: 'forms/FIELDS_DATA',
       updateValid: 'forms/UPDATE_VALID',
       myLocation: 'forms/MY_LOCATION',

@@ -114,8 +114,10 @@ export const state = () => ({
     },
   },
   realLocation: null, // реальное местоположение пользователя
+  popular_tags: [],
 })
 export const getters = {
+  POPULAR_TAGS: state => state.popular_tags,
   INFO_FILLED: (state) => state.isFilled,
   LOGIN_VALID: ({formFields}) => ['login', 'password']
     .map(fieldName => formFields[fieldName].valid)
@@ -130,6 +132,7 @@ export const getters = {
   MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
+  SET_POPULAR_TAGS: (state, tag_list) => state.popular_tags = tag_list,
   CANGE_PASSWORD_VALID: (state, value) => {
     state.formFields.password.valid = value
     state.formFields.password.errorMsg = value ? '' : 'Пароль слишком простой'
@@ -157,6 +160,16 @@ export const mutations = {
   },
 }
 export const actions = {
+
+  async GET_POPULAR_TAGS ({ commit }) {
+
+    let res = await this.$axios.$get('get-tags')
+
+    if (res.type === 'ok') {
+      commit('SET_POPULAR_TAGS', res.data)
+    }
+
+  },
 
   CHANGE_USER_FIELD ({ commit, rootState }, { key, value }) {
 
@@ -228,17 +241,18 @@ export const actions = {
 
     socket.onopen = function(e) {
     }
-
+    
     socket.onclose = function(event) {
-      console.log('socket ', event)
-      dispatch('INIT_SOCKETS')
+      if (event.code === 1001) {
+        dispatch('INIT_SOCKETS')
+      } else {
+        dispatch('LOGOUT')
+      }
     }
-
+    
     socket.onerror = function(error) {
-      console.log('socket ', error)
-      dispatch('INIT_SOCKETS')
     }
-
+    
     socket.onmessage = function(event) {
       dispatch('history/PUSH_NOTIFICATION', JSON.parse(event.data), { root: true })
     }.bind(this)
@@ -300,10 +314,6 @@ export const actions = {
     
     if (password) {
       const res = await this.$axios.$get(`/password-validate/${password}`)
-      // const res = {
-      //   type: 'error',
-      //   message: 'Пароль слишком простой',
-      // }
   
       commit('CANGE_PASSWORD_VALID', res.type === 'ok')
     }

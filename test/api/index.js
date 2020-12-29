@@ -130,7 +130,6 @@ export default {
 
     const q1 = history.filter(user => user.to === loginTo && user.from === loginFrom)
     const q2 = history.filter(user => user.to === loginFrom && user.from === loginTo)
-    // console.log(loginFrom, loginTo, q1, q2, history)
     const user = { ...this.users[loginTo] }
     user.location = user.geoLoc || user.realLocation
     delete user.password

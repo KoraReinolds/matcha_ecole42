@@ -1,9 +1,11 @@
 <template lang="pug">
-  span.tag {{ name }}
+  span.tag(
+    @click="$emit('click', $event)"
+  ) {{ name }}
     font-awesome-icon(
       v-if="closeButton"
       class="close"
-      @click="$emit('click', $event)"
+      @click="$emit('delete', $event)"
       icon="times-circle"
     )
 </template>

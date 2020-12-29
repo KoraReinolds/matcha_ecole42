@@ -9,7 +9,7 @@ export default async function ({ store, redirect, route, $auth, $axios }) {
       )
     }
   } else {
-    if (['change-password', 'reset-password', 'confirm-registration', 'verification'].includes(route.name)) {
+    if (['change-password', 'reset-password', 'confirm-registration', 'verification', '404'].includes(route.name)) {
 
     } else if (!['login', 'registration', 'fill-id'].includes(route.name)) {
       return redirect('/login')

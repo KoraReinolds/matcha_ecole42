@@ -136,7 +136,6 @@ export default {
     store.commit('chat/SET_MESSAGES', [])
     user = chatList.find((user) => user.login === route.params.id)
     if (route.params.id) {
-      console.log(!user)
       if (!user) return redirect('/404')
       store.commit('chat/SET_CUR_USER', user)
       res = await store.dispatch('chat/GET_MESSAGES')

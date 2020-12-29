@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 server.listen(port, function() {
-  console.log('Express server listening on port ' + port)
 })
 
 app.use('/', routes)

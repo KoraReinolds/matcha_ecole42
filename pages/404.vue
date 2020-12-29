@@ -1,6 +1,7 @@
 <template lang="pug">
 
   CustomImage(
+    :class="$style.image"
     :width="'100%'"
     :height="'100%'"
     :src="'https://sun9-2.userapi.com/c627224/v627224882/42b51/Qfyhj4sKGYI.jpg'"
@@ -34,5 +35,8 @@ export default {
 
 <style module lang="scss">
 
+  .image {
+    z-index: 10000;
+  }
 
 </style>

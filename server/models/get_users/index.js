@@ -18,10 +18,7 @@ module.exports = async function({
     offset,
   }
 }) {
-  // console.log(ageMin, +ageMin)
   // const users = await this.find()
-  // users.forEach(user => console.log(user.login, user.geoLoc))
-  console.log("limit, offset", limit, offset)
   let docs = await this.aggregate([
     {
       $geoNear: {
@@ -64,7 +61,6 @@ module.exports = async function({
     return userInQuery
   }))
 
-  // console.log(docs, "NONONONONO")
     // .select('-_id -salt -token -hashedPassword -__v -email -created')
   // let filteredDocs = docs
 
