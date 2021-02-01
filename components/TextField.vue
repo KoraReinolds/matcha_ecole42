@@ -3,66 +3,49 @@
   InputWrapper(
     :class="[modesClasses, stateClasses]"
     :error="data.errorMsg"
-  )
+  ) value: {{ value }}
     fieldset(
-      v-show="showField"
       :class="$style.input_field"
       align="left"
       aria-hidden="true"
-      @click.prevent="($refs.input || $refs.textarea).focus()"
     )
       legend(
         :style="{ width: `${(focus || value) ? legendLen + 8 : 0}px` }"
       )
       label(ref="label") {{ data.title }}
       textarea(
+        v-bind="$attrs"
         :class="$style.input"
         v-if="textarea"
-        ref="textarea"
-        :type="type || 'text'"
+        ref="input"
         @focus="onFocus"
         @blur="onBlur"
         @input="inputValue"
         :value="value"
-        :name="name"
-        :step="step || 1"
-        :min="min || 0"
-        :max="max || ''"
       )
       input(
+        v-bind="$attrs"
         :class="$style.input"
         v-else
         ref="input"
-        :type="type || 'text'"
         @focus="onFocus"
         @blur="onBlur"
         @input="inputValue"
         :value="value"
-        :name="name"
-        :step="step || 1"
-        :min="min || 0"
-        :max="max || ''"
       )
-    fieldset(
-      v-show="!showField"
-      :class="$style.skeleton"
-    )
+
 </template>
 
 <script>
 import InputWrapper from '@/components/InputWrapper.vue'
 
 export default {
+  inheritAttrs: false,
   name: 'TextField',
   components: {
     InputWrapper,
   },
   props: {
-    min: String,
-    max: String,
-    step: String,
-    name: String,
-    type: String,
     value: [String, Number],
     outlined: Boolean,
     filled: Boolean,
@@ -71,11 +54,6 @@ export default {
     many: Boolean,
   },
   data: () => ({
-    showField: false,
-    filledMode: null,
-    regularMode: null,
-    outlinedMode: null,
-    roundedMode: null,
     focus: false,
     legendLen: null,
     textarea: null,
@@ -91,10 +69,10 @@ export default {
     },
     modesClasses: function() {
       return {
-        [this.$style.filled]: this.filledMode,
-        [this.$style.regular]: this.regularMode,
-        [this.$style.outlined]: this.outlinedMode,
-        [this.$style.rounded]: this.roundedMode,
+        [this.$style.filled]: this.filled,
+        [this.$style.regular]: !this.outlined && !this.rounded,
+        [this.$style.outlined]: this.outlined,
+        [this.$style.rounded]: this.rounded,
       }
     }
   },
@@ -123,27 +101,15 @@ export default {
   watch: {
     value() {
       this.$nextTick(() => {
-        this.setHeight(this.$refs.textarea)
+        this.setHeight(this.$refs.input)
       });
     },
   },
   mounted() {
-    this.textarea = this.many
-    this.filledMode = this.filled
-    this.outlinedMode = this.outlined
-    this.roundedMode = this.rounded
-    if (!this.outlined) {
-      this.regularMode = true
-    }
-    if (this.rounded) {
-      this.outlinedMode = true
-      this.regularMode = null
-    }
-    this.showField = true
     this.$nextTick(() => {
       if (this.value) this.legendLen = this.$refs.label.offsetWidth
       else this.legendLen = this.$refs.label.offsetWidth * 0.75
-      this.setHeight(this.$refs.textarea)
+      this.setHeight(this.$refs.input)
     });
   },
 };

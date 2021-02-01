@@ -30,10 +30,6 @@
           :class="$style.form_action_link"
           to="/registration"
         ) Registration
-        nuxt-link(
-          :class="$style.form_action_link"
-          to="/reset-password"
-        ) Forget password
         Button(
           @click.prevent="signIn"
           :disabled="!(data_login && data_password) || !location"
@@ -64,7 +60,10 @@ export default {
     }),
     login: {
       get() { return this.data_login; },
-      set(value) { this.setValue({ key: 'login', value }) },
+      set(value) { 
+        console.log(value)
+        this.setValue({ key: 'login', value })
+      },
     },
     password: {
       get() { return this.data_password; },

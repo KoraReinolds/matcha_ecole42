@@ -41,7 +41,6 @@ export default {
     window.removeEventListener('resize', this.resize);
   },
   mounted() {
-    console.log = function() {}
     this.resize()
     window.addEventListener('resize', this.resize)
     this.getLocation()
