@@ -45,9 +45,9 @@ export default {
     window.addEventListener('resize', this.resize)
     this.getLocation()
 
-    if (this.$auth.getToken('local')) {
-      this.innitSocketConection()
-    }
+    // if (this.$auth.getToken('local')) {
+    //   this.innitSocketConection()
+    // }
 
     if (this.$auth.loggedIn && this.$store.state.auth.user.isFilled) {
       this.getUnreadedNotifications()

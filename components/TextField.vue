@@ -2,8 +2,8 @@
 
   InputWrapper(
     :class="[modesClasses, stateClasses]"
-    :error="data.errorMsg"
-  ) value: {{ value }}
+    :error="errorMsg"
+  )
     fieldset(
       :class="$style.input_field"
       align="left"
@@ -12,8 +12,9 @@
       legend(
         :style="{ width: `${(focus || value) ? legendLen + 8 : 0}px` }"
       )
-      label(ref="label") {{ data.title }}
+      label(:for="id" ref="label") {{ title }}
       textarea(
+        :id="id"
         v-bind="$attrs"
         :class="$style.input"
         v-if="textarea"
@@ -24,6 +25,7 @@
         :value="value"
       )
       input(
+        :id="id"
         v-bind="$attrs"
         :class="$style.input"
         v-else
@@ -50,29 +52,30 @@ export default {
     outlined: Boolean,
     filled: Boolean,
     rounded: Boolean,
-    data: Object,
+    title: String,
+    errorMsg: String,
     many: Boolean,
   },
   data: () => ({
+    id: Math.random(),
     focus: false,
     legendLen: null,
     textarea: null,
   }),
-  mixins: [],
   computed: {
-    stateClasses: function() {
+    stateClasses() {
       return {
         [this.$style.focus]: this.focus,
         [this.$style.not_empty]: this.value,
-        [this.$style.error]: this.data.errorMsg,
+        [this.$style.error]: this.errorMsg,
       }
     },
-    modesClasses: function() {
+    modesClasses() {
       return {
-        [this.$style.filled]: this.filled,
+        [this.$style.outlined]: this.outlined,
         [this.$style.regular]: !this.outlined && !this.rounded,
         [this.$style.outlined]: this.outlined,
-        [this.$style.rounded]: this.rounded,
+        [this.$style.rounded]: this.rounded
       }
     }
   },
@@ -110,6 +113,10 @@ export default {
       if (this.value) this.legendLen = this.$refs.label.offsetWidth
       else this.legendLen = this.$refs.label.offsetWidth * 0.75
       this.setHeight(this.$refs.input)
+
+      // for move placeholder top when browser set saved value
+      this.onFocus()
+      this.onBlur()
     });
   },
 };
@@ -239,9 +246,10 @@ export default {
         content: "";
         position: absolute;
         transition: width 0.5s;
-        display: block;
+        display: inline-block;
         height: 1px;
-        bottom: 0;
+        left: 0;
+        bottom: calc(-100% - 1px);
         width: 0%;
         background: rgba(0.0, 0.0, 0.0, 0.45);
       }

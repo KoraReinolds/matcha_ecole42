@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'Distance',
@@ -22,8 +22,10 @@ export default {
     size: Number,
   },
   computed: {
+    ...mapState({
+      myLocation: state => state.forms.realLocation,
+    }),
     ...mapGetters({
-      myLocation: 'forms/MY_LOCATION',
     }),
   },
   methods: {

@@ -1,90 +1,73 @@
 <template lang="pug">
 
-  div
-    form(
-      :class="$style.form"
-      v-on:keyup.enter="data_login && data_password && location && signIn()"
+  form(
+    :class="$style.form"
+    name="login_form"
+    @submit.prevent="signIn"
+  )
+    h2(
+      :class="$style.form_title"
+    ) Login
+    TextField(
+      v-bind="fieldsData.login"
+      @input="setValue({ key: 'login', value: $event })"
+      outlined
+      filled
+      name="matcha_login"
     )
-      h2(
-        :class="$style.form_title"
-      ) Login
-      TextField(
-        :data="fieldsData.login"
-        v-model="login"
-        outlined
-        filled
-        name="login"
+    TextField(
+      v-bind="fieldsData.password"
+      @input="setValue({ key: 'password', value: $event })"
+      type='password'
+      outlined
+      filled
+      name="matcha_password"
+    )
+    div(
+      :class="$style.form_actions"
+    )
+      nuxt-link(
+        :class="$style.form_action_link"
+        to="/registration"
+      ) Registration
+      input(
+        :class="$style.btn"
+        type="submit"
+        :disabled="!loginValid"
+        value="Login"
       )
-      TextField(
-        :data="fieldsData.password"
-        v-model="password"
-        type='password'
-        outlined
-        filled
-        name="password"
-      )
-      div(
-        :class="$style.form_actions"
-      )
-        nuxt-link(
-          :class="$style.form_action_link"
-          to="/registration"
-        ) Registration
-        Button(
-          @click.prevent="signIn"
-          :disabled="!(data_login && data_password) || !location"
-        ) LogIn
 
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import TextField from '@/components/TextField.vue'
-import Button from '@/components/Button.vue'
 
 export default {
   name: 'Login',
   components: {
     TextField,
-    Button,
   },
   data: () => ({
-    data_login: '',
-    data_password: '',
   }),
+  middleware({ store }) {
+    store.commit('forms/CLEAR_FIELDS')
+  },
   computed: {
-    ...mapGetters({
-      fieldsData: 'forms/FIELDS_DATA',
-      formValid: 'forms/LOGIN_VALID',
-      location: 'forms/MY_LOCATION',
+    ...mapState({
+      fieldsData: state => state.forms.formFields,
     }),
-    login: {
-      get() { return this.data_login; },
-      set(value) { 
-        console.log(value)
-        this.setValue({ key: 'login', value })
-      },
-    },
-    password: {
-      get() { return this.data_password; },
-      set(value) { this.setValue({ key: 'password', value }) },
-    },
+    ...mapGetters({
+      loginValid: 'forms/LOGIN_VALID'
+    }),
   },
   methods: {
     ...mapMutations({
+      setValue: 'forms/SET_VALUE',
     }),
     ...mapActions({
+      signIn: 'forms/SIGN_IN',
     }),
-
-    setValue({ key, value }) {
-      this[`data_${key}`] = value
-    },
-    signIn() {
-      this.$store.dispatch('forms/SIGN_IN', {
-        login: this.data_login,
-        password: this.data_password,
-      })
-    }
   },
   mounted() {
   },
@@ -94,5 +77,6 @@ export default {
 <style lang="scss" module>
 
 @import '@/assets/css/form.scss';
+@import '@/assets/css/button.scss';
 
 </style>

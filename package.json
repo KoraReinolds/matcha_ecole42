@@ -12,8 +12,6 @@
     "dev": "nuxt",
     "generate": "nuxt generate",
     "precommit": "npm run lint",
-    "server": "node ./server/db/createDB.js; node ./server/index.js;",
-    "serverdev": "cd ./server; supervisor ./index.js;",
     "start": "nuxt start",
     "test": "jest"
   },

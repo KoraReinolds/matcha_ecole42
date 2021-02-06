@@ -1,7 +1,6 @@
 <template lang="pug">
   div(
-    :class="[$style.btn, { [$style.disabled]: disabled }]"
-    @click="!disabled && $emit('click', $event)"
+    :class="[$style.btn]"
   )
     slot
 
@@ -15,7 +14,6 @@ export default {
   data: () => ({
   }),
   props: {
-    disabled: Boolean,
   },
   computed: {
     ...mapGetters({

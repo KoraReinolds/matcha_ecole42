@@ -9,7 +9,7 @@
   &:hover {
     background: $main-color-hover;
   }
-  &.disabled {
+  &:disabled {
     cursor: default;
     background: lightgray;
   }

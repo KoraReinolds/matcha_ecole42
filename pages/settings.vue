@@ -46,6 +46,7 @@
       :class="$style.form_field"
       :data="fieldsData.preference"
       v-model="preference"
+      many
     )
     TagsField(
       :class="$style.form_field"
@@ -79,7 +80,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import MapField from '@/components/MapField.vue';
 import ImagesField from '@/components/ImagesField.vue';
 import TagsField from '@/components/TagsField.vue';
@@ -156,11 +157,13 @@ export default {
       get() { return this.$auth.user.location },
       set(value) { this.changeUserField({ key: 'location', value }) },
     },
+    ...mapState({
+      popularTagList: state => state.forms.popular_tags,
+      fieldsData: state => state.forms.formFields,
+      myLocation: state => state.forms.realLocation,
+    }),
     ...mapGetters({
-      popularTagList: 'forms/POPULAR_TAGS',
-      fieldsData: 'forms/FIELDS_DATA',
       updateValid: 'forms/UPDATE_VALID',
-      myLocation: 'forms/MY_LOCATION',
     }),
   },
   methods: {

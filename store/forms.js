@@ -3,6 +3,7 @@ import API from '~/api'
 export const state = () => ({
   formFields: {
     login: {
+      value: '',
       errorMsg: '',
       title: 'Login',
       valid: false,
@@ -12,6 +13,7 @@ export const state = () => ({
       ],
     },
     password: {
+      value: '',
       errorMsg: '',
       title: 'Password',
       valid: false,
@@ -22,6 +24,7 @@ export const state = () => ({
       ],
     },
     fname: {
+      value: '',
       errorMsg: '',
       title: 'First Name',
       valid: false,
@@ -32,6 +35,7 @@ export const state = () => ({
       ],
     },
     lname: {
+      value: '',
       errorMsg: '',
       title: 'Last Name',
       valid: false,
@@ -42,6 +46,7 @@ export const state = () => ({
       ],
     },
     age: {
+      value: '',
       errorMsg: '',
       title: 'Age',
       valid: false,
@@ -53,6 +58,7 @@ export const state = () => ({
       ],
     },
     email: {
+      value: '',
       errorMsg: '',
       title: 'E-mail',
       valid: false,
@@ -63,15 +69,17 @@ export const state = () => ({
       ],
     },
     biography: {
+      value: '',
       errorMsg: '',
       title: 'Biography',
       valid: false,
       rules: [
         "!!value || 'Required'",
-        "(value && value.length <= 200) || 'Max 200 characters'",
+        "(value && value.length <= 2048) || 'Max 2048 characters'",
       ],
     },
     gender: {
+      value: '',
       options: { male: 1, female: 2 },
       errorMsg: '',
       title: 'Gender',
@@ -81,7 +89,8 @@ export const state = () => ({
       ],
     },
     preference: {
-      options: { male: 1, female: 2, both: 3 },
+      value: [],
+      options: { male: 1, female: 2 },
       errorMsg: '',
       title: 'Preferences',
       valid: false,
@@ -90,6 +99,7 @@ export const state = () => ({
       ],
     },
     tags: {
+      value: [],
       errorMsg: '',
       title: 'New tag',
       valid: false,
@@ -100,6 +110,7 @@ export const state = () => ({
       ],
     },
     images: {
+      value: [],
       errorMsg: '',
       title: 'Images',
       valid: false,
@@ -108,6 +119,7 @@ export const state = () => ({
       ],
     },
     location: {
+      value: '',
       errorMsg: '',
       title: 'Location',
       valid: false,
@@ -120,33 +132,26 @@ export const state = () => ({
   popular_tags: [],
 })
 export const getters = {
-  POPULAR_TAGS: state => state.popular_tags,
-  INFO_FILLED: (state) => state.isFilled,
-  LOGIN_VALID: ({formFields}) => ['login', 'password']
+  LOGIN_VALID: (state) => !!(state.formFields.login.value &&
+    state.formFields.password.value && state.realLocation),
+  REG_VALID: ({ formFields }) => ['login', 'password', 'fname', 'lname', 'email']
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
-  REG_VALID: ({formFields}) => ['login', 'password', 'fname', 'lname', 'email']
+  UPDATE_VALID: ({ formFields }) => ['fname', 'lname', 'age', 'email', 'biography', 'gender', 'preference', 'tags', 'images']
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
-  UPDATE_VALID: ({formFields}) => ['fname', 'lname', 'age', 'email', 'biography', 'gender', 'preference', 'tags', 'images']
-    .map(fieldName => formFields[fieldName].valid)
-    .every((valid) => valid === true),
-  FIELDS_DATA: (state) => state.formFields,
-  MY_LOCATION: (state) => state.realLocation,
+  // MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
   CLEAR_FIELDS: (state) => Object.values(state.formFields).forEach(field => {
     field.valid = false
+    field.errorMsg = ''
+    field.value = typeof field.value === 'string' ? '' : []
   }),
   SET_POPULAR_TAGS: (state, tag_list) => state.popular_tags = tag_list,
-  CANGE_PASSWORD_VALID: (state, value) => {
-    if (!state.formFields.password.errorMsg) {
-      state.formFields.password.valid = value
-      state.formFields.password.errorMsg = value ? '' : 'Пароль слишком простой'
-    }
-  },
   TOGGLE_LIKE: (state, user) => user.likedFrom = !user.likedFrom,
   SET_LOCATION: (state, location) => state.realLocation = location,
+  SET_VALUE: (state, { key, value }) => state.formFields[key].value = value,
   VALIDATE_VALUE: (state, { key, value }) => {
     let field = state.formFields[key]
     if (field && field.rules) {
@@ -165,6 +170,7 @@ export const mutations = {
         field.valid = true
       }
     }
+    field.value = value
   },
 }
 export const actions = {
@@ -211,8 +217,8 @@ export const actions = {
 
     await this.$auth.logout()
 
-    // дожидаемся окончания анимации и сбрасываем хранилище, перезагружая страницу
-    setTimeout(() => location.reload(), 500)
+    // // дожидаемся окончания анимации и сбрасываем хранилище, перезагружая страницу
+    // setTimeout(() => location.reload(), 500)
 
   },
 
@@ -236,8 +242,7 @@ export const actions = {
 
     if (res.type === 'ok') {
       commit('CLEAR_FIELDS')
-      res.message = 'Для окончания регистрации перейдите по ссылке в почте'
-      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
+      dispatch('SIGN_IN', data)
     }
 
   },
@@ -269,15 +274,19 @@ export const actions = {
   },
 
   // авторизация пользователя
-  async SIGN_IN ({ dispatch, state, rootState }, data) {
+  async SIGN_IN ({ dispatch, state, rootState }) {
 
-    data.location = state.realLocation // отправляем текущую локацию
-
-    let { data: { type } } = await this.$auth.loginWith('local', { data })
+    let { data: { type } } = await this.$auth.loginWith('local', {
+      data: {
+        login: state.formFields.login.value,
+        password: state.formFields.password.value,
+        location: state.realLocation // отправляем текущую локацию
+      }
+    })
 
     if (type === 'ok') {
 
-      dispatch('INIT_SOCKETS')
+      // dispatch('INIT_SOCKETS')
       if (rootState.auth.user.isFilled) {
         // получаем непрочитанные уведомления
         dispatch('history/GET_UNREADED_NOTIFICATIONS', null, { root: true })
@@ -317,27 +326,6 @@ export const actions = {
           value: [...images, img],
         })
       }
-    }
-  },
-
-  async CHECK_SIMPLIFY ({ dispatch, commit }, password) {
-    
-    if (password) {
-      const res = await this.$axios.$get(`/password-validate/${password}`)
-  
-      commit('CANGE_PASSWORD_VALID', res.type === 'ok')
-    }
-  },
-
-  async CHANGE_PASSWORD ({ dispatch }, { password, token }) {
-
-    const res = await this.$axios.$post(`change-reset-password`, { password }, {
-      headers: { Authorization: token },
-    })
-    
-    if (res.type === 'ok') {
-      res.message = 'Пароль успешно изменен'
-      dispatch('history/PUSH_POP_WINDOW', res, { root: true })
     }
   },
 
