@@ -1,24 +1,23 @@
 <template lang="pug">
-  div(
+  form(
     :class="$style.settings"
   )
     TextField(
       :class="$style.form_field"
-      outlined
-      :data="fieldsData.fname"
-      v-model.trim="fname"
+      v-bind="fieldsData.fname"
+      @input="setValue({ key: 'fname', value: $event })"
     )
     TextField(
       :class="$style.form_field"
       outlined
-      :data="fieldsData.lname"
-      v-model="lname"
+      v-bind="fieldsData.lname"
+      @input="setValue({ key: 'lname', value: $event })"
     )
     TextField(
       :class="$style.form_field"
       outlined
-      :data="fieldsData.age"
-      v-model.trim="age"
+      v-bind="fieldsData.age"
+      @input="setValue({ key: 'age', value: $event })"
       type="number"
       min="18"
       max="99"
@@ -26,56 +25,57 @@
     TextField(
       :class="$style.form_field"
       outlined
-      :data="fieldsData.email"
-      v-model.trim="email"
+      v-bind="fieldsData.email"
+      @input="setValue({ key: 'email', value: $event })"
       name="email"
     )
     TextField(
       :class="[$style.form_field, $style.full_width]"
       outlined
       many
-      :data="fieldsData.biography"
-      v-model.trim="biography"
+      v-bind="fieldsData.biography"
+      @input="setValue({ key: 'biography', value: $event })"
     )
     Options(
       :class="$style.form_field"
-      :data="fieldsData.gender"
-      v-model="gender"
+      v-bind="fieldsData.gender"
+      type="radio"
+      @change="setValue({ key: 'gender', value: $event })"
     )
     Options(
       :class="$style.form_field"
-      :data="fieldsData.preference"
-      v-model="preference"
-      many
+      v-bind="fieldsData.preference"
+      type="checkbox"
+      @change="setValue({ key: 'preference', value: $event })"
     )
-    TagsField(
-      :class="$style.form_field"
-      :data="fieldsData.tags"
-      v-model="tags"
-      :maxTags="5"
-    )
-    ReusableTagsField(
-      v-if="reusableTags.length"
-      :class="$style.form_field"
-      v-model="reusableTags"
-    )
-    ImagesField(
-      :class="[$style.form_field, $style.full_width]"
-      :data="fieldsData.images"
-      v-model="images"
-      :maxTags="5"
-    )
-    MapField(
-      :class="[$style.form_field, $style.full_width]"
-      :data="fieldsData.location"
-      v-model="location"
-      :realLocation="myLocation"
-    )
-    Button(
-      :class="$style.btn"
-      @click.prevent="updateUser($auth.user)"
-      :disabled="!updateValid"
-    ) Save Changes
+    //- TagsField(
+    //-   :class="$style.form_field"
+    //-   :data="fieldsData.tags"
+    //-   v-model="tags"
+    //-   :maxTags="5"
+    //- )
+    //- ReusableTagsField(
+    //-   v-if="reusableTags.length"
+    //-   :class="$style.form_field"
+    //-   v-model="reusableTags"
+    //- )
+    //- ImagesField(
+    //-   :class="[$style.form_field, $style.full_width]"
+    //-   :data="fieldsData.images"
+    //-   v-model="images"
+    //-   :maxTags="5"
+    //- )
+    //- MapField(
+    //-   :class="[$style.form_field, $style.full_width]"
+    //-   :data="fieldsData.location"
+    //-   v-model="location"
+    //-   :realLocation="myLocation"
+    //- )
+    //- Button(
+    //-   :class="$style.btn"
+    //-   @click.prevent="updateUser($auth.user)"
+    //-   :disabled="!updateValid"
+    //- ) Save Changes
 
 </template>
 
@@ -110,53 +110,53 @@ export default {
     ReusableTagsField,
   },
   computed: {
-    fname: {
-      get() { return this.$auth.user.fname },
-      set(value) { this.changeUserField({ key: 'fname', value }) },
-    },
-    lname: {
-      get() { return this.$auth.user.lname },
-      set(value) { this.changeUserField({ key: 'lname', value }) },
-    },
-    age: {
-      get() { return this.$auth.user.age || '' },
-      set(value) { this.changeUserField({ key: 'age', value }) },
-    },
-    email: {
-      get() { return this.$auth.user.email },
-      set(value) { this.changeUserField({ key: 'email', value }) },
-    },
-    biography: {
-      get() { return this.$auth.user.biography },
-      set(value) { this.changeUserField({ key: 'biography', value }) },
-    },
-    gender: {
-      get() { return this.$auth.user.gender },
-      set(value) { this.changeUserField({ key: 'gender', value }) },
-    },
-    preference: {
-      get() { return this.$auth.user.preference },
-      set(value) { this.changeUserField({ key: 'preference', value }) },
-    },
-    tags: {
-      get() { return this.$auth.user.tags },
-      set(value) { this.changeUserField({ key: 'tags', value }) },
-    },
-    reusableTags: {
-      get() { return this.popularTagList },
-      set(value) { this.changeUserField({
-        key: 'tags',
-        value: [...new Set([...this.$auth.user.tags, value])]
-      }) },
-    },
-    images: {
-      get() { return this.$auth.user.images },
-      set(value) { this.changeUserField({ key: 'images', value }) },
-    },
-    location: {
-      get() { return this.$auth.user.location },
-      set(value) { this.changeUserField({ key: 'location', value }) },
-    },
+    // fname: {
+    //   get() { return this.$auth.user.fname },
+    //   set(value) { this.changeUserField({ key: 'fname', value }) },
+    // },
+    // lname: {
+    //   get() { return this.$auth.user.lname },
+    //   set(value) { this.changeUserField({ key: 'lname', value }) },
+    // },
+    // age: {
+    //   get() { return this.$auth.user.age || '' },
+    //   set(value) { this.changeUserField({ key: 'age', value }) },
+    // },
+    // email: {
+    //   get() { return this.$auth.user.email },
+    //   set(value) { this.changeUserField({ key: 'email', value }) },
+    // },
+    // biography: {
+    //   get() { return this.$auth.user.biography },
+    //   set(value) { this.changeUserField({ key: 'biography', value }) },
+    // },
+    // gender: {
+    //   get() { return this.$auth.user.gender },
+    //   set(value) { this.changeUserField({ key: 'gender', value }) },
+    // },
+    // preference: {
+    //   get() { return this.$auth.user.preference },
+    //   set(value) { this.changeUserField({ key: 'preference', value }) },
+    // },
+    // tags: {
+    //   get() { return this.$auth.user.tags },
+    //   set(value) { this.changeUserField({ key: 'tags', value }) },
+    // },
+    // reusableTags: {
+    //   get() { return this.popularTagList },
+    //   set(value) { this.changeUserField({
+    //     key: 'tags',
+    //     value: [...new Set([...this.$auth.user.tags, value])]
+    //   }) },
+    // },
+    // images: {
+    //   get() { return this.$auth.user.images },
+    //   set(value) { this.changeUserField({ key: 'images', value }) },
+    // },
+    // location: {
+    //   get() { return this.$auth.user.location },
+    //   set(value) { this.changeUserField({ key: 'location', value }) },
+    // },
     ...mapState({
       popularTagList: state => state.forms.popular_tags,
       fieldsData: state => state.forms.formFields,
@@ -168,16 +168,17 @@ export default {
   },
   methods: {
     ...mapMutations({
-      }),
+      setValue: 'forms/VALIDATE_VALUE',
+    }),
     ...mapActions({
       updateUser: 'forms/UPDATE_USER',
       changeUserField: 'forms/CHANGE_USER_FIELD',
     }),
   },
   mounted() {
-    Object.entries(this.$auth.user).forEach(([key, value]) => {
-      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
-    })
+    // Object.entries(this.$auth.user).forEach(([key, value]) => {
+    //   this.$store.commit('forms/VALIDATE_VALUE', { key, value })
+    // })
   },
 };
 </script>

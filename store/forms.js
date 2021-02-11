@@ -234,15 +234,18 @@ export const actions = {
   },
 
   // регистрация пользователя
-  async REGISTRATION ({ dispatch, state, commit }, data) {
+  async REGISTRATION ({ dispatch, state, commit }) {
 
-    data.location = state.realLocation // отправляем текущую локацию
-
-    const res = await this.$axios.$post('register', data)
+    const res = await this.$axios.$post('register', {
+      login: state.formFields.login.value,
+      password: state.formFields.password.value,
+      lname: state.formFields.lname.value,
+      fname: state.formFields.fname.value,
+      email: state.formFields.email.value,
+    })
 
     if (res.type === 'ok') {
-      commit('CLEAR_FIELDS')
-      dispatch('SIGN_IN', data)
+      dispatch('SIGN_IN')
     }
 
   },

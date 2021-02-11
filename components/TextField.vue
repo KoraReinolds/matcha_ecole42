@@ -1,40 +1,38 @@
 <template lang="pug">
 
   InputWrapper(
-    :class="[modesClasses, stateClasses]"
+    :class="[$style['text-field'], modesClasses, { [$style.error]: errorMsg }]"
     :error="errorMsg"
   )
-    fieldset(
-      :class="$style.input_field"
-      align="left"
-      aria-hidden="true"
-    )
-      legend(
-        :style="{ width: `${(focus || value) ? legendLen + 8 : 0}px` }"
+    label(:for="id" ref="label")
+      fieldset(
+        :class="$style.input_field"
+        align="left"
+        aria-hidden="true"
       )
-      label(:for="id" ref="label") {{ title }}
-      textarea(
-        :id="id"
-        v-bind="$attrs"
-        :class="$style.input"
-        v-if="textarea"
-        ref="input"
-        @focus="onFocus"
-        @blur="onBlur"
-        @input="inputValue"
-        :value="value"
-      )
-      input(
-        :id="id"
-        v-bind="$attrs"
-        :class="$style.input"
-        v-else
-        ref="input"
-        @focus="onFocus"
-        @blur="onBlur"
-        @input="inputValue"
-        :value="value"
-      )
+        textarea(
+          ref="input"
+          required
+          :id="id"
+          v-bind="$attrs"
+          :class="$style.input"
+          v-if="many"
+          @input="inputValue"
+          :value="value"
+        )
+        input(
+          required
+          :id="id"
+          v-bind="$attrs"
+          :class="$style.input"
+          v-else
+          @input="inputValue"
+          :value="value"
+        )
+        //- points for width (like paddings)
+        legend(
+          :data-title="title"
+        ) ..{{ title }}...
 
 </template>
 
@@ -58,23 +56,16 @@ export default {
   },
   data: () => ({
     id: Math.random(),
-    focus: false,
-    legendLen: null,
-    textarea: null,
   }),
   computed: {
-    stateClasses() {
-      return {
-        [this.$style.focus]: this.focus,
-        [this.$style.not_empty]: this.value,
-        [this.$style.error]: this.errorMsg,
-      }
-    },
     modesClasses() {
+
+      const regular = !this.outlined &&!this.rounded
+
       return {
         [this.$style.outlined]: this.outlined,
-        [this.$style.regular]: !this.outlined && !this.rounded,
-        [this.$style.outlined]: this.outlined,
+        [this.$style.regular]: regular,
+        [this.$style.filled]: this.filled && !regular,
         [this.$style.rounded]: this.rounded
       }
     }
@@ -83,21 +74,10 @@ export default {
     inputValue(event) {
       this.$emit('input', event.target.value)
     },
-    onFocus(event) {
-      this.focus = true
-      this.$emit('focus', event)
-    },
-    onBlur(event) {
-      this.focus = false
-      this.$emit('blur', event)
-    },
     setHeight(elem) {
-      const el = elem;
-      if (el) {
-        el.style.cssText = 'height:0px'
-        el.style.cssText = `height:${
-          el.scrollHeight + 12
-        }px`
+      if (elem) {
+        elem.style.cssText = 'height:0px'
+        elem.style.cssText = `height:${ elem.scrollHeight }px`
       }
     },
   },
@@ -110,13 +90,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.value) this.legendLen = this.$refs.label.offsetWidth
-      else this.legendLen = this.$refs.label.offsetWidth * 0.75
       this.setHeight(this.$refs.input)
-
-      // for move placeholder top when browser set saved value
-      this.onFocus()
-      this.onBlur()
     });
   },
 };
@@ -133,175 +107,178 @@ export default {
     border: none;
   }
 
-  @mixin errorMixin() {
-    &.error {
-      .tooltip_field,
-      label {
-        color: $error-color !important;
-      }
-      .input_field::after {
-        background: $error-color !important;
-      }
+  @mixin textFieldMixin(
+    $base-color: #000,
+  ) {
+    
+    &.regular {
+
+      @include inputMixin(
+        $base-color: $base-color,
+        $top-offset: 10px,
+      );
+
+      // underline effect
       .input_field {
-        border-color: $error-color !important;
+        legend::after {
+          content: "";
+          position: absolute;
+          transition: width 0.3s;
+          display: inline-block;
+          height: 2px;
+          left: 0;
+          bottom: 0;
+          width: 0%;
+          visibility: visible;
+          background: $base-color;
+        }
+        .input:focus ~ legend::after {
+          width: 100%;
+        }
+
       }
-      &.filled .input_field {
-        background: rgba($color: $error-color, $alpha: 0.05);
-      }
+
     }
+
+    &.outlined {
+
+      @include inputMixin(
+        $base-color: $base-color,
+        $border: solid 1px,
+        $border-radius: 8px,
+      );
+
+    }
+
+    &.rounded {
+      
+      @include inputMixin(
+        $base-color: $base-color,
+        $border-radius: 28px,
+        $left-offset: 14px,
+      );
+
+    }
+
   }
 
   @mixin inputMixin(
-    $border: solid 1px rgba($color: #000000, $alpha: 0.45),
-    $border-bottom: solid 1px rgba($color: #000000, $alpha: 0.45),
-    $label-top-offset: 0px,
-    $input-top-offset: 20px,
+    $base-color: #000,
+    $border: transparent,
+    $border-bottom: solid 1px,
     $label-size: 16px,
     $border-radius: 0px,
     $left-offset: 0px,
+    $top-offset: 0px,
   ) {
+
+    &.filled {
+      
+      .input_field {
+        background-color: rgba($color: $base-color, $alpha: 0.05);
+
+        &:hover {
+          background-color: rgba($color: $base-color, $alpha: 0.1);
+        }
+
+      }
+
+    }
+
     .input_field {
+      transition: all 0.5s ease-in-out;
       border-radius: $border-radius;
-      cursor: text;
-      transition: all 0.3s;
       border: $border;
       border-bottom: $border-bottom;
+      border-color: rgba($color: $base-color, $alpha: 0.45);
       position: relative;
-      width: 100%;
-      left: 0;
-      top: 0px;
+      height: auto;
       min-height: 56px;
+      display: block;
+      cursor: text;
+
+      &:hover {
+        border-color: rgba($color: $base-color, $alpha: 1.0);
+      }
+
+      // legend - empty space
+      // legend:before - placeholder and legend text simultaneously
       legend {
-        transition: width 0.3s;
-        margin-left: calc(8px + #{$left-offset});
+        height: 0;
+        max-width: 0%;
+        transition: all 0.5s ease-in-out;
+        transition-property: max-width font-size;
+        font-size: $label-size;
+        margin-left: $left-offset;
+        visibility: hidden;
+
+        &:before {
+          transition: all 0.5s ease-in-out;
+          transition-property: font-size top;
+          visibility: visible;
+          content: attr(data-title);
+          position: absolute;
+          font-size: $label-size;
+          left: calc(10px + #{$left-offset});
+          top: calc(50% + #{$top-offset});
+          transform: translateY(-50%);
+          color: rgba($color: $base-color, $alpha: 0.45);
+        }
+
+      }
+      .input:focus,
+      .input:valid {
+
+        &~legend {
+          font-size: calc(#{$label-size} * 0.75);
+          max-width: 100%;
+          &:before {
+            font-size: calc(#{$label-size} * 0.75);
+            top: calc(0px + #{$top-offset});
+            color: rgba($color: $base-color, $alpha: 1.0);
+          }
+        }
+
+      }
+
+      textarea.input {
+        margin-top: calc((54px - 16px) / 2 + #{$top-offset});
+        margin-bottom: calc((54px - 16px) / 2 - #{$top-offset} - 8px);
+        height: 16px;
+        padding: 0 calc(12px + #{$left-offset});
+      }
+      input.input {
+        top: calc(54px / 2 + #{$top-offset});
+        transform: translateY(-50%);
       }
       .input {
         position: relative;
-        padding: 8px calc(12px + #{$left-offset});
-        top: $input-top-offset;
-        resize: none;
+        border-radius: $border-radius;
         border: none;
+        padding: 8px calc(12px + #{$left-offset});
+        resize: none;
+        overflow: hidden;
         background: transparent;
         font-size: 16px;
-        height: 32px;
         width: 100%;
         &:focus {
           outline: none;
         }
       }
-      label {
-        font-size: $label-size;
-        position: absolute;
-        top: 50%;
-        left: calc(12px + #{$left-offset});
-        top: $label-top-offset;
-        transition: all 0.3s;
-        color: rgba($color: #000000, $alpha: 0.45);
-      }
-      &:hover {
-        border-color: rgba(0.0, 0.0, 0.0, 0.75);
-        label {
-          color: rgba(0.0, 0.0, 0.0, 0.75);
-        }
-      }
+
     }
   }
 
-  @mixin inputWrapperMixin(
-    $args,
-    $label-top-offset,
-    $label-top-offset-focus,
-  ) {
+  .text-field {
 
-    &.not_empty,
-    &.focus {
-      @include inputMixin(
-        $label-top-offset: $label-top-offset,
-        $label-size: 12px,
-        $args...,
-      );
-    }
-
-    @include errorMixin();
-
-    @include inputMixin(
-      $label-top-offset: $label-top-offset-focus,
-      $args...,
-    );
-  }
-
-  .regular {
-    
-    @include inputWrapperMixin(
-      $args: (
-        'border': transparent,
-        'border-bottom': solid 1px rgba($color: #000000, $alpha: 0.45),
-      ),
-      $label-top-offset: 5px,
-      $label-top-offset-focus: 26px,
+    @include textFieldMixin(
+      $base-color: $main-color,
     );
 
-    .input_field {
-      &::after {
-        content: "";
-        position: absolute;
-        transition: width 0.5s;
-        display: inline-block;
-        height: 1px;
-        left: 0;
-        bottom: calc(-100% - 1px);
-        width: 0%;
-        background: rgba(0.0, 0.0, 0.0, 0.45);
-      }
-    }
-    &.focus {
-      .input_field::after {
-        width: 100%;
-      }
-    }
-
-  }
-
-  .outlined {
-
-    @include inputWrapperMixin(
-      $args: (
-        'input-top-offset': 11px,
-        'border-radius': 8px,
-      ),
-      $label-top-offset: -9px,
-      $label-top-offset-focus: 16px,
-    );
-
-    &.focus {
-      .input_field {
-        border: 2px solid rgba(0.0, 0.0, 0.0, 0.45);
-      }
-    }
-    
-  }
-
-  .rounded {
-
-    @include inputWrapperMixin(
-      $args: (
-        'input-top-offset': 11px,
-        'border-radius': 28px,
-        'left-offset': 14px,
-      ),
-      $label-top-offset: -9px,
-      $label-top-offset-focus: 16px,
-    );
-
-  }
-
-  .filled {
-
-    .input_field {
-      background: rgba($color: #000000, $alpha: 0.05);
-      &:hover {
-        background: rgba($color: #000000, $alpha: 0.1);
-      }
+    &.error {
+      @include textFieldMixin(
+        $base-color: $error-color,
+      )
     }
 
   }

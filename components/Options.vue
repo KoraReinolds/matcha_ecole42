@@ -1,29 +1,29 @@
 <template lang="pug">
 
   InputWrapper(
-    :class="{ [$style.error]: data.errorMsg }"
-    :error="data.errorMsg"
+    :class="{ [$style.error]: errorMsg }"
+    :error="errorMsg"
   )
     template(v-slot:title)
-      div.title.left {{ data.title }}
+      div.title.left {{ title }}
     div(
-      :class="[$style.options, { [$style.many]: type === 'checkbox', [$style.icons]: icons }]"
+      :class="[$style.options, { [$style.icons]: icons }]"
     )
       div(
-        v-for="[opt, value] in Object.entries(data.options)"
-        :key="data.title+value"
+        v-for="[opt, value] in Object.entries(options)"
+        :key="title+value"
       )
         input(
-          :type="type"
-          :id="data.title+value"
+          v-bind="$attrs"
+          :id="title+value"
           :value="value"
           @change="change"
-          :name="data.title"
+          :name="title"
           :checked="optionChecked(value)"
         )
         label(
           :class="{ [$style.label]: !icons }"
-          :for="data.title+value"
+          :for="title+value"
         )
           font-awesome-icon.fa-2x(
             v-if="icons"
@@ -38,6 +38,7 @@
 import InputWrapper from '@/components/InputWrapper.vue'
 
 export default {
+  inheritAttrs: false,
   name: 'Options',
   components: {
     InputWrapper,
@@ -47,10 +48,11 @@ export default {
     data: Object,
     many: Boolean,
     icons: Object,
+    options: Object,
+    errorMsg: String,
+    title: String,
   },
   data: () => ({
-    type: null,
-    errorMsg: null,
   }),
   computed: {
   },
@@ -73,7 +75,6 @@ export default {
     },
   },
   mounted() {
-    this.type = this.many ? 'checkbox' : 'radio'
   },
 };
 </script>
@@ -129,39 +130,39 @@ export default {
         transition: .2s;
       }
     }
-    &.many {
-      input:checked + .label:after {
-        top: 10px;
-        left: -25px;
-        width: 10px;
-        height: 10px;
+    // &.many {
+    input[type=checkbox]:checked + .label:after {
+      top: 10px;
+      left: -25px;
+      width: 10px;
+      height: 10px;
+    }
+    input[type=checkbox].label {
+      &:before {
+        cursor: pointer;
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: -30px;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        background: $main-color;
+        transition: .2s;
       }
-      .label {
-        &:before {
-          cursor: pointer;
-          content: '';
-          position: absolute;
-          top: 5px;
-          left: -30px;
-          width: 20px;
-          height: 20px;
-          border-radius: 4px;
-          background: $main-color;
-          transition: .2s;
-        }
-        &:after {
-          content: '';
-          width: 0;
-          height: 0;
-          top: 15px;
-          left: -20px;
-          position: absolute;
-          border-radius: 2px;
-          background: #fff;
-          transition: .2s;
-        }
+      &:after {
+        content: '';
+        width: 0;
+        height: 0;
+        top: 15px;
+        left: -20px;
+        position: absolute;
+        border-radius: 2px;
+        background: #fff;
+        transition: .2s;
       }
     }
+    // }
     &.icons {
       display: flex;
       padding: 10px 0;
