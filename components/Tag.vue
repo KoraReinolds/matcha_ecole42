@@ -1,45 +1,55 @@
 <template lang="pug">
-  span.tag(
+  span(
+    :class="$style.tag"
     @click="$emit('click', $event)"
   ) {{ name }}
-    font-awesome-icon(
-      v-if="closeButton"
-      class="close"
+    Icon(
+      v-if="canDelete"
+      :class="$style.close"
       @click="$emit('delete', $event)"
-      icon="times-circle"
+      name="times-circle"
+      :size="1"
     )
 </template>
 
 <script>
+import Icon from '@/components/Icon.vue'
+
 export default {
   name: 'Tag',
   data: () => ({
-    closeButton: null,
   }),
-  props: ['name', 'canDelete'],
+  components: {
+    Icon,
+  },
+  props: {
+    name: String,
+    canDelete: Boolean,
+  },
   mounted() {
-    if (this.canDelete === '') this.closeButton = true;
   },
 };
 </script>
 
-<style scoped lang="scss">
-.tag {
-  position: relative;
-  height: 30px;
-  line-height: 30px;
-  display: inline-block;
-  margin: 5px;
-  padding: 0px 15px 0px 15px;
-  font-weight: bold;
-  background-color: white;
-  border-radius: 15px;
-  background: $main-color;
-  color: white;
-  .close {
+<style module lang="scss">
+
+  .tag {
     position: relative;
-    left: 5px;
-    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    margin: 5px;
+    padding: 0px 15px 0px 15px;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 15px;
+    background: $main-color;
+    color: white;
+    .close {
+      position: relative;
+      left: 5px;
+      cursor: pointer;
+    }
   }
-}
+
 </style>

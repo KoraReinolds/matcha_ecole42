@@ -1,7 +1,8 @@
 <template lang="pug">
   font-awesome-icon(
     :class="[`fa-${size || 2}x`, $style.icon]"
-    :icon="icons[name]"
+    :icon="icons[name] || name"
+    @click="$emit('click', $event)"
   )
 </template>
 

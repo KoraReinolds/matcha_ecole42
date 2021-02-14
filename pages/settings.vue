@@ -49,12 +49,13 @@
       type="checkbox"
       @change="setValue({ key: 'preference', value: $event })"
     )
-    //- TagsField(
-    //-   :class="$style.form_field"
-    //-   :data="fieldsData.tags"
-    //-   v-model="tags"
-    //-   :maxTags="5"
-    //- )
+    TagsField(
+      :class="$style.form_field"
+      v-bind="fieldsData.tags"
+      @change="setValue({ key: 'tags', value: $event })"
+      :maxTags="5"
+      :maxTagLength="10"
+    )
     //- ReusableTagsField(
     //-   v-if="reusableTags.length"
     //-   :class="$style.form_field"

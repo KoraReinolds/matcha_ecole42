@@ -11,7 +11,6 @@
 export default {
   name: 'InputWrapper',
   props: {
-    title: String,
     error: String,
   },
   data: () => ({
@@ -28,7 +27,8 @@ export default {
 <style module lang="scss">
 
   .tooltip_field {
-    color: $error-color !important;
+    padding-top: 5px;
+    color: $error-color;
     height: 30px;
   }
 

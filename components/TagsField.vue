@@ -2,20 +2,19 @@
 
   div
     TextField(
-      v-if="value"
       v-model.trim="newTag"
       outlined
-      :data="data"
+      v-bind="$attrs"
       @blur="addTag"
       @keyup.enter="addTag"
+      :errorMsg="newTag.length > maxTagLength ? 'Max 10 characters' : ''"
     )
-    div.title.left(v-else) Tags
     div(
       :class="$style.tags"
     )
       Tag(
         v-for="tag in value"
-        :key="data.title+tag"
+        :key="tag"
         :name="tag"
         canDelete
         @delete="deleteTag(tag)"
@@ -29,9 +28,10 @@ import InputWrapper from '@/components/InputWrapper.vue'
 import Tag from '@/components/Tag.vue'
 
 export default {
-  name: 'tagsFielld',
+  inheritAttrs: false,
+  name: 'TagsFielld',
   data: () => ({
-    newTag: null,
+    newTag: '',
   }),
   components: {
     TextField,
@@ -39,29 +39,29 @@ export default {
     InputWrapper,
   },
   props: {
-    data: Object,
     value: Array,
     maxTags: Number,
+    maxTagLength: Number,
   },
   methods: {
     deleteTag(tag) {
-      const newVal = this.value.filter(val => val !== tag)
-      this.$emit('input', newVal)
-      this.$emit('delete', newVal)
+      const newSet = new Set(this.value)
+      newSet.delete(tag)
+      this.$emit('change', [...newSet])
     },
-    addTag() {
-      if (this.newTag && !this.value.includes(this.newTag)) {
-        const newVal = [...this.value, this.newTag]
-        this.$emit('input', newVal)
-        this.$emit('add', newVal)
+    addTag(e) {
+      if (this.newTag && this.newTag.length <= this.maxTagLength) {
+        this.$emit('change', [...new Set(this.value).add(this.newTag)])
+        this.newTag = ''
       }
-      this.newTag = null
     },
   },
 };
 </script>
 
 <style module lang="scss">
+
+  @import '@/assets/css/title.scss';
 
   .tags {
     padding-bottom: 20px;

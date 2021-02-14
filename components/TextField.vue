@@ -18,6 +18,7 @@
           :class="$style.input"
           v-if="many"
           @input="inputValue"
+          @blur="$emit('blur', $event)"
           :value="value"
         )
         input(
@@ -27,6 +28,7 @@
           :class="$style.input"
           v-else
           @input="inputValue"
+          @blur="$emit('blur', $event)"
           :value="value"
         )
         //- points for width (like paddings)
