@@ -1,0 +1,27 @@
+
+$colors: (
+  male: #64B5F6,
+  female: #EF9A9A,
+  bisexual: #81C784,
+  block: #2c3e50,
+  ban: #B71C1C,
+  like: #E53935,
+  dislike: #ce93d8,
+  visit: #A5D6A7,
+  messages: #90CAF9,
+  connected: #ffacd8,
+  ok: #7edd82,
+  error: #f76868,
+);
+  
+@each $name, $value in $colors {
+  .#{$name}_color {
+    color: $value;
+  }
+  .#{$name}_background {
+    background: $value;
+  }
+  .#{$name}_background-light {
+    background: rgba($color: $value, $alpha: 0.4);
+  }
+}

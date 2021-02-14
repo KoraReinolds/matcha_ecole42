@@ -4,6 +4,7 @@
   )
     TextField(
       :class="$style.form_field"
+      outlined
       v-bind="fieldsData.fname"
       @input="setValue({ key: 'fname', value: $event })"
     )

@@ -1,78 +1,64 @@
 <template lang="pug">
 
   InputWrapper(
-    :class="{ [$style.error]: errorMsg }"
+    :class="[$style.options, { [$style.icons]: icons, [$style.error]: errorMsg }]"
     :error="errorMsg"
   )
     template(v-slot:title)
-      div.title.left {{ title }}
-    div(
-      :class="[$style.options, { [$style.icons]: icons }]"
-    )
       div(
-        v-for="[opt, value] in Object.entries(options)"
-        :key="title+value"
+        :class="[$style.title]"
+      ) {{ title }}
+    div(
+      :class="$style.option"
+      v-for="value in options"
+      :key="title+value"
+    )
+      input(
+        :class="$style.option_input"
+        v-bind="$attrs"
+        :id="title+value"
+        :value="value"
+        v-model="inputValue"
+        @change="$emit('change', inputValue)"
+        :name="title"
       )
-        input(
-          v-bind="$attrs"
-          :id="title+value"
-          :value="value"
-          @change="change"
-          :name="title"
-          :checked="optionChecked(value)"
+      label(
+        :class="{ [$style.label]: !icons }"
+        :for="title+value"
+      )
+        Icon(
+          :class="$style.option_icon"
+          v-if="icons"
+          :name="value"
         )
-        label(
-          :class="{ [$style.label]: !icons }"
-          :for="title+value"
-        )
-          font-awesome-icon.fa-2x(
-            v-if="icons"
-            :icon="['fas', icons[value]]"
-            :class="[$style.icon, { [$style.active]: optionChecked(value) }]"
-          )
-          template(v-else) {{ opt }}
+        template(v-else) {{ value }}
 
 </template>
 
 <script>
 import InputWrapper from '@/components/InputWrapper.vue'
+import Icon from '@/components/Icon.vue'
 
 export default {
   inheritAttrs: false,
   name: 'Options',
   components: {
     InputWrapper,
+    Icon,
   },
   props: {
     value: [Number, String, Array],
-    data: Object,
-    many: Boolean,
-    icons: Object,
-    options: Object,
+    icons: Boolean,
+    options: Array,
     errorMsg: String,
     title: String,
   },
   data: () => ({
+    inputValue: [],
   }),
   computed: {
   },
   methods: {
-    optionChecked(opt) {
-      return this.many ?
-        this.value.includes(opt) :
-        +this.value === +opt
-    },
-    change(event) {
-      if (Array.isArray(this.value)) {
-        const { value } = event.target
-        let newVal = [...this.value]
-        if (!this.value.includes(value)) newVal.push(value)
-        else newVal = newVal.filter(val => val !== value)
-        this.$emit('input', newVal)
-      } else {
-        this.$emit('input', event.target.value)
-      }
-    },
   },
   mounted() {
   },
@@ -81,23 +67,42 @@ export default {
 
 <style module lang="scss">
 
-  .options {
-    .tooltip_field {
-      height: 30px;
+  @import '@/assets/css/title.scss';
+
+  @mixin pseudoRadioMixin(
+    $size: 20px,
+    $delta-radius: 0px,
+    $inner: false,
+    $scale: 1,
+  ) {
+
+    @if $inner == true {
+      $delta-radius: 5px,
     }
-    input {
-      z-index: -1;
-      opacity: 0;
-      width: 0;
-      
-      height: 0;
-      &:checked + .label:after {
-        top: 10px;
-        left: -26px;
-        width: 11px;
-        height: 11px;
-      }
+
+    cursor: pointer;
+    content: '';
+    position: absolute;
+    transition: transform .2s;
+    transform: translate(calc(-30px + #{$delta-radius}), -50%) scale($scale);
+    top: 50%;
+    left: 0;
+    width: calc(#{$size} - #{$delta-radius} * 2);
+    height: calc(#{$size} - #{$delta-radius} * 2);
+    border-radius: 50%;
+  }
+
+  @mixin optionsMixin(
+    $base-color: $main-color,
+    $text-color: #000,
+    $error: false,
+  ) {
+  
+    @if $error == true {
+      $base-color: $error-color;
+      $text-color: $error-color;
     }
+
     .label {
       cursor: pointer;
       display: inline-block;
@@ -106,81 +111,56 @@ export default {
       position: relative;
       font-weight: normal;
       left: 30px;
+      color: $text-color;
       &:before {
-        cursor: pointer;
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: -30px;
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        background: $main-color;
-        transition: .2s;
+        @include pseudoRadioMixin();
+        background: $base-color;
       }
       &:after {
-        content: '';
-        width: 0;
-        height: 0;
-        top: 15px;
-        left: -20px;
-        position: absolute;
-        border-radius: 8px;
+        @include pseudoRadioMixin($inner: true, $scale: 0);
         background: #fff;
-        transition: .2s;
       }
     }
-    // &.many {
-    input[type=checkbox]:checked + .label:after {
-      top: 10px;
-      left: -25px;
-      width: 10px;
-      height: 10px;
+  
+    .title {
+      @include titleMixin(
+        $base-color: $text-color,
+      )
     }
-    input[type=checkbox].label {
-      &:before {
-        cursor: pointer;
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: -30px;
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        background: $main-color;
-        transition: .2s;
-      }
-      &:after {
-        content: '';
-        width: 0;
-        height: 0;
-        top: 15px;
-        left: -20px;
-        position: absolute;
-        border-radius: 2px;
-        background: #fff;
-        transition: .2s;
+  
+    .option_input[type=checkbox] {
+      & + .label:after,
+      & + .label:before,
+      &:checked + .label:after {
+        border-radius: 3px;
       }
     }
-    // }
-    &.icons {
-      display: flex;
-      padding: 10px 0;
-      .icon {
-        cursor: pointer;
-        color: lightgray;
-        &.active {
-          color: $main-color;
-        }
+  
+    .option_input {
+      z-index: -1;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      &:checked + .label:after {
+        @include pseudoRadioMixin($inner: true);
       }
     }
-  &.error {
-    .tooltip_field {
-      color: $error-color !important;
-    }
-    .label:before {
-      background: rgba($color: $error-color, $alpha: 0.75) !important;
+
+    .option_input:checked ~ label .option_icon {
+      color:$base-color;
     }
   }
-}
+
+  .options {
+
+    @include optionsMixin();
+
+    &.error {
+
+      @include optionsMixin($error: true);
+
+    }
+
+  }
+
 </style>

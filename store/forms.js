@@ -1,131 +1,133 @@
 import API from '~/api'
 
 export const state = () => ({
+  validationRules: {
+    login: [
+      "!!value || 'Required'",
+      "(value && value.length <= 20) || 'Max 20 characters'",
+    ],
+    password: [
+      "!!value || 'Required'",
+      "(value && value.length >= 6) || 'Min 6 characters'",
+      "(value && value.length <= 20) || 'Max 20 characters'",
+    ],
+    fname: [
+      "!!value || 'Required'",
+      "(value && value.length >= 3) || 'Min 3 characters'",
+      "(value && value.length <= 20) || 'Max 20 characters'",
+    ],
+    lname: [
+      "!!value || 'Required'",
+      "(value && value.length >= 3) || 'Min 3 characters'",
+      "(value && value.length <= 20) || 'Max 20 characters'",
+    ],
+    age: [
+      "!!value || 'Required'",
+      "(value && Number.isInteger(+value)) || 'Age must be integer'",
+      "(value && value >= 18) || 'Min 18 years old'",
+      "(value && value <= 99) || 'Max 99 years old'",
+    ],
+    email: [
+      "!!value || 'Required'",
+      "value.match(/[^@]+@[^.]+\..+/) !== null || 'Must be properly formatted'",
+      "(value && value.length <= 30) || 'Max 30 characters'",
+    ],
+    biography: [
+      "!!value || 'Required'",
+      "(value && value.length <= 2048) || 'Max 2048 characters'",
+    ],
+    gender: [
+      "!!value || 'Required'",
+    ],
+    preference: [
+      "!!value.length || 'Required'",
+    ],
+    tags: [
+      "!!value.length || 'Required'",
+      "value.every(val => val.length < 10) || 'Max 10 characters'",
+      "value.length < 6 || 'Max 5 tags'",
+    ],
+    images: [
+      "!!value.length || 'Required'",
+    ],
+    location: [
+      "!!value.length || 'Required'",
+    ],
+  },
   formFields: {
     login: {
       value: '',
       errorMsg: '',
       title: 'Login',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && value.length <= 20) || 'Max 20 characters'",
-      ],
     },
     password: {
       value: '',
       errorMsg: '',
       title: 'Password',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && value.length >= 6) || 'Min 6 characters'",
-        "(value && value.length <= 20) || 'Max 20 characters'",
-      ],
     },
     fname: {
       value: '',
       errorMsg: '',
       title: 'First Name',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && value.length >= 3) || 'Min 3 characters'",
-        "(value && value.length <= 20) || 'Max 20 characters'",
-      ],
     },
     lname: {
       value: '',
       errorMsg: '',
       title: 'Last Name',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && value.length >= 3) || 'Min 3 characters'",
-        "(value && value.length <= 20) || 'Max 20 characters'",
-      ],
     },
     age: {
       value: '',
       errorMsg: '',
       title: 'Age',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && Number.isInteger(+value)) || 'Age must be integer'",
-        "(value && value >= 18) || 'Min 18 years old'",
-        "(value && value <= 99) || 'Max 99 years old'",
-      ],
     },
     email: {
       value: '',
       errorMsg: '',
       title: 'E-mail',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "value.match(/[^@]+@[^.]+\..+/) !== null || 'Must be properly formatted'",
-        "(value && value.length <= 30) || 'Max 30 characters'",
-      ],
     },
     biography: {
       value: '',
       errorMsg: '',
       title: 'Biography',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-        "(value && value.length <= 2048) || 'Max 2048 characters'",
-      ],
     },
     gender: {
       value: '',
-      options: { male: 1, female: 2 },
+      options: ['male', 'female'],
       errorMsg: '',
       title: 'Gender',
       valid: false,
-      rules: [
-        "value !== 3 || 'Required'",
-      ],
     },
     preference: {
       value: [],
-      options: { male: 1, female: 2 },
+      options: ['male', 'female'],
       errorMsg: '',
       title: 'Preferences',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-      ],
     },
     tags: {
       value: [],
       errorMsg: '',
       title: 'New tag',
       valid: false,
-      rules: [
-        "!!value.length || 'Required'",
-        "value.every(val => val.length < 10) || 'Max 10 characters'",
-        "value.length < 6 || 'Max 5 tags'",
-      ],
     },
     images: {
       value: [],
       errorMsg: '',
       title: 'Images',
       valid: false,
-      rules: [
-        "!!value.length || 'Required'",
-      ],
     },
     location: {
       value: '',
       errorMsg: '',
       title: 'Location',
       valid: false,
-      rules: [
-        "!!value || 'Required'",
-      ],
     },
   },
   realLocation: null, // реальное местоположение пользователя
@@ -154,9 +156,10 @@ export const mutations = {
   SET_VALUE: (state, { key, value }) => state.formFields[key].value = value,
   VALIDATE_VALUE: (state, { key, value }) => {
     let field = state.formFields[key]
-    if (field && field.rules) {
+    let rules = state.validationRules[key]
+    if (field && rules) {
       let msg = null
-      field.rules.every((rule) => {
+      rules.every((rule) => {
         msg = eval(rule)
         if (msg !== true) {
           field.errorMsg = msg
