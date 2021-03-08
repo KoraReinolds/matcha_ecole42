@@ -104,20 +104,20 @@ export const state = () => ({
       valid: false,
     },
     preference: {
-      value: [],
+      value: '',
       options: ['male', 'female'],
       errorMsg: '',
       title: 'Preferences',
       valid: false,
     },
     tags: {
-      value: ['games'],
+      value: '',
       errorMsg: '',
       title: 'New tag',
       valid: false,
     },
     images: {
-      value: [],
+      value: '',
       errorMsg: '',
       title: 'Images',
       valid: false,
@@ -130,7 +130,7 @@ export const state = () => ({
     },
   },
   realLocation: null, // реальное местоположение пользователя
-  popular_tags: [],
+  popular_tags: ['lol', 'kek'],
 })
 export const getters = {
   LOGIN_VALID: (state) => !!(state.formFields.login.value &&
@@ -310,8 +310,8 @@ export const actions = {
 
     const images = rootState.auth.user.images // ссылка на существующие изображения
 
-    // если картинка и их количество не больше 5
-    if (files[0].type === 'image/jpeg' && Object.keys(images).length < 5) {
+    // если картинка
+    if (files[0].type === 'image/jpeg') {
 
       const img = { src: '' } // создаем изображение
       const reader = new FileReader()
@@ -331,6 +331,11 @@ export const actions = {
           value: [...images, img],
         })
       }
+    } else {
+      dispatch('history/PUSH_POP_WINDOW', {
+        type: 'error',
+        message: 'Необходимо загрузить картинку в формате JPEG',
+      }, { root: true })
     }
   },
 

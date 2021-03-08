@@ -8,7 +8,7 @@
       :class="$style.close"
       @click="$emit('delete', $event)"
       name="times-circle"
-      :size="1"
+      :size="4"
     )
 </template>
 

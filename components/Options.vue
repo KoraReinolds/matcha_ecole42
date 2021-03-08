@@ -61,6 +61,7 @@ export default {
   methods: {
   },
   mounted() {
+    this.inputValue = this.value
   },
 };
 </script>
@@ -68,6 +69,7 @@ export default {
 <style module lang="scss">
 
   @import '@/assets/css/title.scss';
+  @import '@/assets/css/remove_from_screen.scss';
 
   @mixin pseudoRadioMixin(
     $size: 20px,
@@ -124,7 +126,7 @@ export default {
   
     .title {
       @include titleMixin(
-        $base-color: $text-color,
+        $base-color: $base-color,
       )
     }
   
@@ -137,10 +139,7 @@ export default {
     }
   
     .option_input {
-      z-index: -1;
-      opacity: 0;
-      width: 0;
-      height: 0;
+      @include removeFromScreenMixin();
       &:checked + .label:after {
         @include pseudoRadioMixin($inner: true);
       }

@@ -1,0 +1,8 @@
+@for $i from 1 through 12 {
+  .size_#{$i} {
+    min-width: #{$i * 4}px;
+    max-width: #{$i * 4}px;
+    min-height: #{$i * 4}px;
+    max-height: #{$i * 4}px;
+  }
+}

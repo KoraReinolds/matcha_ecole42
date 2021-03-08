@@ -101,6 +101,7 @@ export default {
 <style module lang="scss">
 
   @import '@/assets/css/skeleton-animation.scss';
+  @import '@/assets/css/field_border_color.scss';
   
   .skeleton {
     @include skeleton-mixin();
@@ -188,20 +189,17 @@ export default {
     }
 
     .input_field {
-      transition: all 0.5s ease-in-out;
       border-radius: $border-radius;
       border: $border;
       border-bottom: $border-bottom;
-      border-color: rgba($color: $base-color, $alpha: 0.45);
       position: relative;
       height: auto;
       min-height: 56px;
       display: block;
       cursor: text;
-
-      &:hover {
-        border-color: rgba($color: $base-color, $alpha: 1.0);
-      }
+      @include fieldBorderColorMixin(
+        $base-color: $base-color,
+      );
 
       // legend - empty space
       // legend:before - placeholder and legend text simultaneously

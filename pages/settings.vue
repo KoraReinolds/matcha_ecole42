@@ -1,23 +1,28 @@
 <template lang="pug">
   form(
     :class="$style.settings"
+    name="login_settings"
+    @submit.prevent="updateUser"
   )
     TextField(
       :class="$style.form_field"
       outlined
       v-bind="fieldsData.fname"
+      :value="fieldsData.fname.value || $auth.user.fname"
       @input="setValue({ key: 'fname', value: $event })"
     )
     TextField(
       :class="$style.form_field"
       outlined
       v-bind="fieldsData.lname"
+      :value="fieldsData.lname.value || $auth.user.lname"
       @input="setValue({ key: 'lname', value: $event })"
     )
     TextField(
       :class="$style.form_field"
       outlined
       v-bind="fieldsData.age"
+      :value="fieldsData.age.value || $auth.user.age"
       @input="setValue({ key: 'age', value: $event })"
       type="number"
       min="18"
@@ -27,6 +32,7 @@
       :class="$style.form_field"
       outlined
       v-bind="fieldsData.email"
+      :value="fieldsData.email.value || $auth.user.email"
       @input="setValue({ key: 'email', value: $event })"
       name="email"
     )
@@ -35,48 +41,55 @@
       outlined
       many
       v-bind="fieldsData.biography"
+      :value="fieldsData.biography.value || $auth.user.biography"
       @input="setValue({ key: 'biography', value: $event })"
     )
     Options(
       :class="$style.form_field"
       v-bind="fieldsData.gender"
+      :value="fieldsData.gender.value || $auth.user.gender"
       type="radio"
       @change="setValue({ key: 'gender', value: $event })"
     )
     Options(
       :class="$style.form_field"
       v-bind="fieldsData.preference"
+      :value="fieldsData.preference.value || $auth.user.preference"
       type="checkbox"
       @change="setValue({ key: 'preference', value: $event })"
     )
     TagsField(
       :class="$style.form_field"
       v-bind="fieldsData.tags"
+      :value="fieldsData.tags.value || $auth.user.tags"
       @change="setValue({ key: 'tags', value: $event })"
       :maxTags="5"
       :maxTagLength="10"
     )
     //- ReusableTagsField(
-    //-   v-if="reusableTags.length"
+    //-   v-if="popularTagList.length"
     //-   :class="$style.form_field"
-    //-   v-model="reusableTags"
+    //-   :value="popularTagList"
     //- )
-    //- ImagesField(
-    //-   :class="[$style.form_field, $style.full_width]"
-    //-   :data="fieldsData.images"
-    //-   v-model="images"
-    //-   :maxTags="5"
-    //- )
+    ImagesField(
+      :class="[$style.form_field, $style.full_width]"
+      v-bind="fieldsData.images"
+      :value="fieldsData.images.value || $auth.user.images"
+      @change="setValue({ key: 'images', value: $event })"
+      :maxImages="5"
+    )
     //- MapField(
     //-   :class="[$style.form_field, $style.full_width]"
-    //-   :data="fieldsData.location"
-    //-   v-model="location"
+    //-   v-bind="fieldsData.location"
+    //-   :value="fieldsData.location.value || $auth.user.location"
     //-   :realLocation="myLocation"
     //- )
-    //- Button(
+
+    //- input(
     //-   :class="$style.btn"
-    //-   @click.prevent="updateUser($auth.user)"
+    //-   type="submit"
     //-   :disabled="!updateValid"
+    //-   value="Login"
     //- ) Save Changes
 
 </template>

@@ -1,48 +1,51 @@
 <template lang="pug">
 
   InputWrapper(
-    :class="{ [$style.error]: data.errorMsg }"
-    :error="data.errorMsg"
+    :class="[$style.images_field, { [$style.error]: errorMsg }]"
+    :error="errorMsg"
   )
     template(v-slot:title)
-      div.title.left {{ data.title }}
-    div(:class="$style.content")
-      div(:class="$style.images")
-        label(
-          :class="[$style.image, $style.add]"
-          v-if="value && value.length < 5"
-          for="file"
+
+      div(
+        :class="$style.title"
+      ) {{ title }}
+
+    div(:class="$style.images")
+      div(
+        :class="$style.image"
+        v-for="(img, index) in value"
+        :key="'img'+img.index"
+      )
+        CustomImage(
+          :src="img.src"
+          :key="'user_image'+img.index"
+          @click="setAsMainImg(img)"
         )
-          font-awesome-icon.fa-2x(
-            :class="$style.choose_file"
-            icon="plus"
-          )
-          input(
-            :class="$style.inputfile"
-            type="file"
-            id="file"
-            @change="loadImage($event.target.files)"
-          )
-        div(
-          :class="$style.image"
-          v-for="(img, index) in value"
-          :key="'img'+img.index"
+        RoundedIcon(
+          :class="$style.delete_mark"
+          name="times-circle"
+          @click="deleteImg(img)"
         )
-          font-awesome-icon.fa-2x(
-            :class="$style.delete_mark"
-            icon="times-circle"
-            @click="deleteImg(img)"
-          )
-          CustomImage(
-            :src="img.src"
-            :key="'user_image'+img.index"
-            @click="setAsMainImg(img)"
-          )
-          font-awesome-icon.fa-2x(
-            :class="[$style.icon, $style.main_mark]"
-            v-if="img.avatar"
-            icon="check"
-          )
+        RoundedIcon(
+          :class="$style.main_mark"
+          v-if="img.avatar"
+          name="check"
+        )
+      label(
+        :class="$style.image"
+        v-if="value && value.length < 5"
+        for="file"
+      )
+        Icon(
+          :class="$style.choose_file"
+          name="plus"
+        )
+        input(
+          :class="$style.inputfile"
+          type="file"
+          id="file"
+          @change="loadImage($event.target.files)"
+        )
 
 </template>
 
@@ -50,18 +53,24 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import CustomImage from '@/components/CustomImage.vue'
 import InputWrapper from '@/components/InputWrapper.vue'
+import Icon from '@/components/Icon.vue'
+import RoundedIcon from '@/components/RoundedIcon.vue'
 
 export default {
   name: 'imagesFielld',
   components: {
     CustomImage,
     InputWrapper,
+    Icon,
+    RoundedIcon,
   },
   data: () => ({
   }),
   props: {
-    data: Object,
+    errorMsg: String,
+    title: String,
     value: Array,
+    maxImages: Number,
   },
   methods: {
     ...mapMutations({
@@ -76,10 +85,10 @@ export default {
       if (img.avatar && newImages.length) {
         newImages[0].avatar = true // если удалили аватар устанавливаем первое изображение в качестве аватара
       }
-      this.$emit('input', newImages)
+      this.$emit('change', newImages)
     },
     setAsMainImg(img) {
-      this.$emit('input', this.value.map(val => ({ ...val, avatar: img === val })))
+      this.$emit('change', this.value.map(val => ({ ...val, avatar: img === val })))
     },
   },
   mounted() {
@@ -89,80 +98,96 @@ export default {
 
 <style module lang="scss">
 
-  .content {
-    padding: 10px 0 20px 0;
-    .inputfile {
-      width: 0px;
-      height: 0px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: -1;
+  @import '@/assets/css/title.scss';
+  @import '@/assets/css/remove_from_screen.scss';
+  @import '@/assets/css/field_border_color.scss';
+
+  @mixin imageFieldMixin(
+    $base-color: $main-color,
+    $text-color: #000,
+    $error: false,
+  ) {
+
+    @if $error == true {
+      $base-color: $error-color;
+      $text-color: $error-color;
     }
 
-    .images {
-      display: flex;
-      @media (max-width: 480px) {
-        min-height: 130px;
-        flex-wrap: wrap;
-        margin: 20px 0;
+    .title {
+      @include titleMixin(
+        $base-color: $base-color,
+      )
+    }
+  
+      .inputfile {
+        @include removeFromScreenMixin();
       }
-      .image {
-        cursor: pointer;
-        position: relative;
-        @media (max-width: 480px) {
-          width: 50%;
-          padding: 5px;
-          height: auto;
-        }
-        @media (min-width: 480px) {
-          width: 200px;
-          height: 300px;
-          margin-right: 10px;
-        }
-        .img {
-          width: 100%;
-          height: 100%;
-        }
-        .delete_mark {
+  
+      .images {
+        margin: 10px 0 20px 0;
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        grid-auto-rows: 300px;
+  
+        .image {
           cursor: pointer;
-          color: $main-color;
-          position: absolute;
-          top: 10px;
-          right: 10px;
-        }
-        .main_mark {
-          color: $main-color;
-          position: absolute;
-          bottom: 10px;
-          left: 10px;
-        }
-        &.add {
-          border: 2px solid $main-color;
-          padding-right: 0;
+          position: relative;
+          border: solid 1px;
+          @include fieldBorderColorMixin(
+            $base-color: $base-color,
+          );
+  
+          .delete_mark {
+            cursor: pointer;
+            color: $base-color;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+          }
+          .main_mark {
+            color: $base-color;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+          }
         }
       }
-    }
-    .choose_file {
-      cursor: pointer;
-      position:absolute;
-      color: $main-color;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+      .choose_file {
+        cursor: pointer;
+        position:absolute;
+        color: $base-color;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
   }
-  .error {
-    .images .image.add {
-      border: 2px solid $error-color;
+
+  .images_field {
+
+    @include imageFieldMixin();
+
+    &.error {
+
+      @include imageFieldMixin($error: true);
+
     }
-    .tooltip-field,
-    .choose_file {
-      color: $error-color;
-    }
-    label:before {
-      background: rgba($color: $error-color, $alpha: 0.75) !important;
-    }
+
   }
+
+  // .error {
+  //   .images .image.add {
+  //     border: 2px solid $error-color;
+  //   }
+  //   .tooltip-field,
+  //   .choose_file {
+  //     color: $error-color;
+  //   }
+  //   label:before {
+  //     background: rgba($color: $error-color, $alpha: 0.75) !important;
+  //   }
+  // }
 
 </style>

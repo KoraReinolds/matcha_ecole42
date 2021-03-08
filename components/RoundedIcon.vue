@@ -1,52 +1,55 @@
 <template lang="pug">
 
-  font-awesome-icon-layers.rounded-icon(
-    v-if="!mask"
-    :class="[`fa-${size}x`]"
+  font-awesome-icon-layers(
+    :class="[$style[`size_${size}`]]"
     @click="$emit('click', $event)"
   )
-    font-awesome-icon.circle(
-      icon="circle"
-      :style="{ borderRadius: `${8 * size}px` }"
+    Icon(
+      :class="[$style.circle]"
+      name="circle"
     )
-    font-awesome-icon.inner-icon(
-      :class="[`${icon}_color`]"
-      :icon="icons[icon] ? icons[icon] : icon"
-      :transform="`shrink-5`"
+    Icon(
+      :class="[$style.inner]"
+      :name="name"
     )
 
-  font-awesome-icon(
-    v-else
-    :icon="icons[icon] ? icons[icon] : icon"
-    :class="[`${icon}_color`]"
-    @click="$emit('click', $event)"
-    transform="shrink-5"
-    mask="circle"
-    :size="`${size}x`"
-  )
 </template>
 
 <script>
-import iconsMixin from '../mixins/iconMixin';
+import Icon from '@/components/Icon.vue';
 
 export default {
-  name: 'roundIcon',
+  name: 'RoundedIcon',
   props: {
-    icon: String,
-    size: Number,
+    name: String,
+    size: {
+      type: Number,
+      default: 12,
+    },
     mask: Boolean,
   },
-  mixins: [iconsMixin],
+  components: {
+    Icon,
+  },
   mounted() {
   },
 };
 </script>
 
-<style scoped lang="scss">
-.rounded-icon {
+<style module lang="scss">
+
+  @import '@/assets/css/map-size.scss';
+
   .circle {
-    color: white;
-    box-shadow: 0 0 10px lightgrey;
+    color: #fff;
+    min-width: 100%;
+    min-height: 100%;
   }
-}
+
+  .inner {
+    color: inherit;
+    transform: scale(0.75);
+    min-width: 100%;
+    min-height: 100%;
+  }
 </style>

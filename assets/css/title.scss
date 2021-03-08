@@ -1,6 +1,6 @@
 
 @mixin titleMixin(
-  $base-color: #000,
+  $base-color: $main-color,
   $before-width: 5%,
   $after-width: 95%,
   $type: 'left',

@@ -1,15 +1,19 @@
 <template lang="pug">
+
   font-awesome-icon(
-    :class="[`fa-${size || 2}x`, $style.icon]"
+    :class="[$style[`size_${size}`], $style.icon]"
     :icon="icons[name] || name"
+    v-bind="$attrs"
     @click="$emit('click', $event)"
   )
+
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
+  inheritAttrs: false,
   name: 'Icon',
   data: () => ({
     icons: {
@@ -29,7 +33,14 @@ export default {
   }),
   props: {
     name: String,
-    size: Number,
+    size: {
+      type: Number,
+      default: 8,
+    },
+    rounded: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     ...mapGetters({
@@ -45,6 +56,8 @@ export default {
 </script>
 
 <style module lang="scss">
+
+  @import '@/assets/css/map-size.scss';
 
   .icon {
     cursor: pointer;

@@ -7,7 +7,7 @@
       v-bind="$attrs"
       @blur="addTag"
       @keyup.enter="addTag"
-      :errorMsg="newTag.length > maxTagLength ? 'Max 10 characters' : ''"
+      :errorMsg="newTag.length > maxTagLength ? 'Max 10 characters' : errorMsg"
     )
     div(
       :class="$style.tags"
@@ -40,6 +40,7 @@ export default {
   },
   props: {
     value: Array,
+    errorMsg: String,
     maxTags: Number,
     maxTagLength: Number,
   },
@@ -64,7 +65,6 @@ export default {
   @import '@/assets/css/title.scss';
 
   .tags {
-    padding-bottom: 20px;
     text-align: left;
   }
 
