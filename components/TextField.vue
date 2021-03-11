@@ -19,6 +19,7 @@
           v-if="many"
           @input="inputValue"
           @blur="$emit('blur', $event)"
+          @focus="$emit('focus', $event)"
           :value="value"
         )
         input(
@@ -29,12 +30,14 @@
           v-else
           @input="inputValue"
           @blur="$emit('blur', $event)"
+          @focus="$emit('focus', $event)"
           :value="value"
         )
         //- points for width (like paddings)
         legend(
           :data-title="title"
         ) ..{{ title }}...
+    slot
 
 </template>
 

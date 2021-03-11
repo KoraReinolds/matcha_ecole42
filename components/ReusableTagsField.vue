@@ -2,13 +2,15 @@
   div(
     :class="$style.reusable_tags"
   )
-    span.title.left Popular_tags
+    div(
+      :class="$style.title"
+    ) Popular_tags
     Tag(
       :class="$style.tag"
       v-for="(tag, index) in value"
-      :key="index+tag.name"
-      :name="tag.name"
-      @click="$emit('input', tag.name)"
+      :key="'reusable_'+tag"
+      :name="tag"
+      @click="$emit('change', tag)"
     )
 </template>
 
@@ -41,7 +43,14 @@ export default {
 
 <style module lang="scss">
 
+  @import '@/assets/css/title.scss';
+
   .reusable_tags {
+    .title {
+      @include titleMixin(
+        $base-color: $main-color,
+      )
+    }
     .tag {
       cursor: pointer;
     }

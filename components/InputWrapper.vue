@@ -30,6 +30,7 @@ export default {
     padding-top: 5px;
     color: $error-color;
     height: 30px;
+    margin-bottom: 10px;
   }
 
 </style>

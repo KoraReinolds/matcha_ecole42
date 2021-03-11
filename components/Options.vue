@@ -60,6 +60,11 @@ export default {
   },
   methods: {
   },
+  watch: {
+    value(val) {
+      this.inputValue = val
+    }
+  },
   mounted() {
     this.inputValue = this.value
   },

@@ -50,7 +50,6 @@ export const state = () => ({
       "!!value.length || 'Required'",
     ],
     location: [
-      "!!value.length || 'Required'",
     ],
   },
   formFields: {
@@ -104,20 +103,20 @@ export const state = () => ({
       valid: false,
     },
     preference: {
-      value: '',
+      value: [],
       options: ['male', 'female'],
       errorMsg: '',
       title: 'Preferences',
       valid: false,
     },
     tags: {
-      value: '',
+      value: [],
       errorMsg: '',
       title: 'New tag',
       valid: false,
     },
     images: {
-      value: '',
+      value: [],
       errorMsg: '',
       title: 'Images',
       valid: false,
@@ -141,7 +140,6 @@ export const getters = {
   UPDATE_VALID: ({ formFields }) => ['fname', 'lname', 'age', 'email', 'biography', 'gender', 'preference', 'tags', 'images']
     .map(fieldName => formFields[fieldName].valid)
     .every((valid) => valid === true),
-  // MY_LOCATION: (state) => state.realLocation,
 }
 export const mutations = {
   CLEAR_FIELDS: (state) => Object.values(state.formFields).forEach(field => {
@@ -171,8 +169,8 @@ export const mutations = {
         field.errorMsg = null
         field.valid = true
       }
+      field.value = value
     }
-    field.value = value
   },
 }
 export const actions = {

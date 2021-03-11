@@ -1,14 +1,15 @@
 <template lang="pug">
 
-  div
-    TextField(
-      v-model.trim="newTag"
-      outlined
-      v-bind="$attrs"
-      @blur="addTag"
-      @keyup.enter="addTag"
-      :errorMsg="newTag.length > maxTagLength ? 'Max 10 characters' : errorMsg"
-    )
+  TextField(
+    v-model.trim="newTag"
+    outlined
+    v-bind="$attrs"
+    @blur="addTag"
+    @keyup.enter="addTag"
+    @focus="readonly = false"
+    :readonly="readonly"
+    :errorMsg="newTag.length > maxTagLength ? 'Max 10 characters' : errorMsg"
+  )
     div(
       :class="$style.tags"
     )
@@ -31,6 +32,9 @@ export default {
   inheritAttrs: false,
   name: 'TagsFielld',
   data: () => ({
+    // установлено только для чтения, чтобы при валидации формы
+    // браузер не проверял это поле (пустое)
+    readonly: true,
     newTag: '',
   }),
   components: {
@@ -51,8 +55,10 @@ export default {
       this.$emit('change', [...newSet])
     },
     addTag(e) {
+      this.readonly = true
       if (this.newTag && this.newTag.length <= this.maxTagLength) {
-        this.$emit('change', [...new Set(this.value).add(this.newTag)])
+        this.$emit('change', this.newTag)
+        // this.$emit('change', [...new Set(this.value).add(this.newTag)])
         this.newTag = ''
       }
     },
@@ -65,6 +71,7 @@ export default {
   @import '@/assets/css/title.scss';
 
   .tags {
+    margin-top: 10px;
     text-align: left;
   }
 

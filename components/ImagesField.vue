@@ -5,7 +5,6 @@
     :error="errorMsg"
   )
     template(v-slot:title)
-
       div(
         :class="$style.title"
       ) {{ title }}
@@ -176,18 +175,5 @@ export default {
     }
 
   }
-
-  // .error {
-  //   .images .image.add {
-  //     border: 2px solid $error-color;
-  //   }
-  //   .tooltip-field,
-  //   .choose_file {
-  //     color: $error-color;
-  //   }
-  //   label:before {
-  //     background: rgba($color: $error-color, $alpha: 0.75) !important;
-  //   }
-  // }
 
 </style>

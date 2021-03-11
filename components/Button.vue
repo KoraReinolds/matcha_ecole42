@@ -1,6 +1,7 @@
 <template lang="pug">
   div(
     :class="[$style.btn]"
+    @click="$emit('click', $event)"
   )
     slot
 
