@@ -9,7 +9,7 @@
         :class="[$style.title]"
       ) {{ title }}
     div(
-      :class="$style.option"
+      :class="{ [$style.icons]: icons }"
       v-for="value in options"
       :key="title+value"
     )
@@ -127,6 +127,10 @@ export default {
         @include pseudoRadioMixin($inner: true, $scale: 0);
         background: #fff;
       }
+    }
+
+    .icons {
+      display: inline-block;
     }
   
     .title {

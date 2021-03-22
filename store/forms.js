@@ -97,14 +97,14 @@ export const state = () => ({
     },
     gender: {
       value: '',
-      options: ['male', 'female'],
+      options: ['male', 'female', 'bisexual'],
       errorMsg: '',
       title: 'Gender',
       valid: false,
     },
     preference: {
       value: [],
-      options: ['male', 'female'],
+      options: ['male', 'female', 'bisexual'],
       errorMsg: '',
       title: 'Preferences',
       valid: false,
@@ -197,9 +197,41 @@ export const actions = {
 
   },
 
-  async UPDATE_USER ({ dispatch }, user) {
+  async UPDATE_USER ({ dispatch, state }) {
 
-    let res = await this.$axios.$post('profile-update', user)
+    // console.log([
+    //   'age',
+    //   'biography',
+    //   'email',
+    //   'fname',
+    //   'gender',
+    //   'lname',
+    //   'images',
+    //   'location',
+    //   'login',
+    //   'preference',
+    //   'tags',
+    // ].reduce((sum, cur) => ({
+    //   ...sum,
+    //   [cur]: state.formFields[cur].value
+    // }), {}))
+
+    let res = await this.$axios.$post('profile-update', [
+      'age',
+      'biography',
+      'email',
+      'fname',
+      'gender',
+      'lname',
+      'images',
+      'location',
+      'login',
+      'preference',
+      'tags',
+    ].reduce((sum, cur) => ({
+      ...sum,
+      [cur]: state.formFields[cur].value
+    }), {}))
 
     if (res.type === 'ok') {
 

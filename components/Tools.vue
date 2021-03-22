@@ -9,9 +9,8 @@
     )
       RoundedIcon(
         :class="[$style.icon, $style.toggle_state]"
-        :icon="show ? 'times' : 'cog'"
+        :name="show ? 'times' : 'cog'"
         @click="show=!show"
-        :size="3"
       )
     div(
       :class="$style.tools"
@@ -19,20 +18,15 @@
     )
       Options(
         :class="[$style.form_field, $style.full_width]"
-        :data="tools.pref"
-        v-model.trim="pref"
-        many
+        v-bind="tools.pref"
+        :icons="true"
+        type="checkbox"
+        @change="filterUsers({ val: $event, key: 'pref' })"
       )
-      //- Options(
-      //-   :class="[$style.form_field, $style.full_width]"
-      //-   :data="tools.pref"
-      //-   :icons="prefIcons"
-      //-   v-model.trim="pref"
-      //- )
+
       TextField(
         :class="$style.form_field"
-        :data="tools.ageMin"
-        v-model="ageMin"
+        v-bind="tools.ageMin"
         type="number"
         min="18"
         max="99"
@@ -40,8 +34,7 @@
       )
       TextField(
         :class="$style.form_field"
-        :data="tools.ageMax"
-        v-model="ageMax"
+        v-bind="tools.ageMax"
         type="number"
         min="18"
         max="99"
@@ -50,66 +43,64 @@
 
       TextField(
         :class="[$style.form_field, $style.full_width]"
-        :data="tools.radius"
-        @blur="filterUsers({ val: $event.target.value, key: 'radius' })"
-        v-model="radius"
+        v-bind="tools.radius"
         type="number"
+        @blur="filterUsers({ val: $event.target.value, key: 'radius' })"
       )
 
       TextField(
         :class="$style.form_field"
-        :data="tools.minRating"
-        @blur="filterUsers({ val: $event.target.value, key: 'minRating' })"
-        v-model="minRating"
+        v-bind="tools.minRating"
         type="number"
         step="10"
+        min="0"
+        max="1000"
+        @blur="filterUsers({ val: $event.target.value, key: 'minRating' })"
       )
       TextField(
         :class="$style.form_field"
-        :data="tools.maxRating"
-        @blur="filterUsers({ val: $event.target.value, key: 'maxRating' })"
-        v-model="maxRating"
+        v-bind="tools.maxRating"
         type="number"
-        step="1"
+        step="10"
         min="0"
         max="1000"
+        @blur="filterUsers({ val: $event.target.value, key: 'maxRating' })"
       )
 
       TagsField(
         :class="[$style.form_field, $style.full_width]"
-        :data="tools.tags"
-        v-model="tags"
+        v-bind="tools.tags"
         @delete="filterUsers({ val: $event, key: 'tags' })"
-        @add="filterUsers({ val: $event, key: 'tags' })"
+        @change="filterUsers({ val: $event, key: 'tags' })"
       )
 
       Options(
         :class="$style.form_field"
-        :data="tools.sortLocation"
-        v-model="sortLocation"
-        :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
-        many
+        v-bind="tools.sortLocation"
+        :icons="true"
+        @change="changeOrder({ val: $event, key: 'sortLocation' })"
+        type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        :data="tools.sortAge"
-        :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
-        v-model="sortAge"
-        many
+        v-bind="tools.sortAge"
+        :icons="true"
+        @change="changeOrder({ val: $event, key: 'sortAge' })"
+        type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        :data="tools.sortRating"
-        :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
-        v-model="sortRating"
-        many
+        v-bind="tools.sortRating"
+        :icons="true"
+        @change="changeOrder({ val: $event, key: 'sortRating' })"
+        type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        :data="tools.sortTags"
-        :icons="{ '-1': 'sort-amount-down', '1': 'sort-amount-up' }"
-        v-model="sortTags"
-        many
+        v-bind="tools.sortTags"
+        :icons="true"
+        @change="changeOrder({ val: $event, key: 'sortTags' })"
+        type="checkbox"
       )
       div(
         :class="$style.order"
@@ -124,7 +115,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import RoundedIcon from '@/components/RoundedIcon.vue';
 import Options from '@/components/Options.vue';
 import TextField from '@/components/TextField.vue';
@@ -134,7 +125,6 @@ export default {
   name: 'tools',
   data: () => ({
     show: true,
-    newTag: null,
     prefIcons: {
       male: 'mars',
       female: 'venus',
@@ -148,83 +138,22 @@ export default {
     TagsField,
   },
   computed: {
+    ...mapState({
+      fieldsData: state => state.forms.formFields,
+    }),
     ...mapGetters({
       sortOrder: 'users/SORT_ORDER',
       mobile: 'IS_MOBILE',
     }),
-    pref: {
-      set(value) { this.filterUsers({ val: value, key: 'pref' }) },
-      get() { return this.tools.pref.value; },
-    },
-    ageMin: {
-      set(value) { this.filterUsers({ val: value, key: 'ageMin' }) },
-      get() { return this.tools.ageMin.value; },
-    },
-    ageMax: {
-      set(value) { this.filterUsers({ val: value, key: 'ageMax' }) },
-      get() { return this.tools.ageMax.value; },
-    },
-    radius: {
-      set(value) { this.filterUsers({ val: value, key: 'radius' }) },
-      get() { return this.tools.radius.value; },
-    },
-    maxRating: {
-      set(value) { this.filterUsers({ val: value, key: 'maxRating' }) },
-      get() { return this.tools.maxRating.value; },
-    },
-    minRating: {
-      set(value) { this.filterUsers({ val: value, key: 'minRating' }) },
-      get() { return this.tools.minRating.value; },
-    },
-    tags: {
-      set(value) { this.filterUsers({ val: value, key: 'tags' }) },
-      get() { return this.tools.tags.value; },
-    },
-    sortLocation: {
-      set(value) {
-        this.changeOrder(['sortLocation', value.length])
-        this.filterUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortLocation' })
-      },
-      get() { return this.tools.sortLocation.value; },
-    },
-    sortAge: {
-      set(value) {
-        this.changeOrder(['sortAge', value.length])
-        this.filterUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortAge' })
-      },
-      get() { return this.tools.sortAge.value; },
-    },
-    sortRating: {
-      set(value) {
-        this.changeOrder(['sortRating', value.length])
-        this.filterUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortRating' })
-      },
-      get() { return this.tools.sortRating.value; },
-    },
-    sortTags: {
-      set(value) {
-        this.changeOrder(['sortTags', value.length])
-        this.filterUsers({ val: value.length === 2 ? [value[1]] : value, key: 'sortTags' })
-      },
-      get() { return this.tools.sortTags.value; },
-    },
-    sortList: {
-      set(value) { this.sort(value); },
-      get() { return this.$store.getters['users/SORT_LIST']; },
-    },
     ...mapGetters({
       tools: 'users/TOOLS',
     }),
   },
   methods: {
-    deleteTag(index) {
-      this.tools.tags.splice(index, 1);
-      this.filterUsers();
-    },
     ...mapMutations({
-      changeOrder: 'users/CHANGE_SORT_ORDER'
     }),
     ...mapActions({
+      changeOrder: 'users/CHANGE_SORT_ORDER',
       addTag: 'users/ADD_TAG',
       filterUsers: 'users/FILTER_USERS',
       sort: 'users/SORT',

@@ -54,7 +54,8 @@
     TagsField(
       :class="$style.form_field"
       v-bind="fieldsData.tags"
-      @change="setTag"
+      @delete="setValue({ key: 'tags', value: $event })"
+      @change="setValue({ key: 'tags', value: $event })"
       :maxTags="5"
       :maxTagLength="10"
     )
@@ -62,7 +63,7 @@
       v-if="popularTagList.length"
       :class="$style.form_field"
       :value="popularTagList"
-      @change="setTag"
+      @change="setValue({ key: 'tags', value: $event })"
     )
     ImagesField(
       :class="[$style.form_field, $style.full_width]"
@@ -100,10 +101,10 @@ export default {
   name: 'Settings',
   async validate({ route, store }) {
     await store.dispatch('forms/GET_POPULAR_TAGS')
-    let res = await store.dispatch('user/GET_USER', store.state.auth.user.login)
+    const { data: value } = await store.dispatch('user/GET_USER', store.state.auth.user.login)
     store.commit('auth/SET', {
       key: 'user',
-      value: res.data,
+      value,
     }, { root: true })
     return true
   },
@@ -134,12 +135,12 @@ export default {
       updateUser: 'forms/UPDATE_USER',
       changeUserField: 'forms/CHANGE_USER_FIELD',
     }),
-    setTag(tag) {
-      this.setValue({
-        key: 'tags',
-        value: [...new Set([...this.fieldsData.tags.value, tag])]
-      })
-    }
+    // setTag(tag) {
+    //   this.setValue({
+    //     key: 'tags',
+    //     value: $event,
+    //   })
+    // }
   },
   mounted() {
     Object.entries(this.$auth.user).forEach(([key, value]) => {

@@ -3,30 +3,22 @@
     :class="$style.user"
   )
     div(
-      :class="[$style.main, `${gender(user.gender)}_background-light`]"
+      :class="[$style.main, $style[`${user.gender}_background-light`]]"
     )
       div(
         :class="$style.image"
       )
         CustomImage(
           :class="$style.custom_image"
-          :src="user.src"
+          :src="user ? user.images.filter(img => img.avatar)[0].src : ''"
         )
         RoundedIcon(
-          :class="$style.gender"
-          :icon="gender(user.preference)"
-          :size="4"
-          :mask="false"
-        )
-        div(
           v-if="user.likedFrom !== undefined"
-          :class="$style.like_icon"
+          :class="[$style.like_icon, $style.inactive_color]"
+          :innerScale="0.6"
+          name="like"
+          :size="14"
         )
-          Like(
-            :class="$style.like"
-            :user="user"
-            :size="2"
-          )
       div(
         :class="$style.content"
       )
@@ -52,7 +44,7 @@
         )
           Tag(
             v-for="tag in user.tags"
-            :class="[`${gender(user.gender)}_background`]"
+            :class="[`${user.gender}_background`]"
             :key="`user_tag_${tag}`"
             :name="tag"
           )
@@ -61,21 +53,29 @@
       :class="$style.sidebar"
     )
       Raiting(
-        :class="$style.icon"
+        :class="$style.section"
         :value="user.rating"
-        :size="2"
       )
       Distance(
-        :class="$style.icon"
+        :class="$style.section"
         :value="user.distance"
-        :size="2"
       )
+      //- span(
+      //-   :class="[$style.section, $style.preferences]"
+      //- )
+      //-   Icon(
+      //-     v-for="icon in user.preference"
+      //-     :class="$style[`${icon}_color`]"
+      //-     :name="icon"
+      //-     :size="10"
+      //-   )
 
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import RoundedIcon from '@/components/RoundedIcon.vue'
+import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import Distance from '@/components/Distance.vue'
 import NameLink from '@/components/NameLink.vue'
@@ -93,6 +93,7 @@ export default {
     Raiting,
     Tag,
     Like,
+    Icon,
   },
   props: {
     user: Object,
@@ -102,7 +103,7 @@ export default {
     }),
   },
   methods: {
-    gender: index => ['male', 'female', 'bisexual'][index - 1],
+    // gender: index => ['male', 'female', 'bisexual'][index - 1],
     ...mapMutations({
       }),
     ...mapActions({
@@ -115,6 +116,8 @@ export default {
 </script>
 
 <style module lang="scss">
+
+@import '@/assets/css/map-colors.scss';
 
 .user {
   display: flex;
@@ -130,8 +133,9 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    .icon {
+    .section {
       padding: 20px;
+      display: flex;
     }
   }
 
@@ -160,18 +164,7 @@ export default {
         position: absolute;
         bottom: 30px;
         right: 30px;
-        box-shadow: 0 0 10px lightgrey;
-        background: #fff;
         z-index: 100;
-        height: 50px;
-        width: 50px;
-        border-radius: 50%;
-        .like {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
       }
     }
     .content {

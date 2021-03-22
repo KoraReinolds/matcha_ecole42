@@ -10,12 +10,12 @@
       v-for="(tag, index) in value"
       :key="'reusable_'+tag"
       :name="tag"
-      @click="$emit('change', tag)"
+      @click="addTag(tag)"
     )
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import Tag from '@/components/Tag.vue'
 
 export default {
@@ -29,12 +29,23 @@ export default {
     value: Array,
   },
   computed: {
+    ...mapState({
+      tags: state => state.forms.formFields.tags.value
+    }),
     ...mapGetters({
     }),
   },
   methods: {
     ...mapActions({
     }),
+    addTag(tag) {
+      this.$emit('change', [
+        ...new Set([
+          ...this.tags,
+          tag
+        ])
+      ])
+    },
   },
   mounted() {
   },

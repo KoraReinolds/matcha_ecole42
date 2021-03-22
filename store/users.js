@@ -6,16 +6,10 @@ export const state = () => ({
   limit: 4,
   sortOrder: new Set(['sortTags', 'sortRating', 'sortLocation']),
   tools: {
-    // pref: {
-    //   value: null,
-    //   title: 'Preferences',
-    //   options: ['male', 'female', 'bisexual']
-    // },
     pref: {
-      value: ["1"],
+      value: [],
       title: 'Preferences',
-      options: { 'Учитывать мои предпочтения': "1" }
-      // options: ['1']
+      options: ['male', 'female', 'bisexual']
     },
     ageMin: {
       value: null,
@@ -34,32 +28,32 @@ export const state = () => ({
       title: "Min_rate",
     },
     maxRating: {
-      value: 50,
+      value: 500,
       title: "Max_rate",
     },
     tags: {
-      value: ['poker'],
+      value: [],
       title: 'Tags',
     },
     sortLocation: {
-      value: ['1'],
+      value: ['sort-amount-down'],
       title: 'Dist',
-      options: ['1', '-1'],
+      options: ['sort-amount-down', 'sort-amount-up'],
     },
     sortAge: {
       value: [],
       title: 'Age',
-      options: ['1', '-1'],
+      options: ['sort-amount-down', 'sort-amount-up'],
     },
     sortRating: {
-      value: ['-1'],
+      value: ['sort-amount-up'],
       title: 'Rate',
-      options: ['1', '-1'],
+      options: ['sort-amount-down', 'sort-amount-up'],
     },
     sortTags: {
-      value: ['-1'],
+      value: ['sort-amount-up'],
       title: 'Tags',
-      options: ['1', '-1'],
+      options: ['sort-amount-down', 'sort-amount-up'],
     },
   },
 })
@@ -85,7 +79,7 @@ export const mutations = {
   },
   SET_LOADING: (state, value) => state.loading = value,
   SET_INIT_TOOLS: (state, user) => {
-    // state.tools.pref.value = ['male', 'female', 'bisexual'][user.preference - 1]
+    state.tools.pref.value = user.preference
     state.tools.ageMin.value = Math.max(+user.age - 5, 18)
     state.tools.ageMax.value = Math.min(+user.age + 5, 99)
     state.tools.tags.value = user.tags
@@ -98,6 +92,11 @@ export const mutations = {
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
 }
 export const actions = {
+
+  async CHANGE_SORT_ORDER ({ commit, state, dispatch }, { val, key }) {
+    commit('CHANGE_SORT_ORDER', [key, val.length])
+    dispatch('FILTER_USERS', { key, val: [val[val.length - 1]] })
+  },
 
   async CHANGE_MOBILE_USER ({ commit, state, dispatch }, page) {
 
@@ -130,19 +129,20 @@ export const actions = {
       commit('SET_LOADING', true)
       const tools = state.tools
       const reqParams = {
-        needPreference: tools.pref.value[0] || 0,
+        preference: tools.pref.value || 0,
         ageMin: tools.ageMin.value || 0,
         ageMax: tools.ageMax.value || 0,
         deltaRadius: tools.radius.value || 0,
         minRating: tools.minRating.value || 0,
         maxRating: tools.maxRating.value || 0,
+        tags: tools.tags.value || 0,
         limit: state.limit,
         offset: (state.curPage - 1) * state.limit,
       }
-      if (tools.tags.value.length) reqParams.tags = tools.tags.value.join()
-      state.sortOrder.forEach(fieldName => {
-        reqParams[fieldName] = tools[fieldName].value[0]
-      })
+      // if (tools.tags.value.length) reqParams.tags = tools.tags.value.join()
+      // state.sortOrder.forEach(fieldName => {
+      //   reqParams[fieldName] = tools[fieldName].value[0]
+      // })
       const res = await this.$axios.$get(`get-users`, {
         params: reqParams,
       })

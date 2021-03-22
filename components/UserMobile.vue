@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import RoundedIcon from '@/components/RoundedIcon.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import Distance from '@/components/Distance.vue'
@@ -63,9 +63,11 @@ export default {
     user: Object,
   },
   computed: {
+    ...mapState({
+      mobilePage: state.users.mobilePage,
+    }),
     ...mapGetters({
       mobile: 'IS_MOBILE',
-      mobilePage: 'users/MOBILE_PAGE',
     }),
   },
   methods: {

@@ -1,24 +1,33 @@
 <template lang="pug">
-  span.raiting
-    font-awesome-icon.star(
-      icon="star"
-      :class="[`fa-${size}x`]"
+  span
+    Icon(
+      :class="$style.icon"
+      name="star"
       :style="{ opacity }"
+      :size="size"
     )
     span(
-      :style="{ fontSize: `${size * 10}px` }"
+      :class="$style[`font_size_${size - 2}`]"
     ) {{ value.toString() || '...' }}
 </template>
 
 <script>
+import Icon from '@/components/Icon.vue'
+
 export default {
   name: 'Raiting',
   data: () => ({
     opacity: null,
   }),
+  components: {
+    Icon,
+  },
   props: {
-    value: [String, Number],
-    size: Number,
+    value: Number,
+    size: {
+      type: Number,
+      default: 8,
+    },
   },
   mounted() {
     this.opacity = this.value / 1000 + 0.2;
@@ -26,10 +35,13 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.raiting {
-  .star {
+<style module lang="scss">
+
+  @import '@/assets/css/map-size.scss';
+
+  .icon {
     color: $main-color;
+    margin-right: 5px;
   }
-}
+
 </style>

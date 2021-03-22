@@ -12,6 +12,8 @@ $colors: (
   connected: #ffacd8,
   ok: #7edd82,
   error: #f76868,
+  inactive: lightgray,
+  main: $main-color,
 );
   
 @each $name, $value in $colors {

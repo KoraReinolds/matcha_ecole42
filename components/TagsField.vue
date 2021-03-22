@@ -52,13 +52,22 @@ export default {
     deleteTag(tag) {
       const newSet = new Set(this.value)
       newSet.delete(tag)
-      this.$emit('change', [...newSet])
+      this.$emit('delete', [...newSet])
     },
     addTag(e) {
       this.readonly = true
-      if (this.newTag && this.newTag.length <= this.maxTagLength) {
-        this.$emit('change', this.newTag)
-        // this.$emit('change', [...new Set(this.value).add(this.newTag)])
+      if (
+        this.newTag &&
+        (this.maxTagLength ?
+          this.newTag.length <= this.maxTagLength :
+          true)
+      ) {
+        this.$emit('change', [
+          ...new Set([
+            ...this.value,
+            this.newTag
+          ])
+        ])
         this.newTag = ''
       }
     },

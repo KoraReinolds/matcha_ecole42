@@ -10,6 +10,7 @@
     )
     Icon(
       :class="[$style.inner]"
+      :style="{ transform: `scale(${innerScale})` }"
       :name="name"
     )
 
@@ -25,6 +26,10 @@ export default {
     size: {
       type: Number,
       default: 12,
+    },
+    innerScale: {
+      type: Number,
+      default: 0.75,
     },
     mask: Boolean,
   },
@@ -48,8 +53,8 @@ export default {
 
   .inner {
     color: inherit;
-    transform: scale(0.75);
     min-width: 100%;
     min-height: 100%;
   }
+  
 </style>

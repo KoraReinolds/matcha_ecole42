@@ -1,8 +1,11 @@
-@for $i from 1 through 12 {
+@for $i from 1 through 24 {
   .size_#{$i} {
     min-width: #{$i * 4}px;
     max-width: #{$i * 4}px;
     min-height: #{$i * 4}px;
     max-height: #{$i * 4}px;
+  }
+  .font_size_#{$i} {
+    font-size: #{$i * 4}px;
   }
 }
