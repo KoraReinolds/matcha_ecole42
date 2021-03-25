@@ -4,17 +4,13 @@
     v-if="tools"
     :class="$style.tools_box"
   )
-    div(
-      :class="$style.toggle_state_box"
+    RoundedIcon(
+      :class="[$style.toggle_state]"
+      :name="show ? 'times' : 'cog'"
+      @click="show=!show"
     )
-      RoundedIcon(
-        :class="[$style.icon, $style.toggle_state]"
-        :name="show ? 'times' : 'cog'"
-        @click="show=!show"
-      )
     div(
-      :class="$style.tools"
-      v-show="show"
+      :class="[$style.tools, { [$style.hide]: !show }]"
     )
       Options(
         :class="[$style.form_field, $style.full_width]"
@@ -105,11 +101,12 @@
       div(
         :class="$style.order"
       )
-        font-awesome-icon(
-          :class="$style.icon"
+        Icon(
           v-for="item in sortOrder"
+          :class="$style.order_icon"
           :key="'item'+item"
-          :icon="['fas', { sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]]"
+          :name="{ sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]"
+          :size="6"
         )
 
 </template>
@@ -117,6 +114,7 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import RoundedIcon from '@/components/RoundedIcon.vue';
+import Icon from '@/components/Icon.vue';
 import Options from '@/components/Options.vue';
 import TextField from '@/components/TextField.vue';
 import TagsField from '@/components/TagsField.vue';
@@ -124,29 +122,22 @@ import TagsField from '@/components/TagsField.vue';
 export default {
   name: 'tools',
   data: () => ({
+    // show tools by default
     show: true,
-    prefIcons: {
-      male: 'mars',
-      female: 'venus',
-      bisexual: 'transgender',
-    }
   }),
   components: {
     RoundedIcon,
+    Icon,
     Options,
     TextField,
     TagsField,
   },
   computed: {
     ...mapState({
-      fieldsData: state => state.forms.formFields,
+      tools: state => state.users.tools,
+      sortOrder: state => state.users.sortOrder,
     }),
     ...mapGetters({
-      sortOrder: 'users/SORT_ORDER',
-      mobile: 'IS_MOBILE',
-    }),
-    ...mapGetters({
-      tools: 'users/TOOLS',
     }),
   },
   methods: {
@@ -154,99 +145,86 @@ export default {
     }),
     ...mapActions({
       changeOrder: 'users/CHANGE_SORT_ORDER',
-      addTag: 'users/ADD_TAG',
       filterUsers: 'users/FILTER_USERS',
-      sort: 'users/SORT',
     }),
   },
-  watch: {
-    mobile(val) {
-      this.show = !val;
-    }
-  },
   mounted() {
-    this.show = !this.mobile;
   }
-};
+}
 </script>
 
 <style module lang="scss">
 
 @mixin toolsMixin(
-  $width: 100%,
-  $position-tools: absolute,
-  $position-tools-box: absolute,
-  $tools-height: 90%,
-  $toggle-btn-viisibility: block,
-  $overflow: hidden,
+  $mobile: false,
+  $default_toggler_display: none,
 ) {
-
+  
+  @if $mobile {
+    $default_toggler_display: block;
+  }
+  
   .tools_box {
-    width: $width;
-    position: $position-tools-box;
+    // inherit parent width
+    width: inherit;
+    position: fixed;
+    height: calc(100% - #{$footer-height} - #{$header-height});
+    overflow: scroll;
+  }
 
-    .toggle_state_box {
-      display: $toggle-btn-viisibility;
-      cursor: pointer;
-      position: fixed;
-      width: $width;
-      z-index: 2;
-      .toggle_state {
-        position: absolute;
-        right: 0;
-        color: $main-color;
-        transform: translate(-10px, 10px);
-      }
-    }
+  .toggle_state {
+    z-index: 2;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: $main-color;
+    display: $default_toggler_display;
+  }
 
-    .tools {
-      background: #fff;
-      width: $width;
-      position: fixed;
-      height: $tools-height;
-      overflow: $overflow;
-      padding: 30px 30px 90px 30px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+  .tools {
+    background-color: inherit;
+    overflow: scroll;
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    opacity: 1;
+    transition: all 0.5s ease;
+    max-height: 100%;
 
-      .form_field {
-        width: 45%;
-        &.full_width {
-          width: 100%
-        }
-      }
-      .order {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 10px;
-        .icon {
-          color: $main-color;
-          margin-right: 10px;
-        }
-      }
+    &.hide {
+      opacity: 0;
+      max-height: 0;
+      padding: 0;
     }
 
   }
 
+  .form_field {
+    width: 45%;
+    &.full_width {
+      width: 100%
+    }
+  }
+
+  .order {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    .order_icon {
+      margin-right: 10px;
+      color: $main-color;
+    }
+  }
+
 }
 
-@include toolsMixin(
-  $width: 260px,
-  $position-tools: fixed,
-  $position-tools-box: relative,
-  $tools-height: auto,
-  $toggle-btn-viisibility: none,
-);
+@include toolsMixin();
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include toolsMixin(
-    $width: 100%,
-    $position-tools: absolute,
-    $position-tools-box: absolute,
-    $tools-height: 100%,
-    $overflow: scroll,
+    $mobile: true,
   );
 }
 

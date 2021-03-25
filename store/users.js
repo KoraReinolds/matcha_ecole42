@@ -58,15 +58,9 @@ export const state = () => ({
   },
 })
 export const getters = {
-  MOBILE_PAGE: (state) => state.mobilePage, 
-  SORT_ORDER: (state) => state.sortOrder,
-  USERS: (state, _, rootState) => {
-    return rootState.mobile ? 
-      state.users.length ? [state.users[state.mobilePage]] : [] :
-      state.users
-  },
-  CUR_PAGE: (state) => state.curPage,
-  TOOLS: (state) => state.tools,
+  USERS: (state, _, rootState) => rootState.mobile ? 
+    state.users.length ? [state.users[state.mobilePage]] : [] :
+    state.users
 }
 export const mutations = {
   CHANGE_SORT_ORDER: (state, [newItem, isChange]) => {
@@ -92,6 +86,13 @@ export const mutations = {
   CHANGE_TOOLS: (state, { key, val }) => state.tools[key].value = val,
 }
 export const actions = {
+
+  async LOAD_MORE_USERS ({ commit, state, dispatch }) {
+    if (state.curPage * state.limit === state.users.length) {
+      commit('CHANGE_PAGE', state.curPage + 1)
+      await dispatch('GET_USERS')
+    }
+  },
 
   async CHANGE_SORT_ORDER ({ commit, state, dispatch }, { val, key }) {
     commit('CHANGE_SORT_ORDER', [key, val.length])

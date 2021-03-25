@@ -64,9 +64,10 @@ export default {
   },
   computed: {
     ...mapState({
-      mobilePage: state.users.mobilePage,
-    }),
+      }),
     ...mapGetters({
+      // mobilePage: state => state.users.mobilePage,
+      mobilePage: 'users/MOBILE_PAGE',
       mobile: 'IS_MOBILE',
     }),
   },

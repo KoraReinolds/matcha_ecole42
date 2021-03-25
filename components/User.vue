@@ -60,15 +60,15 @@
         :class="$style.section"
         :value="user.distance"
       )
-      //- span(
-      //-   :class="[$style.section, $style.preferences]"
-      //- )
-      //-   Icon(
-      //-     v-for="icon in user.preference"
-      //-     :class="$style[`${icon}_color`]"
-      //-     :name="icon"
-      //-     :size="10"
-      //-   )
+      span(
+        :class="[$style.section, $style.preferences]"
+      )
+        Icon(
+          v-for="icon in user.preference"
+          :class="$style[`${icon}_color`]"
+          :name="icon"
+          :size="10"
+        )
 
 </template>
 
