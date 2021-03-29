@@ -1,7 +1,5 @@
 <template lang="pug">
-  div(
-    :class="$style.user"
-  )
+  div
     div(
       :class="[$style.main, $style[`${user.gender}_background-light`]]"
     )
@@ -10,41 +8,27 @@
       )
         CustomImage(
           :class="$style.custom_image"
-          :src="user ? user.images.filter(img => img.avatar)[0].src : ''"
+          :images="user.images"
         )
-        RoundedIcon(
-          v-if="user.likedFrom !== undefined"
-          :class="[$style.like_icon, $style.inactive_color]"
-          :innerScale="0.6"
-          name="like"
-          :size="14"
+        Like(
+          :class="[$style.like_icon]"
+          :user="user"
         )
       div(
         :class="$style.content"
       )
-        span(
-          :class="$style.fio"
-        )
-          NameLink(
-            :class="$style.age"
-            :user="user"
-          )
-          span(
-            :class="$style.age"
-          ) {{ `${user.age} y.o.` }}
+        NameLink(
+          :user="user"
+        ) {{ `${user.age} y.o.` }}
         div(
           :class="$style.biography"
-        )
-          div(
-            :class="$style.text"
-          ) {{ `${user.biography}` }}
-        div(v-if="user.tagsCount !== undefined") Match tags: {{ user.tagsCount || '0' }}
+        ) {{ `${user.biography}` }}
         div(
           :class="$style.tags"
         )
           Tag(
             v-for="tag in user.tags"
-            :class="[`${user.gender}_background`]"
+            :class="[$style[`${user.gender}_background`]]"
             :key="`user_tag_${tag}`"
             :name="tag"
           )
@@ -74,7 +58,6 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import RoundedIcon from '@/components/RoundedIcon.vue'
 import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import Distance from '@/components/Distance.vue'
@@ -86,7 +69,6 @@ import Like from '@/components/Like.vue'
 export default {
   name: 'user',
   components: {
-    RoundedIcon,
     CustomImage,
     Distance,
     NameLink,
@@ -103,11 +85,9 @@ export default {
     }),
   },
   methods: {
-    // gender: index => ['male', 'female', 'bisexual'][index - 1],
     ...mapMutations({
       }),
     ...mapActions({
-      like: 'users/LIKE',
     }),
   },
   mounted() {
@@ -119,81 +99,62 @@ export default {
 
 @import '@/assets/css/map-colors.scss';
 
-.user {
-  display: flex;
-  align-items: center;
-  height: 300px;
-  width: 800px;
-  &:not(:nth-child(1)) {
-    margin-top: 50px;
-  }
-
-  .sidebar {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .section {
-      padding: 20px;
-      display: flex;
-    }
-  }
-
   .main {
     display: flex;
     align-items: center;
-    width: 600px;
-    height: 100%;
     border-radius: 20px;
-
-    .image {
-      padding: 20px;
-      position: relative;
-      height: 300px;
-      max-width: 300px;
-      min-width: 300px;
-      .custom_image {
-        border-radius: 20px;
-      }
-      .gender {
-        position: absolute;
-        top: 30px;
-        left: 30px;
-      }
-      .like_icon {
-        position: absolute;
-        bottom: 30px;
-        right: 30px;
-        z-index: 100;
-      }
-    }
-    .content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 300px;
-      .fio {
-        font-family: 'Lobster', cursive;
-      }
-      .biography {
-        padding: 15px;
-        .text {
-          text-align: center;
-          font-family: 'Rubik', sans-serif;
-          line-height: 15px;
-          font-size: 12px;
-          max-height: 90px;
-          overflow: hidden;
-        }
-      }
-      .tags {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        max-width: 300px;
-      }
-    }
   }
-}
+
+  .image {
+    padding: 20px;
+    position: relative;
+    height: 300px;
+    width: 300px;
+  }
+
+  .custom_image {
+    border-radius: 20px;
+  }
+
+  .like_icon {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+  }
+
+  .biography {
+    margin: 15px 20px;
+    text-align: center;
+    font-family: 'Rubik', sans-serif;
+    line-height: 15px;
+    font-size: 12px;
+    max-height: 60px;
+    overflow: hidden;
+  }
+
+  .tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 300px;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto 0;
+  }
+  
+  .section {
+    padding: 20px;
+  }
 
 </style>

@@ -112,6 +112,8 @@ module.exports = {
             'faHashtag',
             'faChild',
             'faYinYang',
+            'faChevronCircleRight',
+            'faChevronCircleLeft',
           ]
         }
       ]

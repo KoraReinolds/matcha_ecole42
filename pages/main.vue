@@ -7,25 +7,31 @@
       :class="$style.users"
       v-if="users.length"
     )
-      UserMobile(
-        :class="$style.mobile_users"
-        v-for="(user, index) in users"
-        :key="'mobile-'+user.login"
-        :user="user"
-      )
       User(
+        :class="$style.user"
         v-for="(user, index) in users"
         :user="user"
         :key="user.login"
+      )
+      UserMobile(
+        :class="$style.mobile_user"
+        v-for="(user, index) in users"
+        :key="'mobile-'+user.login"
+        :user="user"
       )
     div(
       v-else
       :class="$style.else"
     ) Search returned no results
-    div(
-      :class="$style.sidebar"
+    RoundedIcon(
+      :class="[$style.toggle_state]"
+      :name="show ? 'times' : 'cog'"
+      @click="show=!show"
     )
-      Tools
+    Tools(
+      :show="show"
+    )
+
 
   </div>
 </template>
@@ -35,6 +41,8 @@ import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import User from '@/components/User.vue'
 import Tools from '@/components/Tools.vue'
 import UserMobile from '@/components/UserMobile.vue'
+import RoundedIcon from '@/components/RoundedIcon.vue'
+
 
 export default {
   name: 'mainPage',
@@ -48,8 +56,11 @@ export default {
     User,
     Tools,
     UserMobile,
+    RoundedIcon,
   },
   data: () => ({
+    // hide tools by default
+    show: false,
   }),
   computed: {
     ...mapState({
@@ -82,31 +93,24 @@ export default {
 <style module lang="scss">
 
   @mixin mainMixin(
-    $mobile: false,
     $mobile_display: none,
-    $desktop_display: block,
+    $desktop_display: flex,
     $padding: 50px 20px,
-    $sidebar_width: 260px,
   ) {
     
-    @if $mobile {
-      $mobile_display: block;
-      $desktop_display: none;
-      $sidebar_width: 100%;
-    }
-
-    .mobile_users {
+    .mobile_user {
       display: $mobile_display;
     }
 
-    .sidebar {
-      width: $sidebar_width;
-      height: 100%;
+    .user {
+      display: $desktop_display;
+      &:not(.user:first-child) {
+        margin-top: 50px;
+      }
     }
 
     .users {
       width: 800px;
-      display: $desktop_display;
     }
   
     .main {
@@ -119,6 +123,15 @@ export default {
     .else {
       padding: 50px 20px;
     }
+
+    .toggle_state {
+      position: fixed;
+      display: $mobile_display;
+      top: calc(#{$header-height} + 16px);
+      right: 16px;
+      color: $main-color;
+      z-index: 5;
+    }
     
   }
 
@@ -126,10 +139,10 @@ export default {
 
   @media (max-width: map-get($grid-breakpoints, sm)) {
     @include mainMixin(
-      $mobile: true,
+      $mobile_display: block,
+      $desktop_display: none,
       $padding: 0px,
     );
   }
-
 
 </style>

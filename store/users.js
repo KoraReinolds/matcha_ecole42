@@ -99,7 +99,9 @@ export const actions = {
     dispatch('FILTER_USERS', { key, val: [val[val.length - 1]] })
   },
 
-  async CHANGE_MOBILE_USER ({ commit, state, dispatch }, page) {
+  async CHANGE_MOBILE_USER ({ commit, state, dispatch }, inc) {
+
+    let page = state.mobilePage + inc
 
     if (page === -1) {
       page = state.users.length - 1

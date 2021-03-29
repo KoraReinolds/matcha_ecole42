@@ -1,62 +1,58 @@
 <template lang="pug">
+
   div(
-    :class="[$style.user, gender(user.gender)]"
+    :class="$style.user_mobile"
   )
     div(
-      :class="[$style.main, `${gender(user.gender)}_background-light`]"
+      :class="$style.image"
     )
       div(
-        :class="$style.image"
+        :class="$style.gradient"
       )
-        CustomImage(
-          :class="$style.custom_image"
-          :src="user.src"
-          @click="paginate"
-        )
-        div(
-          v-if="user.likedFrom !== undefined"
-          :class="$style.like_icon"
-        )
-          Like(
-            :class="$style.like"
-            :user="user"
-            :size="2"
-          )
-      div(
-        :class="$style.content"
+      CustomImage(
+        :class="$style.custom_image"
+        :images="user.images"
       )
-        span(
-          :class="$style.fio"
-        )
-          NameLink(
-            :class="$style.age"
-            :user="user"
-          )
-          span(
-            :class="$style.age"
-          ) {{ `${user.age} y.o.` }}
+      NameLink(
+        :class="$style.name"
+        :user="user"
+        color="white"
+      ) {{ `,  ${user.age} y.o.` }}
+    div(
+      :class="$style.panel"
+    ) 
+      Icon(
+        :class="$style.main_color"
+        name="chevron-circle-left"
+        :size="10"
+        @click="changeMobileUser(-1)"
+      )
+      Like(
+        :class="[$style.like, { [$style.active]: user.likedFrom }]"
+        :user="user"
+      )
+      Icon(
+        :class="$style.main_color"
+        name="chevron-circle-right"
+        :size="10"
+        @click="changeMobileUser(1)"
+      )
 
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
-import RoundedIcon from '@/components/RoundedIcon.vue'
+import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
-import Distance from '@/components/Distance.vue'
 import NameLink from '@/components/NameLink.vue'
-import Raiting from '@/components/Raiting.vue'
-import Tag from '@/components/Tag.vue'
 import Like from '@/components/Like.vue'
 
 export default {
   name: 'UserMobile',
   components: {
-    RoundedIcon,
+    Icon,
     CustomImage,
-    Distance,
     NameLink,
-    Raiting,
-    Tag,
     Like,
   },
   props: {
@@ -64,28 +60,21 @@ export default {
   },
   computed: {
     ...mapState({
-      }),
+    }),
     ...mapGetters({
-      // mobilePage: state => state.users.mobilePage,
-      mobilePage: 'users/MOBILE_PAGE',
-      mobile: 'IS_MOBILE',
     }),
   },
   methods: {
-    gender: index => ['male', 'female', 'bisexual'][index - 1],
-    paginate(e) {
-      if (this.mobile) {
-        if (e.clientX > window.innerWidth * 0.8) {
-          this.changeMobileUser(this.mobilePage + 1)
-        } else if (e.clientX < window.innerWidth * 0.2) {
-          this.changeMobileUser(this.mobilePage - 1)
-        }
-      }
-    },
+    // paginate(e) {
+      // if (e.clientX > window.innerWidth * 0.8) {
+      //   this.changeMobileUser(this.mobilePage + 1)
+      // } else if (e.clientX < window.innerWidth * 0.2) {
+      //   this.changeMobileUser(this.mobilePage - 1)
+      // }
+    // },
     ...mapMutations({
       }),
     ...mapActions({
-      like: 'users/LIKE',
       changeMobileUser: 'users/CHANGE_MOBILE_USER',
     }),
   },
@@ -96,44 +85,69 @@ export default {
 
 <style module lang="scss">
 
-.user {
-  .like_icon {
-    bottom: 40px;
-    right: 0;
-    right: 10%;
-    transform: translateX(50%);
-    position: fixed;
-    height: 50px;
-    width: 50px;
-    background: #fff;
-    border-radius: 50%;
-    .like {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+  @import '@/assets/css/map-colors.scss';
+
+  @mixin userMobMixin(
+    $panel-height: 50px,
+  ) {
+
+    .name {
+      display: block;
+      position: relative;
+      top: -70px;
+      padding: 20px;
+      width: 100%;
     }
+
+    .user_mobile {
+      height: 100%;
+      padding: 11px;
+    }
+  
+    .image {
+      position: relative;
+      height: calc(100% - #{$panel-height});
+    }
+  
+    .panel {
+      padding-top: 11px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: $panel-height;
+    }
+
+    .like {
+      z-index: 4;
+      border-radius: 50%;
+      border: 2px solid lightgray;
+      transform: scale(1.3) translateY(-10px);
+      &.active {
+        border-color: $main-color;
+      }
+    }
+  
+    .gradient {
+      border-radius: 5px 24px 5px 5px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(1,1,1,0) 60%, #2c2c2c 100%);
+
+    }
+
+    .custom_image {
+      border-radius: 5px 24px 5px 5px;
+    }
+
   }
-  .fio {
-    bottom: 50px;
-    left: 20px;
-    font-family: 'Lobster', cursive;
-    position: fixed;
-    font-size: 25px;
+
+  @include userMobMixin();
+
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    @include userMobMixin(
+    );
   }
-  .age {
-    display: block;
-    font-size: 14px;
-  }
-  img {
-    opacity: 0.9;
-    height: 80%;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    mask-image: linear-gradient(rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-  }
-}
+
 
 </style>

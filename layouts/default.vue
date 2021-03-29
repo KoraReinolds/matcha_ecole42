@@ -122,7 +122,8 @@ export default {
     flex-grow: 1;
     display: flex;
     @media (max-width: 600px) {
-      margin-bottom: $footer-height;
+      padding-bottom: $footer-height;
+      height: 100vh;
     }
   }
 

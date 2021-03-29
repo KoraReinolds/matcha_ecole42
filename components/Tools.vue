@@ -4,11 +4,6 @@
     v-if="tools"
     :class="$style.tools_box"
   )
-    RoundedIcon(
-      :class="[$style.toggle_state]"
-      :name="show ? 'times' : 'cog'"
-      @click="show=!show"
-    )
     div(
       :class="[$style.tools, { [$style.hide]: !show }]"
     )
@@ -112,19 +107,20 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
-import RoundedIcon from '@/components/RoundedIcon.vue';
-import Icon from '@/components/Icon.vue';
-import Options from '@/components/Options.vue';
-import TextField from '@/components/TextField.vue';
-import TagsField from '@/components/TagsField.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import RoundedIcon from '@/components/RoundedIcon.vue'
+import Icon from '@/components/Icon.vue'
+import Options from '@/components/Options.vue'
+import TextField from '@/components/TextField.vue'
+import TagsField from '@/components/TagsField.vue'
 
 export default {
   name: 'tools',
   data: () => ({
-    // show tools by default
-    show: true,
   }),
+  props: {
+    show: Boolean,
+  },
   components: {
     RoundedIcon,
     Icon,
@@ -156,33 +152,20 @@ export default {
 <style module lang="scss">
 
 @mixin toolsMixin(
-  $mobile: false,
-  $default_toggler_display: none,
+  $tools_width: 260px,
+  $tools_position: relative,
 ) {
   
-  @if $mobile {
-    $default_toggler_display: block;
-  }
-  
   .tools_box {
-    // inherit parent width
-    width: inherit;
-    position: fixed;
-    height: calc(100% - #{$footer-height} - #{$header-height});
-    overflow: scroll;
-  }
-
-  .toggle_state {
-    z-index: 2;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: $main-color;
-    display: $default_toggler_display;
+    position: $tools_position;
+    width: $tools_width;
+    z-index: 4;
   }
 
   .tools {
-    background-color: inherit;
+    position: fixed;
+    width: inherit;
+    background-color: #fff;
     overflow: scroll;
     padding: 30px;
     display: flex;
@@ -190,14 +173,7 @@ export default {
     justify-content: space-between;
     opacity: 1;
     transition: all 0.5s ease;
-    max-height: 100%;
-
-    &.hide {
-      opacity: 0;
-      max-height: 0;
-      padding: 0;
-    }
-
+    max-height: calc(100% - #{$header-height} - #{$footer-height});
   }
 
   .form_field {
@@ -224,8 +200,15 @@ export default {
 
 @media (max-width: map-get($grid-breakpoints, sm)) {
   @include toolsMixin(
-    $mobile: true,
+    $tools_width: 100%,
+    $tools_position: fixed,
   );
+
+  .tools.hide {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+  }
 }
 
 

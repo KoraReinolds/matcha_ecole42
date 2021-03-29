@@ -1,12 +1,16 @@
 <template lang="pug">
-  span.name
-    nuxt-link.link(
+  nuxt-link(
+    :class="[$style.name, $style[`${color}_color`]]"
+    :to="`/user/${user.login}`"
+  )
+    span(
       v-if="user"
-      :to="`/user/${user.login}`"
     ) {{`${user.fname} ${user.lname} `}}
-    span.link(
+    span(
+      :class="[$style.link]"
       v-else
     ) ...
+    slot
 </template>
 
 <script>
@@ -16,23 +20,27 @@ export default {
   }),
   props: {
     user: Object,
+    color: {
+      type: String,
+      default: 'font',
+    }
   },
   mounted() {
   },
 };
 </script>
 
-<style scoped lang="scss">
-.name {
-  font-family: 'Lobster', cursive;
-  a {
+<style module lang="scss">
+
+  @import '@/assets/css/map-colors.scss';
+
+  .name {
+    font-family: 'Lobster', cursive;
     text-decoration: none;
-    color: $font-color;
     font-size: 20px;
     cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
-  a:hover {
-    text-decoration: underline;
-  }
-}
 </style>

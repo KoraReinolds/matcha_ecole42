@@ -5,7 +5,7 @@
     @click="$emit('click', $event)"
   )
     Icon(
-      :class="[$style.circle]"
+      :class="[$style.circle, $style[`${ circleColor }_color`]]"
       name="circle"
     )
     Icon(
@@ -23,6 +23,10 @@ export default {
   name: 'RoundedIcon',
   props: {
     name: String,
+    circleColor: {
+      type: String,
+      default: 'white',
+    },
     size: {
       type: Number,
       default: 12,
@@ -43,10 +47,10 @@ export default {
 
 <style module lang="scss">
 
+  @import '@/assets/css/map-colors.scss';
   @import '@/assets/css/map-size.scss';
 
   .circle {
-    color: #fff;
     min-width: 100%;
     min-height: 100%;
   }
