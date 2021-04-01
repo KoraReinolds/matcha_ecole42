@@ -42,7 +42,7 @@
       )
       Distance(
         :class="$style.section"
-        :value="user.distance"
+        :value="user.dist"
       )
       span(
         :class="[$style.section, $style.preferences]"

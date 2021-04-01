@@ -67,30 +67,30 @@
 
       Options(
         :class="$style.form_field"
-        v-bind="tools.sortLocation"
+        v-bind="tools.dist"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'sortLocation' })"
+        @change="changeOrder({ val: $event, key: 'dist' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        v-bind="tools.sortAge"
+        v-bind="tools.age"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'sortAge' })"
+        @change="changeOrder({ val: $event, key: 'age' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        v-bind="tools.sortRating"
+        v-bind="tools.rating"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'sortRating' })"
+        @change="changeOrder({ val: $event, key: 'rating' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
-        v-bind="tools.sortTags"
+        v-bind="tools.tagsCount"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'sortTags' })"
+        @change="changeOrder({ val: $event, key: 'tagsCount' })"
         type="checkbox"
       )
       div(
@@ -100,7 +100,7 @@
           v-for="item in sortOrder"
           :class="$style.order_icon"
           :key="'item'+item"
-          :name="{ sortTags: 'hashtag', sortLocation: 'location-arrow', sortRating: 'star', sortAge: 'child' }[item]"
+          :name="{ tagsCount: 'hashtag', dist: 'location-arrow', rating: 'star', age: 'child' }[item]"
           :size="6"
         )
 

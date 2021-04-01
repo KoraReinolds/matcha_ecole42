@@ -7,8 +7,7 @@
     )
     span(
       :class="$style[`font_size_${size - 2}`]"
-    ) {{ (myLocation && value !== '0') ? `${Math.floor(value / 1000)} km` : '...' }}
-    //- ) {{ (myLocation && value !== '0') ? `${Math.floor(value * 10) / 10} km` : '...' }}
+    ) {{ (myLocation && value !== '0') ? `${value} km` : '...' }}
 </template>
 
 <script>

@@ -14,10 +14,9 @@
         :key="user.login"
       )
       UserMobile(
+        v-if="mobileUser"
         :class="$style.mobile_user"
-        v-for="(user, index) in users"
-        :key="'mobile-'+user.login"
-        :user="user"
+        :user="mobileUser"
       )
     div(
       v-else
@@ -47,6 +46,7 @@ import RoundedIcon from '@/components/RoundedIcon.vue'
 export default {
   name: 'mainPage',
   async validate({ route, store, $auth }) {
+    store.commit('users/SET_USERS', [])
     // set initial tools params
     store.commit('users/SET_INIT_TOOLS', $auth.user)
     await store.dispatch('users/GET_USERS')
@@ -64,9 +64,10 @@ export default {
   }),
   computed: {
     ...mapState({
+      users: state => state.users.users,
     }),
     ...mapGetters({
-      users: 'users/USERS',
+      mobileUser: 'users/MOBILE_USER'
     }),
   },
   methods: {

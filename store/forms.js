@@ -199,23 +199,6 @@ export const actions = {
 
   async UPDATE_USER ({ dispatch, state }) {
 
-    // console.log([
-    //   'age',
-    //   'biography',
-    //   'email',
-    //   'fname',
-    //   'gender',
-    //   'lname',
-    //   'images',
-    //   'location',
-    //   'login',
-    //   'preference',
-    //   'tags',
-    // ].reduce((sum, cur) => ({
-    //   ...sum,
-    //   [cur]: state.formFields[cur].value
-    // }), {}))
-
     let res = await this.$axios.$post('profile-update', [
       'age',
       'biography',
