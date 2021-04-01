@@ -114,6 +114,7 @@ module.exports = {
             'faYinYang',
             'faChevronCircleRight',
             'faChevronCircleLeft',
+            'faCommentDots',
           ]
         }
       ]

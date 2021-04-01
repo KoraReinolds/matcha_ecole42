@@ -77,8 +77,6 @@ export default {
 
 <style module lang="scss">
 
-  @import '@/assets/css/title.scss';
-
   .tags {
     margin-top: 10px;
     text-align: left;

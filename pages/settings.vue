@@ -135,12 +135,6 @@ export default {
       updateUser: 'forms/UPDATE_USER',
       changeUserField: 'forms/CHANGE_USER_FIELD',
     }),
-    // setTag(tag) {
-    //   this.setValue({
-    //     key: 'tags',
-    //     value: $event,
-    //   })
-    // }
   },
   mounted() {
     Object.entries(this.$auth.user).forEach(([key, value]) => {

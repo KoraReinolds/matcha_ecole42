@@ -1,125 +1,83 @@
 <template lang="pug">
   div(
-    :class="[$style.user_page, 'footer_bottom']"
+    :class="[$style.user_page]"
   )
     div(
       v-if="user.images.length"
-      :class="$style.main_images"
+      :class="$style.main_image"
     )
       CustomImage(
-        :width="mobile ? '100%' : '200px'"
-        :height="mobile ? '100%' : '300px'"
-        :src="user ? user.images.filter(img => img.avatar)[0].src : ''"
+        :class="$style.image"
+        :images="user.images"
       )
       div(
-        v-if="!myPage"
-        :class="$style.icons"
+        :class="$style.tools"
       )
         Like(
-          :size="2"
+          :class="$style.icon"
           :user="user"
         )
-        Ban(
-          :size="2"
-          :user="user"
+        RoundedIcon(
+          v-if="user.likedFrom && user.likedTo"
+          :class="$style.icon"
+          name="comment-dots"
+          :size="15"
+          :innerScale="0.6"
+          @click="() => $router.push(`/chat/${user.login}`)"
         )
-        Block(
-          :size="2"
-          :user="user"
-        )
-      Button(
-        v-if="chatAvailable"
-        :class="$style.chat_link"
-        @click="() => $router.push(`/chat/${user.login}`)"
-        :user="user"
-      ) Join to chat
       
     div(
       :class="$style.info"
     )
-      div(
-        :class="$style.field"
-      )
-        span(
-          :class="$style.fio"
-        )
-          NameLink(
-            :user="user"
-          )
-          span {{ `, ${user.age}` }} y.o.
+      div( :class="$style.field" )
+        NameLink(
+          :user="user"
+        ) {{ `, ${user.age}` }} y.o.
           Raiting(
             :class="$style.rate"
             :value="user ? user.rating : undefined"
-            :size="1"
-          )
-          Online(
-            v-if="user"
-            :class="$style.online"
-            :time="new Date(this.user.time)"
+            :size="6"
           )
 
-      div.title.left Gender
-      div(
-        :class="[$style.field, $style.gender]"
-      ) {{ ['male', 'female', 'bisexual'][user.gender - 1] }}
+      div( :class="[$style.title]" ) Gender
+      div( :class="[$style.field]" ) {{ user.gender }}
 
-      div.title.left Preferences
-      div(
-        :class="[$style.field, $style.preferences]"
-      )
-        template(v-if="user")
-          span {{ ['male', 'female', 'bisexual'][user.preference - 1] }}
-        template(v-else)
-          span ...
+      div( :class="[$style.title]" ) Preferences
+      div( :class="[$style.field]" )
+        span {{ user.preference.join(', ') }}
 
-      div.title.left Biography
-      div(
-        :class="[$style.field, $style.biography]"
-      ) {{ user ? user.biography : '...' }}
+      div( :class="[$style.title]" ) Biography
+      div( :class="[$style.field]" ) {{ user ? user.biography : '...' }}
 
-      div.title.left Tags
-      div(
-        :class="[$style.field, $style.tags]"
-      )
-        template(v-if="user")
-          Tag(
-            v-for="tag in user.tags"
-            :key="`user_tag_${tag}`"
-            :name="tag"
-          )
-        template(v-else)
-          span ...
+      div( :class="[$style.title]" ) Tags
+      div( :class="[$style.field]" )
+        Tag(
+          v-for="tag in user.tags"
+          :key="`user_tag_${tag}`"
+          :name="tag"
+        )
 
-      div.title.left Images
+      div( :class="[$style.title]" ) Images
       div(
         :class="[$style.field, $style.images]"
       )
-        template(v-if="user")
-          CustomImage(
-            :class="$style.image"
-            height="100px"
-            width="100px"
-            v-for="img in user.images"
-            :src="img.src"
-            :key="'img'+img.index"
-          )
-        template(v-else)
-          span ...
+        CustomImage(
+          :class="$style.mini_image"
+          v-for="img in user.images"
+          :src="img.src"
+          :key="'img'+img.index"
+        )
 
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import CustomImage from '@/components/CustomImage.vue'
-import NameLink from '@/components/NameLink.vue'
-import Button from '@/components/Button.vue'
-import Tag from '@/components/Tag.vue'
-import Ban from '@/components/Ban.vue'
-import Block from '@/components/Block.vue'
 import Like from '@/components/Like.vue'
-import Distance from '@/components/Distance.vue'
 import Raiting from '@/components/Raiting.vue'
-import Online from '@/components/Online.vue'
+import NameLink from '@/components/NameLink.vue'
+import RoundedIcon from '@/components/RoundedIcon.vue'
+import Tag from '@/components/Tag.vue'
 
 export default {
   name: 'UserPage',
@@ -129,30 +87,20 @@ export default {
   },
   components: {
     CustomImage,
-    NameLink,
-    Button,
-    Tag,
-    Ban,
-    Block,
     Like,
-    Distance,
     Raiting,
-    Online,
+    NameLink,
+    RoundedIcon,
+    Tag,
   },
   data: () => ({
   }),
   computed: {
-    ...mapGetters({
-      user: 'user/USER',
-      chatAvailable: 'user/CHAT_AVAILABLE',
-      mobile: 'IS_MOBILE',
+    ...mapState({
+      user: state => state.user.user,
     }),
-    myPage: function() {
-      return this.user ? this.$auth.user.login === this.user.login : true
-    },
-    chatAvailable: function() {
-      return this.user ? this.user.likedFrom && this.user.likedTo : false
-    }
+    ...mapGetters({
+    }),
   },
   methods: {
     ...mapMutations({
@@ -167,84 +115,77 @@ export default {
 
 <style module lang="scss">
 
+@import '@/assets/css/title.scss';
+
+
 @mixin userMixin(
   $padding,
-  $flex-direction: row,
-  $width-info,
-  $margin-left-info: 0,
-  $online-display: block,
+  $height,
 ) {
-
+  
   .user_page {
+    max-width: 800px;
     padding: $padding;
-    display: flex;
-    flex-direction: $flex-direction;
-    .main_images {
-      margin-bottom: 20px;
-      .icons {
-        color: lightgray;
-        display: flex;
-        position: relative;
-        justify-content: space-around;
-      }
-      .chat_link {
-        position: relative;
-        top: 10px;
-        width: 100%;
-        display: block;
-        width: 90%;
-        margin: 0 auto;
-      }
-    }
-    .info {
-      width: $width-info;
-      margin-left: $margin-left-info;
-      .field {
-        position: relative;
-        width: 100%;
-        padding: 10px 5%;
-        .fio {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          flex-direction: $flex-direction;
-          position: relative;
-          font-family: 'Lobster', cursive;
-          font-size: 20px;
-          .rate {
-            margin-left: 10px;
-          }
-          .online {
-            display: $online-display;
-            margin-left: auto;
-          }
-        }
-      }
-      .tags,
-      .preferences {
-        span {
-          margin-right: 10px;
-        }
-      }
-      .image {
-        margin: 5px;
-      }
-    }
   }
+
+  .tools {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px 0;
+  }
+
+  .icon {
+    margin-right: 10px;
+  }
+
+  .main_image {
+    position: relative;
+    width: 100%;
+    height: $height;
+    margin-bottom: 20px;
+  }
+
+  .info {
+    padding-bottom: calc(#{$footer-height} + 20px);
+    max-width: 600px;
+  }
+
+  .title {
+    @include titleMixin(
+      $base-color: $main-color,
+    )
+  }
+
+  .field {
+    padding: 10px 5%;
+  }
+
+  .rate {
+    margin-left: 10px;
+  }
+
+  .images {
+    display: flex;
+  }
+
+  .mini_image {
+    height: 100px;
+    width: 100px;
+    margin-right: 10px;
+  }
+
 }
 
 @include userMixin(
   $padding: 50px 10px,
-  $width-info: 600px,
-  $margin-left-info: 30px,
+  $height: 400px,
 );
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include userMixin(
-    $padding: 0 0 50px 0,
-    $flex-direction: column,
-    $width-info: 100%,
-    $online-display: none,
+    $padding: 0,
+    $height: 100%,
   );
 }
 
