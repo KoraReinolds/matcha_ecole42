@@ -5,6 +5,8 @@
     :icon="icons[name] || name"
     v-bind="$attrs"
     @click="$emit('click', $event)"
+    :mask="mask ? 'circle' : ''"
+    :transform="mask ? 'shrink-4' : ''"
   )
 
 </template>
@@ -38,6 +40,10 @@ export default {
       default: 8,
     },
     rounded: {
+      type: Boolean,
+      default: false,
+    },
+    mask: {
       type: Boolean,
       default: false,
     },

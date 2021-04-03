@@ -100,7 +100,7 @@ export default {
     }
 
     .user_mobile {
-      height: 100%;
+      height: calc(100vh - #{$footer-height} - #{$header-height});
       padding: 11px;
     }
   

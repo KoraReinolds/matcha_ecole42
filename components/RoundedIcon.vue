@@ -35,7 +35,6 @@ export default {
       type: Number,
       default: 0.75,
     },
-    mask: Boolean,
   },
   components: {
     Icon,

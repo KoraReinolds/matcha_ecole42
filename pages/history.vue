@@ -6,10 +6,11 @@
       v-if="historyList.length"
     )
       UserShort(
-        v-for="({ time, ...target }, index) in historyList"
+        v-for="({ action, created, target }, index) in historyList"
         :key="'history'+index+target.login"
         :user="target"
-        :time="time"
+        :type="action"
+        :time="created"
       )
     template(
       v-else
@@ -17,21 +18,23 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import UserShort from '@/components/UserShort.vue';
 
 export default {
   name: 'history',
   async validate({ route, store }) {
-    let res = await store.dispatch('history/GET_HISTORY')
+    await store.dispatch('history/GET_HISTORY')
     return true
   },
   components: {
     UserShort,
   },
   computed: {
+    ...mapState({
+      historyList: state => state.history.history,
+    }),
     ...mapGetters({
-      historyList: 'history/HISTORY',
     }),
   },
   methods: {
@@ -47,7 +50,8 @@ export default {
 <style module lang="scss">
 
   .short_list {
-    padding: 50px 10px;
+    margin: 0 auto;
+    padding: 50px 20px;
   }
 
 </style>

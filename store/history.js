@@ -7,8 +7,6 @@ export const state = () => ({
 })
 export const getters = {
   POP_WINDOWS: (state) => state.popWindows,
-  HISTORY: (state) => state.history,
-  NOTIFICATIONS: (state) => state.notifications,
   NOTIFICATION_COUNT: (state) => state.unreadedNotifications > 99 ? '+99' : state.unreadedNotifications,
   // NOTIFICATION_COUNT: (state) => state.notifications.length - state.notificationsChecked,
 }
@@ -98,7 +96,7 @@ export const actions = {
   },
 
   async GET_NOTIFICATIONS ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$get('notification?limit=50&offset=0')
+    const res = await this.$axios.$post('notifications')
     if (res.type === 'ok') {
       commit('SET_NOTIFICATIONS', res.data)
     }
@@ -119,7 +117,7 @@ export const actions = {
   },
 
   async GET_HISTORY ({ commit, state, rootState, dispatch }) {
-    const res = await this.$axios.$get('history?limit=50&offset=0')
+    const res = await this.$axios.$post('history')
     if (res.type === 'ok') {
       commit('SET_HISTORY', res.data)
     }

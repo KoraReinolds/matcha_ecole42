@@ -8,16 +8,20 @@
       :class="$style.img_container"
     )
       CustomImage(
-        height="96px"
-        width="96px"
+        :class="$style.image"
+        :images="user.images"
         rounded
-        :src="user.src"
       )
       RoundedIcon(
-        :class="$style.gender"
-        :icon="['male', 'female', 'bisexual'][user.gender - 1]"
-        :mask="mobile"
-        :size="6"
+        :class="[$style.gender, $style[`${user.gender}_color`]]"
+        :name="user.gender"
+        :size="24"
+      )
+      Icon(
+        :class="[$style.gender_mobile]"
+        :name="user.gender"
+        :size="24"
+        :mask="true"
       )
     div(
       :class="$style.info_container"
@@ -25,10 +29,10 @@
       div(
         :class="$style.info_line"
       )
-        font-awesome-icon.fa-2x(
-          v-if="action"
-          :class="[$style.icon, `${action}_color`, action]"
-          :icon="icons[action]"
+        Icon(
+          v-if="type"
+          :class="[$style.icon, $style[`${type}_color`]]"
+          :name="type"
         )
         NameLink(
           :user="user"
@@ -43,27 +47,26 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import NameLink from '@/components/NameLink.vue'
 import RoundedIcon from '@/components/RoundedIcon.vue'
+import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
-import iconsMixin from '@/mixins/iconMixin'
 
 export default {
   name: 'userShort',
   data: () => ({
-    action: '',
   }),
   props: {
     user: Object,
+    type: String,
     time: String,
   },
   components: {
     RoundedIcon,
+    Icon,
     CustomImage,
     NameLink,
   },
-  mixins: [iconsMixin],
   computed: {
     ...mapGetters({
-      mobile: 'IS_MOBILE',
     }),
   },
   methods: {
@@ -82,61 +85,79 @@ export default {
     }),
   },
   mounted() {
-    this.action = {
-      LIKE: 'like',
-      PROFILE_LOAD: 'visit',
-      CONNECTED: 'connected',
-      SEND_MESSAGE: 'messages',
-      DISCONNECTED: 'dislike',
-    }[this.user.type]
   },
 };
 </script>
 
 <style module lang="scss">
 
+@import '@/assets/css/map-colors.scss';
+
 @mixin userMixin(
   $gender-display: none,
+  $gender-mobile-display: block,
 ) {
 
   .user {
     height: 96px;
     display: flex;
     width: 100%;
-    margin-bottom: 20px;
-    .img_container {
-      display: flex;
-      position: relative;
-      margin-right: 15px;
-      .gender {
-        display: $gender-display;
-        position: relative;
-        z-index: 1;
-        opacity: 0.7;
-        right: 15px;
-      }
+    &:not(.user:last-child) {
+      margin-bottom: 20px;
     }
-    .info_container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      .info_line {
-        display: flex;
-        .icon {
-          margin-right: 10px;
-        }
-      }
-      .time {
-        font-size: 0.8em;
-        color: gray;
-      }
+  }
+
+  .img_container {
+    display: flex;
+    position: relative;
+    margin-right: 15px;
+  }
+
+  .image {
+    max-height: 96px;
+    min-height: 96px;
+    max-width: 96px;
+    min-width: 96px;
+  }
+
+  .gender {
+    display: $gender-display;
+    position: relative;
+    z-index: 1;
+    opacity: 0.7;
+    right: 15px;
+  }
+
+  .gender_mobile {
+    display: $gender-mobile-display;
+    position: absolute;
+    color: white;
+    opacity: 0.4;
+  }
+
+  .info_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .info_line {
+    display: flex;
+    .icon {
+      margin-right: 10px;
     }
+  }
+
+  .time {
+    font-size: 0.8em;
+    color: gray;
   }
 
 }
 
 @include userMixin(
   $gender-display: block,
+  $gender-mobile-display: none,
 );
 
 @media (max-width: 600px) {

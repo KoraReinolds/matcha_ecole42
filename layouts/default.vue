@@ -123,7 +123,7 @@ export default {
     display: flex;
     @media (max-width: 600px) {
       padding-bottom: $footer-height;
-      height: 100vh;
+      min-height: 100vh;
     }
   }
 

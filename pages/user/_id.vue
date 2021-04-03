@@ -6,10 +6,12 @@
       v-if="user.images.length"
       :class="$style.main_image"
     )
-      CustomImage(
+      div(
         :class="$style.image"
-        :images="user.images"
       )
+        CustomImage(
+          :images="user.images"
+        )
       div(
         :class="$style.tools"
       )
@@ -129,7 +131,7 @@ export default {
   }
 
   .tools {
-    position: absolute;
+  position: absolute;
     bottom: 0;
     right: 0;
     padding: 10px 0;
@@ -139,10 +141,13 @@ export default {
     margin-right: 10px;
   }
 
+  .image {
+    height: $height;
+  }
+
   .main_image {
     position: relative;
     width: 100%;
-    height: $height;
     margin-bottom: 20px;
   }
 

@@ -80,7 +80,7 @@ export default {
       display: flex;
       align-items: center;
       .footer_content {
-        margin: 0 20px;
+        margin: 0 auto;
         font-family: 'Oswald', sans-serif;
         font-size: 18px;
         color: white;

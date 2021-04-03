@@ -6,10 +6,11 @@
       v-if="notifList.length"
     )
       UserShort(
-        v-for="({ time, ...who }, index) in notifList"
+        v-for="({ action, created, who }, index) in notifList"
         :key="'notif'+index+who.login"
         :user="who"
-        :time="time"
+        :type="action"
+        :time="created"
       )
     template(
       v-else
@@ -17,21 +18,23 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import UserShort from '@/components/UserShort.vue';
 
 export default {
   name: 'notif',
   async validate({ route, store }) {
-    let res = await store.dispatch('history/GET_NOTIFICATIONS')
+    await store.dispatch('history/GET_NOTIFICATIONS')
     return true
   },
   components: {
     UserShort,
   },
   computed: {
+    ...mapState({
+      notifList: state => state.history.notifications,
+    }),
     ...mapGetters({
-      notifList: 'history/NOTIFICATIONS',
     }),
   },
   methods: {
@@ -48,7 +51,8 @@ export default {
 <style module lang="scss">
 
   .short_list {
-    padding: 50px 10px;
+    margin: 0 auto;
+    padding: 50px 20px;
   }
 
 </style>
