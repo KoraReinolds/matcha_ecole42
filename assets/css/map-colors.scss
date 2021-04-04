@@ -14,18 +14,19 @@ $colors: (
   error: #f76868,
   inactive: lightgray,
   main: $main-color,
-  white: #fff,
+  white: rgb(255, 255, 255),
   font: $font-color,
 );
   
 @each $name, $value in $colors {
-  .#{$name}_color {
+  // #{''+$colorNam/e+''}
+  .#{''+$name+''}_color {
     color: $value;
   }
-  .#{$name}_background {
+  .#{''+$name+''}_background {
     background: $value;
   }
-  .#{$name}_background-light {
+  .#{''+$name+''}_background-light {
     background: rgba($color: $value, $alpha: 0.4);
   }
 }

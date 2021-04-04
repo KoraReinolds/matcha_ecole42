@@ -50,6 +50,7 @@
         Icon(
           v-for="icon in user.preference"
           :class="$style[`${icon}_color`]"
+          :key="`user_pref_${icon}`"
           :name="icon"
           :size="10"
         )

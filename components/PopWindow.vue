@@ -1,88 +1,106 @@
 <template lang="pug">
-    div.notifications.only_laptop(
-      v-if="messages"
+  div(
+    v-if="messages"
+    :class="[$style.notifications]"
+  )
+    div(
+      v-for="(message, index) in messages"
+      :class="[$style.mess, { [$style.hide]: !message.visible }]"
+      :key="'message'+index"
     )
-      div.mess(
-        v-for="(message, index) in messages"
-        :key="'message'+index"
-        :style="{ display: message.visible ? 'block' : 'none' }"
+      Icon(
+        :class="[$style.icon, $style[`${message.action}_color`]]"
+        :name="message.action"
+        :size="10"
       )
-          font-awesome-icon.close(
-            @click="closeMessage(index)"
-            icon="times"
-          )
-          font-awesome-icon.icon.fa-2x(
-            :class="[`${message.action}_color`, message.action]"
-            :icon="icons[message.action]"
-          )
-          span {{ message.msg || getMessage(message) }}
+      span {{ message.msg }}
+      Icon(
+        @click="closeMessage(message.id)"
+        name="times"
+        :size="5"
+      )
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
-import iconsMixin from '@/mixins/iconMixin';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'PopWindow',
+  components: {
+    Icon,
+  },
   props: {
     icon: String,
   },
-  mixins: [iconsMixin],
   computed: {
+    ...mapState({
+      messages: state => state.popWindows.popWindows,
+    }),
     ...mapGetters({
-      messages: 'history/POP_WINDOWS',
     }),
   },
   methods: {
     ...mapMutations({
-      closeMessage: 'history/CLOSE_MSG',
+      closeMessage: 'popWindows/HIDE_MSG',
     }),
     ...mapActions({
-      getNotifications: 'history/GET_NOTIFICATIONS',
     }),
-    getMessage(message) {
-      return (message.action ==='messages') ?
-        `${message.who.fname} ${message.who.lname} send you message` :
-        `${message.who.fname} ${message.who.lname} ${message.action} you`
-    }
   },
   mounted() {
   },
 };
 </script>
 
-<style scoped lang="scss">
-@media (min-width: map-get($grid-breakpoints, sm)) {
-  .notifications {
-    width: 400px;
-    position: fixed;
-    right: 5%;
-    bottom: 10%;
-    display: flex;
-    flex-direction: column-reverse;
-    z-index: 11111111;
+<style module lang="scss">
+
+@import '@/assets/css/map-colors.scss';
+  
+  @mixin popWindowMixin(
+
+  ) {
+      
+    .notifications {
+      width: 400px;
+      position: fixed;
+      right: 5%;
+      bottom: 10%;
+      display: flex;
+      flex-direction: column-reverse;
+      z-index: 11111111;
+    }
+
     .mess {
-      position: relative;
+      display: flex;
       color: white;
       background: linear-gradient(
         rgba(0, 0, 0, 0.7),
         rgba(0, 0, 0, 0.7)
       );
-      display: flex;
-      align-items: center;
       margin: 10px 0;
       border-radius: 20px 20px 0px 20px;
-      padding: 20px 40px 20px 20px;
-      .close {
-        cursor: pointer;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-      .icon {
-        margin-right: 10px;
-      }
+      padding: 20px;
+      max-height: 200px;
+      opacity: 1;
+      transition: all 0.5s ease-in-out;
+      overflow: hidden;
+    }
+
+    .hide {
+      opacity: 0;
+      max-height: 0px;
+      padding: 0px 20px;
+    }
+
+    .icon {
+      margin-right: 20px;
     }
   }
-}
+
+  @include popWindowMixin();
+
+  @media (max-width: map-get($grid-breakpoints, sm)) {
+    @include popWindowMixin(
+    );
+  }
 </style>
