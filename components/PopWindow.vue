@@ -8,12 +8,15 @@
       :class="[$style.mess, { [$style.hide]: !message.visible }]"
       :key="'message'+index"
     )
-      Icon(
+      RoundedIcon(
         :class="[$style.icon, $style[`${message.action}_color`]]"
         :name="message.action"
         :size="10"
+        :innerScale="0.6"
       )
-      span {{ message.msg }}
+      span(
+        :class="[$style.text]"
+      ) {{ message.msg }}
       Icon(
         @click="closeMessage(message.id)"
         name="times"
@@ -24,25 +27,27 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import Icon from '@/components/Icon.vue'
+import RoundedIcon from '@/components/RoundedIcon.vue'
 
 export default {
   name: 'PopWindow',
   components: {
     Icon,
+    RoundedIcon,
   },
   props: {
     icon: String,
   },
   computed: {
     ...mapState({
-      messages: state => state.popWindows.popWindows,
+      messages: state => state.windows.popWindows,
     }),
     ...mapGetters({
     }),
   },
   methods: {
     ...mapMutations({
-      closeMessage: 'popWindows/HIDE_MSG',
+      closeMessage: 'windows/HIDE_MSG',
     }),
     ...mapActions({
     }),
@@ -57,30 +62,44 @@ export default {
 @import '@/assets/css/map-colors.scss';
   
   @mixin popWindowMixin(
-
+    $width: 400px,
+    $offset-right: 5%,
+    $offset-bottom: 10%,
+    $border-radius: 20px 20px 0px 20px,
+    $max-message-height: 200px,
+    $padding: 20px,
+    $align: start,
+    $message-position: static,
   ) {
       
     .notifications {
-      width: 400px;
+      width: $width;
       position: fixed;
-      right: 5%;
-      bottom: 10%;
+      flex-direction: column;
+      right: $offset-right;
+      bottom: $offset-bottom;
       display: flex;
-      flex-direction: column-reverse;
       z-index: 11111111;
     }
 
     .mess {
+      position: $message-position;
+      bottom: 0;
+      width: inherit;
+
       display: flex;
+      align-items: $align;
       color: white;
       background: linear-gradient(
-        rgba(0, 0, 0, 0.7),
-        rgba(0, 0, 0, 0.7)
+        rgb(110, 110, 110),
+        rgb(110, 110, 110),
       );
-      margin: 10px 0;
-      border-radius: 20px 20px 0px 20px;
-      padding: 20px;
-      max-height: 200px;
+      margin-top: 20px;
+      border-radius: $border-radius;
+      padding: $padding;
+      max-height: $max-message-height;
+      min-height: 50px;
+
       opacity: 1;
       transition: all 0.5s ease-in-out;
       overflow: hidden;
@@ -92,15 +111,28 @@ export default {
       padding: 0px 20px;
     }
 
+    .text {
+      flex-grow: 1;
+    }
+
     .icon {
       margin-right: 20px;
     }
+
   }
 
   @include popWindowMixin();
 
   @media (max-width: map-get($grid-breakpoints, sm)) {
     @include popWindowMixin(
+      $width: 100%,
+      $offset-right: 0%,
+      $offset-bottom: 0%,
+      $border-radius: 0px,
+      $max-message-height: 50px,
+      $padding: 0px 20px,
+      $align: center,
+      $message-position: absolute,
     );
   }
 </style>

@@ -222,7 +222,7 @@ export const actions = {
       dispatch('CHANGE_USER_FIELD', { key: 'isFilled', value: true })
 
       res.message = 'Данные успешно обновлены'
-      dispatch('popWindows/PUSH_POP_WINDOW', res, { root: true })
+      dispatch('windows/PUSH_POP_WINDOW', res, { root: true })
 
     }
 
@@ -345,7 +345,7 @@ export const actions = {
         })
       }
     } else {
-      dispatch('popWindows/PUSH_POP_WINDOW', {
+      dispatch('windows/PUSH_POP_WINDOW', {
         type: 'error',
         message: 'Необходимо загрузить картинку в формате JPEG',
       }, { root: true })
@@ -358,7 +358,7 @@ export const actions = {
     
     if (res.type === 'ok') {
       res.message = 'На вашу почту отправленна инструкция по смене пароля'
-      dispatch('popWindows/PUSH_POP_WINDOW', res, { root: true })
+      dispatch('windows/PUSH_POP_WINDOW', res, { root: true })
     }
   },
 

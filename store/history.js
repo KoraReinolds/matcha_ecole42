@@ -67,7 +67,7 @@ export const actions = {
       commit('SET_NOTIFICATIONS', res.data)
     }
     if (res.message) {
-      dispatch('popWindows/PUSH_POP_WINDOW', {
+      dispatch('windows/PUSH_POP_WINDOW', {
         action: res.type,
         visible: true,
         msg: res.message,
@@ -88,7 +88,7 @@ export const actions = {
       commit('SET_HISTORY', res.data)
     }
     if (res.message) {
-      dispatch('popWindows/PUSH_POP_WINDOW', {
+      dispatch('windows/PUSH_POP_WINDOW', {
         action: res.type,
         visible: true,
         msg: res.message,
