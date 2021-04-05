@@ -3,11 +3,10 @@ export const state = () => ({
   curUser: null,
   messages: [],
 })
+
 export const getters = {
-  CUR_USER: (state) => state.curUser,
-  CHAT_LIST: (state) => state.users,
-  CHAT_MESSAGES: (state) => state.messages,
 }
+
 export const mutations = {
   SET_USERS: (state, list) => state.users = list,
   SET_CUR_USER: (state, user) => state.curUser = user,
@@ -15,6 +14,7 @@ export const mutations = {
   SET_MESSAGES: (state, messages) => state.messages = messages,
   SET_MSG_AS_READED: (state, msg) => msg.read = true,
 }
+
 export const actions = {
 
   async SEND_MESSAGE ({ commit, state, rootState, dispatch }, message) {
@@ -57,12 +57,18 @@ export const actions = {
   },
 
   async GET_CHAT_LIST ({ commit, dispatch, state, rootState }) {
-    const res = await this.$axios.$get('connected', {
-    })
-    if (res.type === 'ok') {
-      commit('SET_USERS', res.data)
-    }
+
+    const { data, type } = await this.$axios.$get('chat-list')
+
     
-    return res
+    if (type === 'ok') {
+      commit('SET_CUR_USER', null)
+      commit('SET_MESSAGES', [])
+      commit('SET_USERS', data)
+    }
+
+    return data
+    
   },
+
 }

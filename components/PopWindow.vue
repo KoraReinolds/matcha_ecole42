@@ -108,7 +108,9 @@ export default {
     .hide {
       opacity: 0;
       max-height: 0px;
+      min-height: 0px;
       padding: 0px 20px;
+      margin-top: 0;
     }
 
     .text {

@@ -86,32 +86,9 @@
           @click="sendMessage"
         )
 
-    div(
-      :class="$style.side_bar"
+    SideBar(
+      :class="[$style.side_bar]"
     )
-
-      div(
-        v-if="show"
-        :class="$style.fixed_box"
-      )
-        div(
-          v-for="user in chatList"
-          :class="$style.side_bar_item"
-          :key="'chat'+user.login"
-          @click="changeChat(user)"
-        )
-          nuxt-link(
-            :class="$style.link"
-            :to="`/chat/${user.login}`"
-          )
-            CustomImage(
-              :class="$style.image"
-              :height="`${mobile ? 48 : 70}px`"
-              :width="`${mobile ? 48 : 70}px`"
-              rounded
-              :src="user.src"
-            )
-            div.only_mobile {{ `${user.fname} ${user.lname}` }}
 
   div(
     :class="$style.chat"
@@ -121,50 +98,54 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import SideBar from '@/components/ChatSidebar.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import NameLink from '@/components/NameLink.vue'
 
 export default {
   name: 'Chat',
   async validate({ route, store, redirect }) {
-    let res = {}
-    let user
-    await store.dispatch('chat/GET_CHAT_LIST', route.params.id)
-    let chatList = store.getters['chat/CHAT_LIST']
-    store.commit('chat/SET_CUR_USER', null)
-    store.commit('chat/SET_MESSAGES', [])
-    user = chatList.find((user) => user.login === route.params.id)
+    
+    // let res = {}
+    // let user
+    console.log(123)
+    let chatList = await store.dispatch('chat/GET_CHAT_LIST', route.params.id)
+
+    let user = chatList.find((user) => user.login === route.params.id)
+
     if (route.params.id) {
-      if (!user) return redirect('/404')
-      store.commit('chat/SET_CUR_USER', user)
-      res = await store.dispatch('chat/GET_MESSAGES')
-      return res.type === "ok" ? true : redirect('/404')
+    //   if (!user) return redirect('/404')
+    //   store.commit('chat/SET_CUR_USER', user)
+    //   res = await store.dispatch('chat/GET_MESSAGES')
+    //   return res.type === "ok" ? true : redirect('/404')
     }
-    return true;
+
+    return true
+
   },
   components: {
+    SideBar,
     CustomImage,
     NameLink,
   },
-  data() {
-    return {
-      intervalId: '',
-      message: '',
-      show: true,
-      today: new Date(Date.now()).toLocaleString('ru', {
-        day: 'numeric',
-        month: 'long',
-        timezone: 'UTC',
-      })
-    }
-  },
+  data: () => ({
+    mobile: false,
+    intervalId: '',
+    message: '',
+    today: new Date(Date.now()).toLocaleString('ru', {
+      day: 'numeric',
+      month: 'long',
+      timezone: 'UTC',
+    })
+  }),
   computed: {
+    ...mapState({
+      messages: state => state.chat.messages,
+      curUser: state => state.chat.curUser,
+      chatList: state => state.chat.users,
+    }),
     ...mapGetters({
-      messages: 'chat/CHAT_MESSAGES',
-      curUser: 'chat/CUR_USER',
-      chatList: 'chat/CHAT_LIST',
-      mobile: 'IS_MOBILE',
     }),
   },
   methods: {
@@ -188,6 +169,10 @@ export default {
         el.style.cssText = `height:${el.scrollHeight}px`
       }
     },
+    changeChat(user) {
+      this.show = this.mobile ? false : true
+      this.scroll()
+    },
     scroll() {
       this.$nextTick(() => {
         const objDiv = this.$refs.messageBox
@@ -204,10 +189,6 @@ export default {
         this.$refs.input.style.cssText = 'height:36px'
         this.$refs.input.focus()
       }
-    },
-    changeChat(user) {
-      this.show = this.mobile ? false : true
-      this.scroll()
     },
     ...mapActions({
     }),
@@ -243,7 +224,12 @@ export default {
 @mixin chatMixin(
   $info-height: 50px,
   $chat-margin: 50px,
+  $max-height: 800px,
 ) {
+
+  .side_bar {
+    max-height: $max-height;
+  }
 
   .chat {
     position: relative;
@@ -253,7 +239,7 @@ export default {
     .window {
       border: 1px solid lightgray;
       flex-grow: 1;
-      max-height: 800px;
+      max-height: $max-height;
       display: flex;
       flex-direction: column;
       .info {
@@ -375,63 +361,6 @@ export default {
 
     }
 
-    @media (min-width: map-get($grid-breakpoints, sm)) {
-
-      .side_bar {
-        padding: 0px 25px 0px 10px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: 100%;
-        right: -100px;
-        top: 0px;
-        .image {
-          cursor: pointer;
-          z-index: 2;
-          border-radius: 50px;
-          width: 100px;
-          height: 100px;
-          object-fit: cover;
-          left: 70px;
-        }
-      }
-
-    }
-
-    @media (max-width: map-get($grid-breakpoints, sm)) {
-
-      .side_bar {
-        position: absolute;
-        top: $info-height;
-        width: 100%;
-        .fixed_box {
-          position: fixed;
-          width: 100%;
-          max-height: 180px;
-          overflow: auto;
-          border-bottom: solid 1px $font-color;
-          .side_bar_item:not(:last-child) {
-            border-bottom: 1px solid $font-color;
-          }
-          .side_bar_item .link {
-            position: relative;
-            width: 100%;
-            background: #fff;
-            cursor: pointer;
-            font-family: 'Lobster', cursive;
-            height: 60px;
-            display: flex;
-            padding-left: 30px;
-            align-items: center;
-            text-decoration: none;
-            color: $font-color;
-            .image {
-              margin-right: 20px;
-            }
-          }
-        }
-      }
-    }
-
   }
 }
 
@@ -439,7 +368,7 @@ export default {
   
 );
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include chatMixin(
     $chat-margin: 0,
   );
