@@ -3,6 +3,7 @@
     slot(name="title")
     slot
     div(
+      v-if="visible"
       :class="$style.tooltip_field"
     ) {{ error }}
 </template>
@@ -12,6 +13,10 @@ export default {
   name: 'InputWrapper',
   props: {
     error: String,
+    visible: {
+      type: Boolean,
+      default: true,
+    },
   },
   data: () => ({
   }),

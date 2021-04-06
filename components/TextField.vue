@@ -3,6 +3,7 @@
   InputWrapper(
     :class="[$style['text-field'], modesClasses, { [$style.error]: errorMsg }]"
     :error="errorMsg"
+    :visible="showError"
   )
     label(:for="id" ref="label")
       fieldset(
@@ -20,6 +21,7 @@
           @input="inputValue"
           @blur="$emit('blur', $event)"
           @focus="$emit('focus', $event)"
+          @keyup="keyup"
           :value="value"
         )
         input(
@@ -30,13 +32,14 @@
           v-else
           @input="inputValue"
           @blur="$emit('blur', $event)"
+          @keyup="$emit('keyup', $event)"
           @focus="$emit('focus', $event)"
           :value="value"
         )
         //- points for width (like paddings)
         legend(
           :data-title="title"
-        ) ..{{ title }}...
+        ) {{ title && `..${ title }...` }}
     slot
 
 </template>
@@ -58,6 +61,10 @@ export default {
     title: String,
     errorMsg: String,
     many: Boolean,
+    showError: {
+      type: Boolean,
+      default: true,
+    },
   },
   data: () => ({
     id: Math.random(),
@@ -76,6 +83,11 @@ export default {
     }
   },
   methods: {
+    keyup(e) {
+      if (e.shiftKey) return
+      console.log("wtf")
+      this.$emit('keyup', e)
+    },
     inputValue(event) {
       this.$emit('input', event.target.value)
     },
@@ -259,10 +271,10 @@ export default {
         border-radius: $border-radius;
         border: none;
         padding: 8px calc(12px + #{$left-offset});
-        resize: none;
         overflow: hidden;
         background: transparent;
         font-size: 16px;
+        resize: none;
         width: 100%;
         &:focus {
           outline: none;

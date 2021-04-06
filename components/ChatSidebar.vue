@@ -1,8 +1,7 @@
 <template lang="pug">
 
   div(
-    v-if="show"
-    :class="$style.side_bar"
+    :class="[$style.side_bar, { [$style.hide]: !visible }]"
   )
     nuxt-link(
       v-for="user in chatList"
@@ -31,9 +30,9 @@ export default {
     CustomImage,
   },
   data: () => ({
-    show: true,
   }),
   props: {
+    visible: Boolean,
   },
   computed: {
     ...mapState({
@@ -64,6 +63,7 @@ export default {
     }
 
     .link {
+      min-height: 60px;
       display: flex;
       background: #fff;
       font-family: 'Lobster', cursive;
@@ -109,6 +109,10 @@ export default {
       border-bottom: solid 1px $main-color;
       max-height: 180px;
       width: 100%;
+    }
+
+    .hide {
+      display: none;
     }
 
     .link {
