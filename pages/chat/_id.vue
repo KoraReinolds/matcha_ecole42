@@ -38,26 +38,25 @@
           ref="messageBox"
         )
           div(
-            v-if="messages.length"
             :class="$style.messages"
           )
-            div(
-              v-for="(message, index) in messages"
-              :key="'message'+index+curUser.login"
-              :class="[$style.message, { [$style.our]: message.toLogin === curUser.login, [$style.unreaded]: !message.read }]"
+            template(
+              v-if="messages.length"
             )
-              span(
-                :class="$style.time"
-              ) {{ getDate(message.time) }}
-              span(
-                v-html="message.message"
-                :class="$style.text_block"
+              div(
+                v-for="(message, index) in messages"
+                :key="'message'+index+curUser.login"
+                :class="[$style.message, { [$style.our]: message.toLogin === curUser.login, [$style.unreaded]: !message.read }]"
               )
-          div(
-            :class="$style.messages"
-            v-else-if="curUser"
-          )
+                span(
+                  :class="$style.time"
+                ) {{ message.created }}
+                span(
+                  v-html="message.message"
+                  :class="$style.text_block"
+                )
             div(
+              v-else-if="curUser"
               :class="$style.else"
             ) Send first message
 
@@ -71,11 +70,13 @@
             many
             outlined
             placeholder="Write message"
-            v-model="message"
+            :value="message"
             :showError="false"
+            @input="setMsg"
             @keyup.enter="sendMessage"
           )
           Icon(
+            v-if="messageTrim"
             :class="$style.send"
             name="paper-plane"
             @click="sendMessage"
@@ -107,8 +108,6 @@ export default {
   name: 'Chat',
   async validate({ route, store, redirect }) {
     
-    // let res = {}
-    // let user
     let chatList = await store.dispatch('chat/GET_CHAT_LIST', route.params.id)
 
     if (route.params.id) {
@@ -116,7 +115,7 @@ export default {
       let user = chatList.find((user) => user.login === route.params.id)
       if (!user) return redirect('/404')
       store.commit('chat/SET_CUR_USER', user)
-    //   res = await store.dispatch('chat/GET_MESSAGES')
+      await store.dispatch('chat/GET_MESSAGES')
     //   return res.type === "ok" ? true : redirect('/404')
     }
 
@@ -133,36 +132,20 @@ export default {
   },
   data: () => ({
     showSidebar: false,
-    message: '',
-    today: new Date(Date.now()).toLocaleString('ru', {
-      day: 'numeric',
-      month: 'long',
-      timezone: 'UTC',
-    })
   }),
   computed: {
     ...mapState({
-      messages: state => state.chat.messages,
+      message: state => state.chat.message,
       curUser: state => state.chat.curUser,
       chatList: state => state.chat.users,
     }),
     ...mapGetters({
+      messages: 'chat/MSG_LIST',
+      messageTrim: 'chat/MSG_TRIM',
     }),
   },
   methods: {
-    getDate(t) {
-      let date = new Date(t).toLocaleString('ru', {
-        month: 'long',
-        day: 'numeric',
-        timezone: 'UTC',
-      })
-      let time = new Date(t).toLocaleString('ru', {
-        timezone: 'UTC',
-        hour: 'numeric',
-        minute: 'numeric',
-      })
-      return `${(date === this.today ? 'today' : date)} ${time}`
-    },
+
     // changeChat(user) {
     //   this.scroll()
     // },
@@ -174,14 +157,10 @@ export default {
     },
     ...mapMutations({
       setCurUser: 'chat/SET_CUR_USER',
+      setMsg: 'chat/SET_MSG',
     }),
-    sendMessage(e) {
-      if (this.message.trim()) {
-        this.$store.dispatch('chat/SEND_MESSAGE', this.message)
-        this.message = ''
-      }
-    },
     ...mapActions({
+      sendMessage: 'chat/SEND_MESSAGE',
     }),
   },
   watch: {

@@ -85,7 +85,6 @@ export default {
   methods: {
     keyup(e) {
       if (e.shiftKey) return
-      console.log("wtf")
       this.$emit('keyup', e)
     },
     inputValue(event) {
