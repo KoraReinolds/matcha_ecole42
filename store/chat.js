@@ -33,7 +33,7 @@ export const getters = {
       ...msg,
       created: getDate(msg.created)
     }))
-    
+
   }
 }
 
@@ -43,7 +43,6 @@ export const mutations = {
   SET_CUR_USER: (state, user) => state.curUser = user,
   PUSH_MESSAGE: (state, message) => state.messages.push(message),
   SET_MESSAGES: (state, messages) => state.messages = messages,
-  SET_MSG_AS_READED: (state, msg) => msg.read = true,
 }
 
 export const actions = {
@@ -52,16 +51,19 @@ export const actions = {
 
     if (getters.MSG_TRIM) {
 
-      const res = await this.$axios.$post('/send-message', {
+      const msg = {
         message: state.message.replace(/\n/g, '<br />'),
         target: state.curUser.login,
-      })
+      }
+      const res = await this.$axios.$post('/send-message', msg)
 
       if (res.type === 'ok') {
         commit('SET_MSG', '')
-        commit('PUSH_MESSAGE', res.data)
-          // created: getDate(res.data.created)
-        // setTimeout(() => dispatch('GET_MESSAGES', state.curUser), 1000)
+        commit('PUSH_MESSAGE', {
+          ...msg,
+          our: true,
+          created: new Date,
+        })
       }
 
     }
@@ -70,23 +72,12 @@ export const actions = {
 
   async GET_MESSAGES ({ commit, state, rootState, dispatch }) {
 
-    const res = await this.$axios.$get(`chat/full`, {
-      params: {
-        toLogin: state.curUser.login,
-        limit: 50,
-      }
+    const res = await this.$axios.$post(`get-messages`, {
+      target: state.curUser.login,
     })
 
     if (res.type === 'ok') {
       commit('SET_MESSAGES', res.data)
-      setTimeout(() => {
-
-        state.messages.forEach((msg) => {
-          if (msg.fromLogin !== rootState.auth.user.login) {
-            commit('SET_MSG_AS_READED', msg)
-          }
-        })
-      }, 1000)
     }
 
     return res

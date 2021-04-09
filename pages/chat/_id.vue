@@ -37,28 +37,24 @@
           :class="$style.messages_box"
           ref="messageBox"
         )
-          div(
-            :class="$style.messages"
+          template(
+            v-if="messages.length"
           )
-            template(
-              v-if="messages.length"
-            )
-              div(
-                v-for="(message, index) in messages"
-                :key="'message'+index+curUser.login"
-                :class="[$style.message, { [$style.our]: message.toLogin === curUser.login, [$style.unreaded]: !message.read }]"
-              )
-                span(
-                  :class="$style.time"
-                ) {{ message.created }}
-                span(
-                  v-html="message.message"
-                  :class="$style.text_block"
-                )
             div(
-              v-else-if="curUser"
-              :class="$style.else"
-            ) Send first message
+              v-for="(message, index) in messages"
+              :key="'message'+index+curUser.login"
+              :class="[$style.message, { [$style.our]: message.our }]"
+            )
+              span(
+                :class="$style.time"
+              ) {{ message.created }}
+              span(
+                v-html="message.message"
+                :class="$style.text_block"
+              )
+          template(
+            v-else-if="curUser"
+          ) Send first message
 
 
         div(
@@ -116,7 +112,6 @@ export default {
       if (!user) return redirect('/404')
       store.commit('chat/SET_CUR_USER', user)
       await store.dispatch('chat/GET_MESSAGES')
-    //   return res.type === "ok" ? true : redirect('/404')
     }
 
     return true
@@ -145,10 +140,6 @@ export default {
     }),
   },
   methods: {
-
-    // changeChat(user) {
-    //   this.scroll()
-    // },
     scroll() {
       this.$nextTick(() => {
         const objDiv = this.$refs.messageBox
@@ -184,9 +175,10 @@ export default {
   .chat {
     position: relative;
     max-width: 600px;
-    max-height: $max-height;
+    height: $max-height;
     margin: $chat-margin auto;
     display: flex;
+    flex-grow: auto;
   }
 
   .window {
@@ -220,83 +212,66 @@ export default {
   }
 
   .messages_box {
-    flex-grow: 1;
     position: relative;
-    width: 100%;
     overflow: scroll;
-    .messages {
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      padding: 20px 0;
-      max-height: 100%;
-
-      .else {
-        text-align: center;
-        color: gray;
-        font-size: 0.8em;
-      }
-
-      .message {
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-        margin: 6px 10px;
-        text-align: left;
-        .time {
-          font-size: 0.8em;
-          color:gray;
-          margin-right: 10px;
-          transform: translateY(-5px);
-        }
-        .text_block {
-          max-width: 100%;
-          // overflow: scroll;
-          margin: 5px;
-          padding: 15px;
-          display: inline-block;
-          line-height: 20px;
-          border-radius: 30px;
-          background-color: lightgrey;
-        }
-        &.unreaded {
-          background: rgb(188, 195, 226);
-        }
-      }
-      .message.our {
-        .text_block {
-
-          color: #fff;
-          background: $main-color;
-        }
-        &.unreaded {
-          background: white;
-          &::after {
-            content: '';
-            display: block;
-            width: 10px;
-            height: 10px;
-            background-color: $main-color;
-            border-radius: 50%;
-            position: relative;
-            top: -25px;
-
-          }
-        }
-      }
-      @media (max-width: map-get($grid-breakpoints, sm)) {
-        .message {
-          margin: 4px 8px;
-          .text_block {
-            padding: 15px;
-            display: inline-block;
-            line-height: 20px;
-            border-radius: 30px 0 0 30px;
-          }
-        }
-      }
-    }
+    text-align: center;
+    margin-top: auto;
+    padding: 5% 20px;
+    color: gray;
   }
+
+  .message {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    text-align: left;
+    flex-direction: row-reverse;
+
+  }
+
+  .time {
+    font-size: 0.8em;
+    margin: 10px;
+  }
+  
+  .text_block {
+    max-width: 80%;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: lightgrey;
+    border-radius: 10px;
+  }
+  // &.unreaded {
+  //   background: rgb(188, 195, 226);
+  // }
+
+  .our {
+
+    &.message {
+      flex-direction: row;
+    }
+
+    .text_block {
+      color: #fff;
+      background: $main-color;
+    }
+
+  }
+
+    // &.unreaded {
+    //   background: white;
+    //   &::after {
+    //     content: '';
+    //     display: block;
+    //     width: 10px;
+    //     height: 10px;
+    //     background-color: $main-color;
+    //     border-radius: 50%;
+    //     position: relative;
+    //     top: -25px;
+
+    //   }
+    // }
 
   .input_field {
     background: lightgray;
@@ -333,6 +308,7 @@ export default {
 
   @include chatMixin(
     $chat-margin: 0,
+    $max-height: calc(100vh - #{$footer-height} - #{$header-height}),
   );
 
 }
