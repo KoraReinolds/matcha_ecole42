@@ -138,6 +138,8 @@ export default {
 
     .custom_image {
       border-radius: 5px 24px 5px 5px;
+      width: 100%;
+      height: 100%;
     }
 
   }

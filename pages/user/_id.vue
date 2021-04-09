@@ -2,16 +2,13 @@
   div(
     :class="[$style.user_page]"
   )
-    div(
+    template(
       v-if="user.images.length"
-      :class="$style.main_image"
     )
-      div(
-        :class="$style.image"
+      CustomImage(
+        :class="$style.main_image"
+        :images="user.images"
       )
-        CustomImage(
-          :images="user.images"
-        )
       div(
         :class="$style.tools"
       )
@@ -141,11 +138,8 @@ export default {
     margin-right: 10px;
   }
 
-  .image {
-    height: $height;
-  }
-
   .main_image {
+    height: $height;
     position: relative;
     width: 100%;
     margin-bottom: 20px;
@@ -190,7 +184,7 @@ export default {
 @media (max-width: map-get($grid-breakpoints, sm)) {
   @include userMixin(
     $padding: 0,
-    $height: 100%,
+    $height: calc(100vh - #{$header-height} - #{$footer-height}),
   );
 }
 

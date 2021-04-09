@@ -137,6 +137,11 @@ export default {
           @include fieldBorderColorMixin(
             $base-color: $base-color,
           );
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
   
           .delete_mark {
             cursor: pointer;
