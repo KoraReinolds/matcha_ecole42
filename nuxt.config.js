@@ -4,7 +4,7 @@ module.exports = {
     extendRoutes(routes, resolve) {
       routes.push({
         path: '*',
-        component: resolve(__dirname, 'pages/404.vue')
+        component: resolve(__dirname, 'layouts/error.vue')
       })
     }
   },

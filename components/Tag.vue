@@ -1,4 +1,5 @@
 <template lang="pug">
+
   span(
     :class="$style.tag"
     @click="$emit('click', $event)"
@@ -10,6 +11,7 @@
       name="times-circle"
       :size="4"
     )
+    
 </template>
 
 <script>
@@ -17,8 +19,6 @@ import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'Tag',
-  data: () => ({
-  }),
   components: {
     Icon,
   },
@@ -26,9 +26,7 @@ export default {
     name: String,
     canDelete: Boolean,
   },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -45,11 +43,12 @@ export default {
     border-radius: 15px;
     background: $main-color;
     color: white;
-    .close {
-      position: relative;
-      left: 5px;
-      cursor: pointer;
-    }
+  }
+
+  .close {
+    position: relative;
+    left: 5px;
+    cursor: pointer;
   }
 
 </style>

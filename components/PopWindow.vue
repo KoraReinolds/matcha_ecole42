@@ -1,10 +1,11 @@
 <template lang="pug">
+
   div(
-    v-if="messages"
+    v-if="$store.state.windows.popWindows"
     :class="[$style.notifications]"
   )
     div(
-      v-for="(message, index) in messages"
+      v-for="(message, index) in $store.state.windows.popWindows"
       :class="[$style.mess, { [$style.hide]: !message.visible }]"
       :key="'message'+index"
     )
@@ -18,14 +19,14 @@
         :class="[$style.text]"
       ) {{ message.msg }}
       Icon(
-        @click="closeMessage(message.id)"
+        @click="$store.commit('windows/HIDE_MSG', message.id)"
         name="times"
         :size="5"
       )
+      
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import Icon from '@/components/Icon.vue'
 import RoundedIcon from '@/components/RoundedIcon.vue'
 
@@ -38,23 +39,7 @@ export default {
   props: {
     icon: String,
   },
-  computed: {
-    ...mapState({
-      messages: state => state.windows.popWindows,
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      closeMessage: 'windows/HIDE_MSG',
-    }),
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -86,7 +71,6 @@ export default {
       position: $message-position;
       bottom: 0;
       width: inherit;
-
       display: flex;
       align-items: $align;
       color: white;
@@ -99,31 +83,16 @@ export default {
       padding: $padding;
       max-height: $max-message-height;
       min-height: 50px;
-
       opacity: 1;
       transition: all 0.5s ease-in-out;
       overflow: hidden;
     }
 
-    .hide {
-      opacity: 0;
-      max-height: 0px;
-      min-height: 0px;
-      padding: 0px 20px;
-      margin-top: 0;
-    }
-
-    .text {
-      flex-grow: 1;
-    }
-
-    .icon {
-      margin-right: 20px;
-    }
-
   }
 
-  @include popWindowMixin();
+  @media (min-width: map-get($grid-breakpoints, sm)) {
+    @include popWindowMixin();
+  }
 
   @media (max-width: map-get($grid-breakpoints, sm)) {
     @include popWindowMixin(
@@ -137,4 +106,21 @@ export default {
       $message-position: absolute,
     );
   }
+
+  .hide {
+    opacity: 0;
+    max-height: 0px;
+    min-height: 0px;
+    padding: 0px 20px;
+    margin-top: 0;
+  }
+
+  .text {
+    flex-grow: 1;
+  }
+
+  .icon {
+    margin-right: 20px;
+  }
+
 </style>

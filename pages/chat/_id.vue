@@ -3,7 +3,7 @@
     :class="$style.chat"
   )
     template(
-      v-if="chatList.length"
+      v-if="$store.state.chat.users.length"
     )
       div(
         :class="$style.window"
@@ -38,10 +38,10 @@
           ref="messageBox"
         )
           template(
-            v-if="messages.length"
+            v-if="$store.getters['chat/MSG_LIST'].length"
           )
             div(
-              v-for="(message, index) in messages"
+              v-for="(message, index) in $store.getters['chat/MSG_LIST']"
               :key="'message'+index+curUser.login"
               :class="[$style.message, { [$style.our]: message.our }]"
             )
@@ -66,13 +66,13 @@
             many
             outlined
             placeholder="Write message"
-            :value="message"
+            :value="$store.state.chat.message"
             :showError="false"
-            @input="setMsg"
+            @input="$store.commit('chat/SET_MSG', $event)"
             @keyup.enter="sendMessage"
           )
           Icon(
-            v-if="messageTrim"
+            v-if="$store.getters['chat/MSG_TRIM'].length"
             :class="$style.send"
             name="paper-plane"
             @click="sendMessage"
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import TextField from '@/components/TextField.vue'
 import SideBar from '@/components/ChatSidebar.vue'
 import RoundedIcon from '@/components/RoundedIcon.vue'
@@ -130,39 +130,23 @@ export default {
   }),
   computed: {
     ...mapState({
-      message: state => state.chat.message,
       curUser: state => state.chat.curUser,
-      chatList: state => state.chat.users,
-    }),
-    ...mapGetters({
-      messages: 'chat/MSG_LIST',
-      messageTrim: 'chat/MSG_TRIM',
     }),
   },
   methods: {
-    scroll() {
-      this.$nextTick(() => {
-        const objDiv = this.$refs.messageBox
-        if (objDiv) objDiv.scrollTop = objDiv.scrollHeight
-      })
-    },
-    ...mapMutations({
-      setCurUser: 'chat/SET_CUR_USER',
-      setMsg: 'chat/SET_MSG',
-    }),
     ...mapActions({
       sendMessage: 'chat/SEND_MESSAGE',
     }),
   },
   watch: {
     messages() {
-      this.scroll()
+      this.$nextTick(() => {
+        const objDiv = this.$refs.messageBox
+        if (objDiv) objDiv.scrollTop = objDiv.scrollHeight
+      })
     },
   },
-  mounted() {
-    this.scroll()
-  },
-};
+}
 </script>
 <style module lang="scss">
 

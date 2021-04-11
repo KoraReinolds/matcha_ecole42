@@ -56,10 +56,6 @@ export default {
   data: () => ({
     inputValue: [],
   }),
-  computed: {
-  },
-  methods: {
-  },
   watch: {
     value(val) {
       this.inputValue = val
@@ -68,7 +64,7 @@ export default {
   mounted() {
     this.inputValue = this.value
   },
-};
+}
 </script>
 
 <style module lang="scss">

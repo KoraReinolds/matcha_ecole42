@@ -3,21 +3,21 @@
   form(
     :class="$style.form"
     name="login_form"
-    @submit.prevent="signIn"
+    @submit.prevent="$store.dispatch('forms/SIGN_IN')"
   )
     h2(
       :class="$style.form_title"
     ) Login
     TextField(
-      v-bind="fieldsData.login"
-      @input="setValue({ key: 'login', value: $event })"
+      v-bind="$store.state.forms.formFields.login"
+      @input="$store.commit('forms/SET_VALUE', { key: 'login', value: $event })"
       outlined
       filled
       name="matcha_login"
     )
     TextField(
-      v-bind="fieldsData.password"
-      @input="setValue({ key: 'password', value: $event })"
+      v-bind="$store.state.forms.formFields.password"
+      @input="$store.commit('forms/SET_VALUE', { key: 'password', value: $event })"
       type='password'
       outlined
       filled
@@ -33,14 +33,13 @@
       input(
         :class="$style.btn"
         type="submit"
-        :disabled="!loginValid"
+        :disabled="!$store.getters['forms/LOGIN_VALID']"
         value="Login"
       )
 
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import TextField from '@/components/TextField.vue'
 
 export default {
@@ -48,30 +47,10 @@ export default {
   components: {
     TextField,
   },
-  data: () => ({
-  }),
   middleware({ store }) {
     store.commit('forms/CLEAR_FIELDS')
   },
-  computed: {
-    ...mapState({
-      fieldsData: state => state.forms.formFields,
-    }),
-    ...mapGetters({
-      loginValid: 'forms/LOGIN_VALID'
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      setValue: 'forms/SET_VALUE',
-    }),
-    ...mapActions({
-      signIn: 'forms/SIGN_IN',
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style lang="scss" module>

@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
 import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import Distance from '@/components/Distance.vue'
@@ -81,19 +80,7 @@ export default {
   props: {
     user: Object,
   },
-  computed: {
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      }),
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  }
-};
+}
 </script>
 
 <style module lang="scss">
@@ -120,9 +107,9 @@ export default {
   }
 
   .like_icon {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
+    position: relative;
+    bottom: 70px;
+    left: 190px;
   }
 
   .content {
@@ -130,10 +117,11 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 300px;
+    margin: 15px 20px;
   }
 
   .biography {
-    margin: 15px 20px;
+    margin: 15px 0;
     text-align: center;
     font-family: 'Rubik', sans-serif;
     line-height: 15px;

@@ -12,7 +12,7 @@
         v-bind="tools.pref"
         :icons="true"
         type="checkbox"
-        @change="filterUsers({ val: $event, key: 'pref' })"
+        @change="$store.dispatch('users/FILTER_USERS', { val: $event, key: 'pref' })"
       )
 
       TextField(
@@ -21,7 +21,7 @@
         type="number"
         min="18"
         max="99"
-        @blur="filterUsers({ val: $event.target.value, key: 'ageMin' })"
+        @blur="$store.dispatch('users/FILTER_USERS', { val: $event.target.value, key: 'ageMin' })"
       )
       TextField(
         :class="$style.form_field"
@@ -29,14 +29,14 @@
         type="number"
         min="18"
         max="99"
-        @blur="filterUsers({ val: $event.target.value, key: 'ageMax' })"
+        @blur="$store.dispatch('users/FILTER_USERS', { val: $event.target.value, key: 'ageMax' })"
       )
 
       TextField(
         :class="[$style.form_field, $style.full_width]"
         v-bind="tools.radius"
         type="number"
-        @blur="filterUsers({ val: $event.target.value, key: 'radius' })"
+        @blur="$store.dispatch('users/FILTER_USERS', { val: $event.target.value, key: 'radius' })"
       )
 
       TextField(
@@ -46,7 +46,7 @@
         step="10"
         min="0"
         max="1000"
-        @blur="filterUsers({ val: $event.target.value, key: 'minRating' })"
+        @blur="$store.dispatch('users/FILTER_USERS', { val: $event.target.value, key: 'minRating' })"
       )
       TextField(
         :class="$style.form_field"
@@ -55,49 +55,49 @@
         step="10"
         min="0"
         max="1000"
-        @blur="filterUsers({ val: $event.target.value, key: 'maxRating' })"
+        @blur="$store.dispatch('users/FILTER_USERS', { val: $event.target.value, key: 'maxRating' })"
       )
 
       TagsField(
         :class="[$style.form_field, $style.full_width]"
         v-bind="tools.tags"
-        @delete="filterUsers({ val: $event, key: 'tags' })"
-        @change="filterUsers({ val: $event, key: 'tags' })"
+        @delete="$store.dispatch('users/FILTER_USERS', { val: $event, key: 'tags' })"
+        @change="$store.dispatch('users/FILTER_USERS', { val: $event, key: 'tags' })"
       )
 
       Options(
         :class="$style.form_field"
         v-bind="tools.dist"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'dist' })"
+        @change="$store.dispatch('users/CHANGE_SORT_ORDER', { val: $event, key: 'dist' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
         v-bind="tools.age"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'age' })"
+        @change="$store.dispatch('users/CHANGE_SORT_ORDER', { val: $event, key: 'age' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
         v-bind="tools.rating"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'rating' })"
+        @change="$store.dispatch('users/CHANGE_SORT_ORDER', { val: $event, key: 'rating' })"
         type="checkbox"
       )
       Options(
         :class="$style.form_field"
         v-bind="tools.tagsCount"
         :icons="true"
-        @change="changeOrder({ val: $event, key: 'tagsCount' })"
+        @change="$store.dispatch('users/CHANGE_SORT_ORDER', { val: $event, key: 'tagsCount' })"
         type="checkbox"
       )
       div(
         :class="$style.order"
       )
         Icon(
-          v-for="item in sortOrder"
+          v-for="item in $store.state.users.sortOrder"
           :class="$style.order_icon"
           :key="'item'+item"
           :name="{ tagsCount: 'hashtag', dist: 'location-arrow', rating: 'star', age: 'child' }[item]"
@@ -107,7 +107,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import RoundedIcon from '@/components/RoundedIcon.vue'
 import Icon from '@/components/Icon.vue'
 import Options from '@/components/Options.vue'
@@ -116,10 +115,9 @@ import TagsField from '@/components/TagsField.vue'
 
 export default {
   name: 'tools',
-  data: () => ({
-  }),
   props: {
     show: Boolean,
+    tools: Object,
   },
   components: {
     RoundedIcon,
@@ -128,24 +126,6 @@ export default {
     TextField,
     TagsField,
   },
-  computed: {
-    ...mapState({
-      tools: state => state.users.tools,
-      sortOrder: state => state.users.sortOrder,
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-      changeOrder: 'users/CHANGE_SORT_ORDER',
-      filterUsers: 'users/FILTER_USERS',
-    }),
-  },
-  mounted() {
-  }
 }
 </script>
 
@@ -178,9 +158,10 @@ export default {
 
   .form_field {
     width: 45%;
-    &.full_width {
-      width: 100%
-    }
+  }
+
+  .full_width {
+    width: 100%
   }
 
   .order {
@@ -188,10 +169,11 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-    .order_icon {
-      margin-right: 10px;
-      color: $main-color;
-    }
+  }
+
+  .order_icon {
+    margin-right: 10px;
+    color: $main-color;
   }
 
 }

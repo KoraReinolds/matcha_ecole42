@@ -4,7 +4,7 @@
     :class="[$style.side_bar, { [$style.hide]: !visible }]"
   )
     nuxt-link(
-      v-for="user in chatList"
+      v-for="user in $store.state.chat.users"
       :class="$style.link"
       :key="'chat'+user.login"
       :to="`/chat/${user.login}`"
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
 import CustomImage from '@/components/CustomImage.vue'
 
 export default {
@@ -29,25 +28,10 @@ export default {
   components: {
     CustomImage,
   },
-  data: () => ({
-  }),
   props: {
     visible: Boolean,
   },
-  computed: {
-    ...mapState({
-      chatList: state => state.chat.users,
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -98,7 +82,7 @@ export default {
 
     @include chatSidebarMixin(
       $image-size: 100px,
-    );
+    )
 
   }
 
@@ -129,7 +113,7 @@ export default {
 
     @include chatSidebarMixin(
       $image-size: 40px,
-    );
+    )
 
   }
 

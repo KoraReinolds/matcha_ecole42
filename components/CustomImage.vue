@@ -19,11 +19,7 @@ export default {
   data: () => ({
     error: false,
   }),
-  computed: {
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

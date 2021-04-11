@@ -162,17 +162,18 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
 
-    .form_field {
-      width: $width;
-      &.full_width {
-        width: 100%;
-      }
-    }
+  }
 
-    .btn {
-      width: $btn-width;
-    }
+  .form_field {
+    width: $width;
+  }
 
+  .full_width {
+    width: 100%;
+  }
+
+  .btn {
+    width: $btn-width;
   }
 
 }

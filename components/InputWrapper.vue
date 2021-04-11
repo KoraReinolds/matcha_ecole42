@@ -18,15 +18,7 @@ export default {
       default: true,
     },
   },
-  data: () => ({
-  }),
-  computed: {
-  },
-  methods: {
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

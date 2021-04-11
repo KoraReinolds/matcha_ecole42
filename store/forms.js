@@ -267,27 +267,27 @@ export const actions = {
   
   async INIT_SOCKETS ({ dispatch }) {
 
-    let socket = new WebSocket(
-      `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
-    )
+    // let socket = new WebSocket(
+    //   `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
+    // )
 
-    socket.onopen = function(e) {
-    }
+    // socket.onopen = function(e) {
+    // }
     
-    socket.onclose = function(event) {
-      if (event.code === 1001) {
-        dispatch('INIT_SOCKETS')
-      } else {
-        dispatch('LOGOUT')
-      }
-    }
+    // socket.onclose = function(event) {
+    //   if (event.code === 1001) {
+    //     dispatch('INIT_SOCKETS')
+    //   } else {
+    //     dispatch('LOGOUT')
+    //   }
+    // }
     
-    socket.onerror = function(error) {
-    }
+    // socket.onerror = function(error) {
+    // }
     
-    socket.onmessage = function(event) {
-      dispatch('history/PUSH_NOTIFICATION', JSON.parse(event.data), { root: true })
-    }.bind(this)
+    // socket.onmessage = function(event) {
+    //   dispatch('history/PUSH_NOTIFICATION', JSON.parse(event.data), { root: true })
+    // }.bind(this)
 
   },
 
@@ -332,8 +332,7 @@ export const actions = {
       reader.readAsDataURL(files[0])
       reader.onload = async () => {
         img.src = reader.result
-        img.index = images.length // устанавливаем индекс последовательности
-        img.avatar = !img.index // если изображение единственное, то присваевем ему статус основного
+        img.avatar = !images.length // если изображение единственное, то присваевем ему статус основного
         const fd = new FormData() // создаем форму для отправки изображения в хранилище изображений
         fd.append('image', reader.result.split(',')[1])
         const res = await API.uploadImage(fd) // отправляем изображение в хранилище

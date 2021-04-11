@@ -1,21 +1,27 @@
 <template lang="pug">
-  div.container
-    h1(v-if="error.statusCode === 404") Страница не найдена
-    h1(v-else) Произошла ошибка
-    nuxt-link.btn(to="/main") Вернуться на главную
+
+  CustomImage(
+    :class="$style.image"
+    :src="'https://sun9-2.userapi.com/c627224/v627224882/42b51/Qfyhj4sKGYI.jpg'"
+  )
+      
 </template>
 
 <script>
+import CustomImage from '@/components/CustomImage.vue';
+
 export default {
-  props: ['error']
-}
+  name: 'Page-404',
+  components: {
+    CustomImage,
+  },
+};
 </script>
 
-<style lang="scss">
-.container {
-  flex-direction: column;
-  h1 {
-    margin-bottom: 20px;
+<style module lang="scss">
+
+  .image {
+    z-index: 10000;
   }
-}
+
 </style>

@@ -29,6 +29,7 @@
     )
     Tools(
       :show="show"
+      :tools="$store.state.users.tools"
     )
 
 
@@ -36,7 +37,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import User from '@/components/User.vue'
 import Tools from '@/components/Tools.vue'
 import UserMobile from '@/components/UserMobile.vue'
@@ -73,14 +74,9 @@ export default {
   methods: {
     scroll(e) {
       if ((window.innerHeight + window.scrollY) + 5 >= document.documentElement.scrollHeight) {
-        this.loadMoreUsers()
+        this.$store.dispatch('users/LOAD_MORE_USERS')
       }
     },
-    ...mapMutations({
-    }),
-    ...mapActions({
-      loadMoreUsers: 'users/LOAD_MORE_USERS',
-    }),
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.scroll)
@@ -88,7 +84,7 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.scroll)
   },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -136,7 +132,9 @@ export default {
     
   }
 
-  @include mainMixin();
+  @media (min-width: map-get($grid-breakpoints, sm)) {
+    @include mainMixin();
+  }
 
   @media (max-width: map-get($grid-breakpoints, sm)) {
     @include mainMixin(

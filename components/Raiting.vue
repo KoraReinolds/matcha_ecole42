@@ -3,7 +3,7 @@
     Icon(
       :class="$style.icon"
       name="star"
-      :style="{ opacity }"
+      :style="{ opacity: value / 1000 + 0.2 }"
       :size="size"
     )
     span(
@@ -16,9 +16,6 @@ import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'Raiting',
-  data: () => ({
-    opacity: null,
-  }),
   components: {
     Icon,
   },
@@ -29,10 +26,7 @@ export default {
       default: 8,
     },
   },
-  mounted() {
-    this.opacity = this.value / 1000 + 0.2;
-  },
-};
+}
 </script>
 
 <style module lang="scss">

@@ -11,14 +11,15 @@
 
     div(:class="$style.images")
       div(
-        :class="$style.image"
+        :class="$style.image_box"
         v-for="(img, index) in value"
         :key="'img'+img.index"
       )
         CustomImage(
+          :class="$style.image"
           :src="img.src"
           :key="'user_image'+img.index"
-          @click="setAsMainImg(img)"
+          @click="$emit('change', value.map(val => ({ ...val, avatar: img === val })))"
         )
         RoundedIcon(
           :class="$style.delete_mark"
@@ -31,7 +32,7 @@
           name="check"
         )
       label(
-        :class="$style.image"
+        :class="$style.image_box"
         v-if="value && value.length < 5"
         for="file"
       )
@@ -43,13 +44,12 @@
           :class="$style.inputfile"
           type="file"
           id="file"
-          @change="loadImage($event.target.files)"
+          @change="$store.dispatch('forms/LOAD_IMAGE', $event.target.files)"
         )
 
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
 import CustomImage from '@/components/CustomImage.vue'
 import InputWrapper from '@/components/InputWrapper.vue'
 import Icon from '@/components/Icon.vue'
@@ -63,8 +63,6 @@ export default {
     Icon,
     RoundedIcon,
   },
-  data: () => ({
-  }),
   props: {
     errorMsg: String,
     title: String,
@@ -72,27 +70,15 @@ export default {
     maxImages: Number,
   },
   methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-      loadImage: 'forms/LOAD_IMAGE',
-    }),
     deleteImg(img) {
-      let newImages = this.value
-        .filter(val => val !== img) // удаляем изображение
-        .map((val, index) => ({ ...val, index })) // сохраняем порядок для сервера
+      let newImages = this.value.filter(val => val !== img) // удаляем изображение
       if (img.avatar && newImages.length) {
         newImages[0].avatar = true // если удалили аватар устанавливаем первое изображение в качестве аватара
       }
       this.$emit('change', newImages)
     },
-    setAsMainImg(img) {
-      this.$emit('change', this.value.map(val => ({ ...val, avatar: img === val })))
-    },
   },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -117,55 +103,39 @@ export default {
         $base-color: $base-color,
       )
     }
-  
-      .inputfile {
-        @include removeFromScreenMixin();
-      }
-  
-      .images {
-        margin: 10px 0 20px 0;
-        display: grid;
-        grid-auto-flow: row;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 12px;
-        grid-auto-rows: 300px;
-  
-        .image {
-          cursor: pointer;
-          position: relative;
-          border: solid 1px;
-          @include fieldBorderColorMixin(
-            $base-color: $base-color,
-          );
 
-          img {
-            width: 100%;
-            height: 100%;
-          }
-  
-          .delete_mark {
-            cursor: pointer;
-            color: $base-color;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-          }
-          .main_mark {
-            color: $base-color;
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-          }
-        }
-      }
-      .choose_file {
-        cursor: pointer;
-        position:absolute;
-        color: $base-color;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+    .image_box {
+      cursor: pointer;
+      position: relative;
+      border: solid 1px;
+      @include fieldBorderColorMixin(
+        $base-color: $base-color,
+      );
+    }
+
+    .delete_mark {
+      cursor: pointer;
+      color: $base-color;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    
+    .main_mark {
+      color: $base-color;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+
+    .choose_file {
+      cursor: pointer;
+      position:absolute;
+      color: $base-color;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
   }
 
@@ -179,6 +149,24 @@ export default {
 
     }
 
+  }
+
+  .inputfile {
+    @include removeFromScreenMixin();
+  }
+
+  .images {
+    margin: 10px 0 20px 0;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    grid-auto-rows: 300px;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
   }
 
 </style>

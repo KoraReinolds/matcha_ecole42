@@ -1,17 +1,18 @@
 <template lang="pug">
+
   div.app
     Header
     main
       nuxt.wrapper
     Footer
     PopWindow
+
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import PopWindow from '@/components/PopWindow.vue';
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+import PopWindow from '@/components/PopWindow.vue'
 
 export default {
   middleware: ['customAuth'],
@@ -20,37 +21,15 @@ export default {
     Footer,
     PopWindow,
   },
-  computed: {
-    ...mapGetters({
-      login: 'forms/LOGIN',
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      resize: 'RESIZE',
-      pushMessage: 'chat/PUSH_MESSAGE',
-      setAllNotifAsChecked: 'history/SET_ALL_NOTIF_AS_CHECKED',
-    }),
-    ...mapActions({
-      getLocation: 'forms/GET_LOCATION',
-      getUnreadedNotifications: 'history/GET_UNREADED_NOTIFICATIONS',
-      innitSocketConection: 'forms/INIT_SOCKETS',
-    }),
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resize);
-  },
   mounted() {
-    this.resize()
-    window.addEventListener('resize', this.resize)
-    this.getLocation()
+    this.$store.dispatch('forms/GET_LOCATION')
 
     // if (this.$auth.getToken('local')) {
-    //   this.innitSocketConection()
+    //   this.$store.dispatch('history/GET_UNREADED_NOTIFICATIONS')
     // }
 
     if (this.$auth.loggedIn && this.$store.state.auth.user.isFilled) {
-      this.getUnreadedNotifications()
+      this.$store.dispatch('forms/INIT_SOCKETS')
     }
   }
 }
@@ -121,9 +100,8 @@ export default {
     padding-top: $header-height;
     flex-grow: 1;
     display: flex;
-    @media (max-width: 600px) {
+    @media (max-width: map-get($grid-breakpoints, sm)) {
       padding-bottom: $footer-height;
-      min-height: 100vh;
     }
   }
 

@@ -7,17 +7,14 @@
     )
     span(
       :class="$style[`font_size_${size - 2}`]"
-    ) {{ (myLocation && value !== '0') ? `${value} km` : '...' }}
+    ) {{ ($store.state.forms.realLocation && value !== '0') ? `${value} km` : '...' }}
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'Distance',
-  data: () => ({
-  }),
   components: {
     Icon,
   },
@@ -28,18 +25,7 @@ export default {
       default: 8,
     },
   },
-  computed: {
-    ...mapState({
-      myLocation: state => state.forms.realLocation,
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

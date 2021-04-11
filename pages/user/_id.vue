@@ -2,7 +2,8 @@
   div(
     :class="[$style.user_page]"
   )
-    template(
+    div(
+      :class="$style.image_box"
       v-if="user.images.length"
     )
       CustomImage(
@@ -12,10 +13,6 @@
       div(
         :class="$style.tools"
       )
-        Like(
-          :class="$style.icon"
-          :user="user"
-        )
         RoundedIcon(
           v-if="user.likedFrom && user.likedTo"
           :class="$style.icon"
@@ -23,6 +20,10 @@
           :size="15"
           :innerScale="0.6"
           @click="() => $router.push(`/chat/${user.login}`)"
+        )
+        Like(
+          :class="$style.icon"
+          :user="user"
         )
       
     div(
@@ -62,15 +63,15 @@
       )
         CustomImage(
           :class="$style.mini_image"
-          v-for="img in user.images"
+          v-for="(img, index) in user.images"
           :src="img.src"
-          :key="'img'+img.index"
+          :key="'img'+index"
         )
 
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import CustomImage from '@/components/CustomImage.vue'
 import Like from '@/components/Like.vue'
 import Raiting from '@/components/Raiting.vue'
@@ -92,24 +93,12 @@ export default {
     RoundedIcon,
     Tag,
   },
-  data: () => ({
-  }),
   computed: {
     ...mapState({
       user: state => state.user.user,
     }),
-    ...mapGetters({
-    }),
   },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -125,10 +114,11 @@ export default {
   .user_page {
     max-width: 800px;
     padding: $padding;
+    position: relative;
   }
 
   .tools {
-  position: absolute;
+    position: absolute;
     bottom: 0;
     right: 0;
     padding: 10px 0;
@@ -138,9 +128,12 @@ export default {
     margin-right: 10px;
   }
 
+  .image_box {
+    position: relative;
+  }
+
   .main_image {
     height: $height;
-    position: relative;
     width: 100%;
     margin-bottom: 20px;
   }

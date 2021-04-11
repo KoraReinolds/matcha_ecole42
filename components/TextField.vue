@@ -101,15 +101,15 @@ export default {
     value() {
       this.$nextTick(() => {
         this.setHeight(this.$refs.input)
-      });
+      })
     },
   },
   mounted() {
     this.$nextTick(() => {
       this.setHeight(this.$refs.input)
-    });
+    })
   },
-};
+}
 </script>
 
 <style module lang="scss">

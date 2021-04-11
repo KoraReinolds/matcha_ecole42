@@ -5,13 +5,12 @@
     :innerScale="0.6"
     name="heart"
     :size="size || 14"
-    @click="like(user)"
+    @click="$store.dispatch('forms/LIKE', user)"
     :circleColor="circleColor"
   )
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
 import RoundedIcon from '@/components/RoundedIcon.vue'
 
 export default {
@@ -19,25 +18,12 @@ export default {
   components: {
     RoundedIcon,
   },
-  data: () => ({
-  }),
   props: {
     circleColor: String,
     size: Number,
     user: Object,
   },
-  computed: {
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapActions({
-      like: 'forms/LIKE',
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

@@ -38,14 +38,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
 import InputWrapper from '@/components/InputWrapper.vue'
 import Button from '@/components/Button.vue'
 
 export default {
   name: 'MapField',
-  data: () => ({
-  }),
   props: {
     title: String,
     value: [Object, String],
@@ -56,8 +53,6 @@ export default {
     Button,
   },
   computed: {
-    ...mapGetters({
-    }),
     mark: function() {
       let loc = this.value || this.realLocation
       return [loc.x, loc.y]
@@ -69,9 +64,7 @@ export default {
       this.$emit('change', { x: coords[0], y: coords[1] })
     }
   },
-  mounted() {
-  }
-};
+}
 </script>
 
 <style module lang="scss">
@@ -95,11 +88,12 @@ export default {
     width: 100%;
     height: 500px;
 
-    .curCoord {
-      position: absolute;
-      top: 20px;
-      left: 10px;
-    }
-
   }
+
+  .curCoord {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+  }
+
 </style>

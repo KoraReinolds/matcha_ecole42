@@ -2,65 +2,48 @@
   footer(
     v-if="$auth.loggedIn"
   )
-    div.wrapper(
-      :class="$style.footer_content"
+    div(
+      :class="['wrapper', 'only_laptop', $style.footer_content]"
+    ) Dating website form 21 School
+    div(
+      :class="['wrapper', 'only_mobile', $style.mobile_nav]"
     )
-      div.only_laptop Dating website form 21 School
-      div.only_mobile(
-        :class="$style.mobile_nav"
+      Icon(
+        class="only_mobile"
+        @click="$router.push(`/user/${$auth.user.login}`)"
+        name="user"
+        :size="5"
       )
-        nuxt-link(
-          :class="$style.link"
-          :to="`/user/${$auth.user.login}`"
-        )
-          font-awesome-icon.icon(
-            icon="user"
-          )
-        nuxt-link(
-          :class="$style.link"
-          to='/history'
-        )
-          font-awesome-icon.icon(
-            icon="history"
-          )
-        nuxt-link(
-          :class="$style.link"
-          to='/main'
-        )
-          font-awesome-icon.icon(
-            icon="search"
-          )
-        nuxt-link(
-          :class="$style.link"
-          to='/chat'
-        )
-          font-awesome-icon.icon(
-            icon="comment-alt"
-          )
+      Icon(
+        class="only_mobile"
+        @click="$router.push('/history')"
+        name="history"
+        :size="5"
+      )
+      Icon(
+        class="only_mobile"
+        @click="$router.push('/main')"
+        name="search"
+        :size="5"
+      )
+      Icon(
+        class="only_mobile"
+        @click="$router.push('/chat')"
+        name="comment-alt"
+        :size="5"
+      )
+
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'Footer',
-  data: () => ({
-  }),
   components: {
+    Icon,
   },
-  computed: {
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -70,8 +53,7 @@ export default {
   ) {
 
     footer {
-      // margin-bottom: -20px;
-      z-index: 3;
+      z-index: $footer-z;
       height: $footer-height;
       position: $position;
       bottom: 0;
@@ -79,34 +61,35 @@ export default {
       background-color: $main-color;
       display: flex;
       align-items: center;
-      .footer_content {
-        margin: 0 auto;
-        font-family: 'Oswald', sans-serif;
-        font-size: 18px;
-        color: white;
-        width: 100%;
-        div {
-          text-align: right;
-        }
-        .mobile_nav {
-          width: 100%;
-          display: flex;
-          justify-content: space-around;
-          a {
-            color: white;
-          }
-        }
-      }
     }
 
+    .footer_content {
+      padding: 0 $laptop-page-padding;
+      font-size: 18px;
+      color: white;
+      width: 100%;
+    }
+
+    .mobile_nav {
+      display: flex;
+      justify-content: space-around;
+
+      svg {
+        color: white;
+      }
+
+    }
+    
   }
 
-  @include footerMixin();
+  @media (min-width: map-get($grid-breakpoints, sm)) {
+    @include footerMixin()
+  }
 
-  @media (max-width: 600px) {
+  @media (max-width: map-get($grid-breakpoints, sm)) {
     @include footerMixin(
       $position: fixed,
-    );
+    )
   }
 
 </style>

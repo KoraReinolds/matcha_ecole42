@@ -3,6 +3,7 @@
 $error-color: #B71C1C;
 $font-color: #2c3e50;
 $like-color: #E53935;
+$notification-color: #e41c19;
 $main-color: rgb(91, 99, 134);
 $main-color-hover: darken($main-color, 10%);
 $main-color-shadow: darken($main-color, 15%);
@@ -12,6 +13,8 @@ $footer-height-mobile: 30px;
 $footer-height: 50px;
 $header-height-mobile: 30px;
 $header-height: 50px;
+
+$laptop-page-padding: 20px;
 
 $grid-breakpoints: (
   xs: 0,
@@ -23,25 +26,14 @@ $grid-breakpoints: (
 
 @media (max-width: map-get($grid-breakpoints, sm)) {
   .only_laptop {
-    display: none !important;
+    display: none;
   }
 }
 @media (min-width: map-get($grid-breakpoints, sm)) {
   .only_mobile {
-    display: none !important; 
+    display: none; 
   }
 }
-
-.full_width {
-  width: 100%;
-}
-
-// .link {
-//   cursor: pointer;
-//   &:hover {
-//     text-decoration: underline;
-//   }
-// }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -50,4 +42,6 @@ input:-webkit-autofill:active {
   transition: background-color 10000s ease-in-out 0s;
 }
 
-
+$footer-z: 3;
+$header-z: 3;
+$header_filled-z: 1000;

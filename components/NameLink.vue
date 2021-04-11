@@ -5,19 +5,13 @@
   )
     span(
       v-if="user"
-    ) {{`${user.fname} ${user.lname} `}}
-    span(
-      :class="[$style.link]"
-      v-else
-    ) ...
+    ) {{ user ? `${user.fname} ${user.lname} ` : '... '}}
     slot
 </template>
 
 <script>
 export default {
   name: 'NameLink',
-  data: () => ({
-  }),
   props: {
     user: Object,
     color: {
@@ -25,9 +19,7 @@ export default {
       default: 'font',
     }
   },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

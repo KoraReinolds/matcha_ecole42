@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
 import NameLink from '@/components/NameLink.vue'
 import RoundedIcon from '@/components/RoundedIcon.vue'
 import Icon from '@/components/Icon.vue'
@@ -52,8 +51,6 @@ import CustomImage from '@/components/CustomImage.vue'
 
 export default {
   name: 'userShort',
-  data: () => ({
-  }),
   props: {
     user: Object,
     type: String,
@@ -65,26 +62,14 @@ export default {
     CustomImage,
     NameLink,
   },
-  computed: {
-    ...mapGetters({
-    }),
-  },
   methods: {
-    getDate(time) {
-      return new Date(time).toLocaleString('ru', {
-        month: 'long',
-        day: 'numeric',
-        timezone: 'UTC',
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-    },
-    ...mapMutations({
-    }),
-    ...mapActions({
-    }),
-  },
-  mounted() {
+    getDate: (time) => new Date(time).toLocaleString('ru', {
+      month: 'long',
+      day: 'numeric',
+      timezone: 'UTC',
+      hour: 'numeric',
+      minute: 'numeric',
+    })
   },
 };
 </script>
@@ -143,9 +128,10 @@ export default {
 
   .info_line {
     display: flex;
-    .icon {
-      margin-right: 10px;
-    }
+  }
+
+  .icon {
+    margin-right: 10px;
   }
 
   .time {
@@ -155,12 +141,14 @@ export default {
 
 }
 
-@include userMixin(
-  $gender-display: block,
-  $gender-mobile-display: none,
-);
+@media (min-width: map-get($grid-breakpoints, sm)) {
+  @include userMixin(
+    $gender-display: block,
+    $gender-mobile-display: none,
+  );
+}
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include userMixin(
   );
 }

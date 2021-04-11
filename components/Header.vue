@@ -3,8 +3,8 @@
   header(
     :class="{ [$style.fill]: !$auth.loggedIn }"
   )
-    div.wrapper(
-      :class="$style.nav"
+    div(
+      :class="['wrapper', $style.nav]"
       v-if="$auth.loggedIn"
     )
       template(
@@ -27,70 +27,52 @@
           to=`/chat`
         ) Chat
 
-        div(
-          :class="$style.filler"
-        )
-
-        nuxt-link(
-          :class="$style.link"
-          v-if="$auth.user.isFilled"
-          to=`/notifications`
-        )
-          font-awesome-icon-layers
-            font-awesome-icon.icon(
-              icon="bell"
-            )
-            span.fa-layers-counter.fa-3x(
-              :class="$style.counter"
-              v-if="notificationCount"
-            ) {{ notificationCount }}
 
       div(
-        v-if="!$auth.user.isFilled"
         :class="$style.filler"
       )
-      
-      nuxt-link(
-        :class="$style.link"
-        to=`/settings`
+
+      div(
+        v-if="$store.getters['history/NOTIFICATION_COUNT']"
+        :class="$style.counter"
       )
-        font-awesome-icon.icon(
-          icon="cogs"
-        )
-      a(
+        div(
+          :class="$style.digit"
+        ) {{ $store.getters['history/NOTIFICATION_COUNT'] }}
+
+      Icon(
+        v-if="$auth.user.isFilled"
         :class="$style.link"
-        @click="logout"
+        @click="$router.push('/notifications')"
+        name="bell"
+        :size="5"
       )
-        font-awesome-icon.icon(
-          icon="sign-out-alt"
-        )
+
+
+      Icon(
+        :class="$style.link"
+        @click="$router.push('/settings')"
+        name="cogs"
+        :size="5"
+      )
+      Icon(
+        :class="$style.link"
+        @click="$store.dispatch('forms/LOGOUT')"
+        name="sign-out-alt"
+        :size="5"
+      )
 
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import Icon from '@/components/Icon.vue'
 
 export default {
-  name: 'header-component',
-  data: () => ({
-  }),
+  name: 'HeaderComponent',
   components: {
+    Icon,
   },
-  computed: {
-    ...mapGetters({
-      notificationCount: 'history/NOTIFICATION_COUNT',
-    }),
-  },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-      logout: 'forms/LOGOUT',
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -101,40 +83,54 @@ export default {
     height: $header-height;
     line-height: $header-height;
     width: 100%;
-    z-index: 1000;
+    z-index: $header-z;
     transition: height 0.5s;
     background-color: $main-color;
-    .nav {
-      background-color: $main-color;
-      padding: 0 20px;
-      font-family: 'Do Hyeon', sans-serif;
-      display: flex;
-      justify-content: space-between;
+  }
 
-      .link {
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: none;
-        color: white;
-        margin-right: 20px;
+  .nav {
+    background-color: $main-color;
+    padding: 0 $laptop-page-padding;
+    font-family: 'Do Hyeon', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
 
-        &:last-child {
-          margin: 0;
-        }
+  .link {
+    margin-right: 20px;
+    &:last-child { margin: 0; }
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
 
-      }
-      .filler {
-        flex-grow: 1;
-      }
-      .counter {
-        right: 19px;
-        top: -3px;
-      }
-    }
-    &.fill {
-      z-index: 1000;
-      height: 100%;
-    }
+  .filler {
+    flex-grow: 1;
+  }
+
+  .counter {
+    position: relative;
+    background-color: $notification-color;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+
+  .digit {
+    transform: scale(0.8);
+    color: white;
+    font-weight: bold;
+  }
+
+  .fill {
+    z-index: $header_filled-z;
+    height: 100%;
   }
 
 </style>

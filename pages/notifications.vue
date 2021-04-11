@@ -3,10 +3,10 @@
     :class="$style.short_list"
   )
     template(
-      v-if="notifList.length"
+      v-if="$store.state.history.notifications.length"
     )
       UserShort(
-        v-for="({ action, created, who }, index) in notifList"
+        v-for="({ action, created, who }, index) in $store.state.history.notifications"
         :key="'notif'+index+who.login"
         :user="who"
         :type="action"
@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import UserShort from '@/components/UserShort.vue';
 
 export default {
@@ -30,24 +29,12 @@ export default {
   components: {
     UserShort,
   },
-  computed: {
-    ...mapState({
-      notifList: state => state.history.notifications,
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({
-    }),
-  },
   mounted() {
     this.$store.commit('history/SET_UNREADED_NOTIFICATIONS', 0, { root: true })
   },
-};
+}
 </script>
+
 <style module lang="scss">
 
   .short_list {

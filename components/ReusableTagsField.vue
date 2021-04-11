@@ -1,7 +1,5 @@
 <template lang="pug">
-  div(
-    :class="$style.reusable_tags"
-  )
+  div
     div(
       :class="$style.title"
     ) Popular_tags
@@ -56,16 +54,14 @@ export default {
 
   @import '@/assets/css/title.scss';
 
-  .reusable_tags {
-    .title {
-      @include titleMixin(
-        $base-color: $main-color,
-      )
-    }
-    .tag {
-      cursor: pointer;
-    }
-
+  .title {
+    @include titleMixin(
+      $base-color: $main-color,
+    )
+  }
+  
+  .tag {
+    cursor: pointer;
   }
 
 </style>

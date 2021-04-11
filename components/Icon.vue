@@ -12,10 +12,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-
 export default {
-  inheritAttrs: false,
   name: 'Icon',
   data: () => ({
     icons: {
@@ -48,17 +45,7 @@ export default {
       default: false,
     },
   },
-  computed: {
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

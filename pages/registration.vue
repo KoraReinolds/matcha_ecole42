@@ -3,7 +3,7 @@
   form(
     :class="$style.form"
     name="register_form"
-    @submit.prevent="register"
+    @submit.prevent="$store.dispatch('forms/REGISTRATION')"
   )
     h2(
       :class="$style.form_title"
@@ -43,23 +43,21 @@
       input(
         :class="$style.btn"
         type="submit"
-        :disabled="!formValid"
+        :disabled="!$store.getters['forms/REG_VALID']"
         value="SignUp"
       )
 
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
-import TextField from '@/components/TextField.vue';
+import { mapState, mapMutations } from 'vuex'
+import TextField from '@/components/TextField.vue'
 
 export default {
   name: 'Registration',
   components: {
     TextField,
   },
-  data: () => ({
-  }),
   middleware({ store }) {
     store.commit('forms/CLEAR_FIELDS')
   },
@@ -67,21 +65,13 @@ export default {
     ...mapState({
       fieldsData: state => state.forms.formFields,
     }),
-    ...mapGetters({
-      formValid: 'forms/REG_VALID',
-    }),
   },
   methods: {
     ...mapMutations({
       setValue: 'forms/VALIDATE_VALUE',
     }),
-    ...mapActions({
-      register: 'forms/REGISTRATION',
-    }),
   },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

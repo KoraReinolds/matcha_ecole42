@@ -1,12 +1,12 @@
 <template lang="pug">
-  span.time {{ ((Date.now() - time) / 1000 > 60) ? getTime() : 'Online' }}
+  span(
+    :class="$style.time"
+  ) {{ ((Date.now() - time) / 1000 > 60) ? getTime() : 'Online' }}
 </template>
 
 <script>
 export default {
   name: 'Online',
-  data: () => ({
-  }),
   props: {
     time: Date,
   },
@@ -25,16 +25,15 @@ export default {
       return 'not online now';
     },
   },
-  mounted() {
-  },
-};
+}
 </script>
 
-<style scoped lang="scss">
-.time {
-  color: rgb(161, 161, 161);
-  font-size: 12px;
-  font-family: sans-serif;
-}
+<style module lang="scss">
+
+  .time {
+    color: rgb(161, 161, 161);
+    font-size: 12px;
+    font-family: sans-serif;
+  }
 
 </style>

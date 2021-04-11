@@ -8,25 +8,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-
 export default {
   name: 'Button',
-  data: () => ({
-  }),
-  props: {
-  },
-  computed: {
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    ...mapActions({
-    }),
-  },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

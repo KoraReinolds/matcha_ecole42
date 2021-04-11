@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Icon from '@/components/Icon.vue';
+import Icon from '@/components/Icon.vue'
 
 export default {
   name: 'RoundedIcon',
@@ -39,9 +39,7 @@ export default {
   components: {
     Icon,
   },
-  mounted() {
-  },
-};
+}
 </script>
 
 <style module lang="scss">

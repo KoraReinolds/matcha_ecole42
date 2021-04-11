@@ -46,7 +46,10 @@ export default {
     value: Array,
     errorMsg: String,
     maxTags: Number,
-    maxTagLength: Number,
+    maxTagLength: {
+      type: Number,
+      default: 5,
+    },
   },
   methods: {
     deleteTag(tag) {
@@ -57,10 +60,7 @@ export default {
     addTag(e) {
       this.readonly = true
       if (
-        this.newTag &&
-        (this.maxTagLength ?
-          this.newTag.length <= this.maxTagLength :
-          true)
+        this.newTag && this.newTag.length <= this.maxTagLength
       ) {
         this.$emit('change', [
           ...new Set([
@@ -72,7 +72,7 @@ export default {
       }
     },
   },
-};
+}
 </script>
 
 <style module lang="scss">

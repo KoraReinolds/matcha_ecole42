@@ -25,7 +25,7 @@
         :class="$style.main_color"
         name="chevron-circle-left"
         :size="10"
-        @click="changeMobileUser(-1)"
+        @click="$store.dispatch('users/CHANGE_MOBILE_USER', -1)"
       )
       Like(
         :class="[$style.like, { [$style.active]: user.likedFrom }]"
@@ -35,13 +35,12 @@
         :class="$style.main_color"
         name="chevron-circle-right"
         :size="10"
-        @click="changeMobileUser(1)"
+        @click="$store.dispatch('users/CHANGE_MOBILE_USER', 1)"
       )
 
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import Icon from '@/components/Icon.vue'
 import CustomImage from '@/components/CustomImage.vue'
 import NameLink from '@/components/NameLink.vue'
@@ -58,29 +57,7 @@ export default {
   props: {
     user: Object,
   },
-  computed: {
-    ...mapState({
-    }),
-    ...mapGetters({
-    }),
-  },
-  methods: {
-    // paginate(e) {
-      // if (e.clientX > window.innerWidth * 0.8) {
-      //   this.changeMobileUser(this.mobilePage + 1)
-      // } else if (e.clientX < window.innerWidth * 0.2) {
-      //   this.changeMobileUser(this.mobilePage - 1)
-      // }
-    // },
-    ...mapMutations({
-      }),
-    ...mapActions({
-      changeMobileUser: 'users/CHANGE_MOBILE_USER',
-    }),
-  },
-  mounted() {
-  }
-};
+}
 </script>
 
 <style module lang="scss">
