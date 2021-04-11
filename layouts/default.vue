@@ -24,9 +24,9 @@ export default {
   mounted() {
     this.$store.dispatch('forms/GET_LOCATION')
 
-    // if (this.$auth.getToken('local')) {
-    //   this.$store.dispatch('history/GET_UNREADED_NOTIFICATIONS')
-    // }
+    if (this.$auth.getToken('local')) {
+      this.$store.dispatch('history/GET_UNREADED_NOTIFICATIONS')
+    }
 
     if (this.$auth.loggedIn && this.$store.state.auth.user.isFilled) {
       this.$store.dispatch('forms/INIT_SOCKETS')

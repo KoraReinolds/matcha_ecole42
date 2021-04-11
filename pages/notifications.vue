@@ -29,9 +29,6 @@ export default {
   components: {
     UserShort,
   },
-  mounted() {
-    this.$store.commit('history/SET_UNREADED_NOTIFICATIONS', 0, { root: true })
-  },
 }
 </script>
 

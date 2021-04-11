@@ -65,6 +65,7 @@ export const actions = {
     const res = await this.$axios.$post('notifications')
     if (res.type === 'ok') {
       commit('SET_NOTIFICATIONS', res.data)
+      commit('SET_UNREADED_NOTIFICATIONS', 0)
     }
     if (res.message) {
       dispatch('windows/PUSH_POP_WINDOW', {
@@ -76,7 +77,7 @@ export const actions = {
   },
 
   async GET_UNREADED_NOTIFICATIONS ({ commit }) {
-    const res = await this.$axios.$get('/new-notifications')
+    const res = await this.$axios.$post('/new-notifications')
     if (res.type === 'ok') {
       commit('SET_UNREADED_NOTIFICATIONS', res.data)
     }

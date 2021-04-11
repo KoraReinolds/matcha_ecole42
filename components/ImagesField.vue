@@ -13,12 +13,11 @@
       div(
         :class="$style.image_box"
         v-for="(img, index) in value"
-        :key="'img'+img.index"
+        :key="'img'+index"
       )
         CustomImage(
           :class="$style.image"
           :src="img.src"
-          :key="'user_image'+img.index"
           @click="$emit('change', value.map(val => ({ ...val, avatar: img === val })))"
         )
         RoundedIcon(
