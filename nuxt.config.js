@@ -123,6 +123,8 @@ module.exports = {
   io: {
     // module options
     sockets: [{
+      url: process.env.VUE_APP_BACKEND_URL,
+      default: true,
     }]
   },
   styleResources: {

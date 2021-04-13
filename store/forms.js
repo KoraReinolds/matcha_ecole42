@@ -232,8 +232,8 @@ export const actions = {
 
     await this.$auth.logout()
 
-    // // дожидаемся окончания анимации и сбрасываем хранилище, перезагружая страницу
-    // setTimeout(() => location.reload(), 500)
+    // дожидаемся окончания анимации и сбрасываем хранилище, перезагружая страницу
+    setTimeout(() => location.reload(), 500)
 
   },
 
@@ -249,7 +249,7 @@ export const actions = {
   },
 
   // регистрация пользователя
-  async REGISTRATION ({ dispatch, state, commit }) {
+  async REGISTRATION ({ dispatch, state, commit }, data) {
 
     const res = await this.$axios.$post('register', {
       login: state.formFields.login.value,
@@ -260,12 +260,30 @@ export const actions = {
     })
 
     if (res.type === 'ok') {
-      dispatch('SIGN_IN')
+      dispatch('SIGN_IN', data)
     }
 
   },
   
-  async INIT_SOCKETS ({ dispatch }) {
+  async INIT_SOCKETS ({ dispatch, commit, rootState }, socket) {
+
+    socket.on(rootState.auth.user.login, (notif, cb) => {
+
+      console.log(notif)
+      if (notif.action === 'messages') {
+        console.log(notif)
+        // dispatch('chat/PUSH_MESSAGE', notif)
+      }
+
+      dispatch('windows/PUSH_POP_WINDOW', notif, { root: true })
+      dispatch('history/PUSH_NOTIFICATION', notif, { root: true })
+      
+      if (this.$router.currentRoute.name === 'notifications') {
+        commit('history/SET_UNREADED_NOTIFICATIONS', 0, { root: true })
+      }
+
+    })
+
 
     // let socket = new WebSocket(
     //   `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
@@ -292,7 +310,7 @@ export const actions = {
   },
 
   // авторизация пользователя
-  async SIGN_IN ({ dispatch, state, rootState }) {
+  async SIGN_IN ({ dispatch, state, rootState }, { socket }) {
 
     let { data: { type } } = await this.$auth.loginWith('local', {
       data: {
@@ -301,6 +319,8 @@ export const actions = {
         location: state.realLocation // отправляем текущую локацию
       }
     })
+
+    // console.log(socket)
 
     if (type === 'ok') {
 
@@ -332,7 +352,8 @@ export const actions = {
       reader.readAsDataURL(files[0])
       reader.onload = async () => {
         img.src = reader.result
-        img.avatar = !images.length // если изображение единственное, то присваевем ему статус основного
+        img.index = images.length // устанавливаем индекс последовательности
+        img.avatar = !img.index // если изображение единственное, то присваевем ему статус основного
         const fd = new FormData() // создаем форму для отправки изображения в хранилище изображений
         fd.append('image', reader.result.split(',')[1])
         const res = await API.uploadImage(fd) // отправляем изображение в хранилище

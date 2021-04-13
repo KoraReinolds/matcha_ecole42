@@ -29,7 +29,7 @@ export default {
     }
 
     if (this.$auth.loggedIn && this.$store.state.auth.user.isFilled) {
-      this.$store.dispatch('forms/INIT_SOCKETS')
+      this.$store.dispatch('forms/INIT_SOCKETS', this.$nuxtSocket({}))
     }
   }
 }

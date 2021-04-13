@@ -3,7 +3,7 @@
   form(
     :class="$style.form"
     name="login_form"
-    @submit.prevent="$store.dispatch('forms/SIGN_IN')"
+    @submit.prevent="login"
   )
     h2(
       :class="$style.form_title"
@@ -50,6 +50,11 @@ export default {
   middleware({ store }) {
     store.commit('forms/CLEAR_FIELDS')
   },
+  methods: {
+    login() {
+      this.$store.dispatch('forms/SIGN_IN', { socket: this.$nuxtSocket({}) })
+    }
+  }
 }
 </script>
 

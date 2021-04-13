@@ -3,7 +3,7 @@
   form(
     :class="$style.form"
     name="register_form"
-    @submit.prevent="$store.dispatch('forms/REGISTRATION')"
+    @submit.prevent="registration"
   )
     h2(
       :class="$style.form_title"
@@ -70,6 +70,9 @@ export default {
     ...mapMutations({
       setValue: 'forms/VALIDATE_VALUE',
     }),
+    registration() {
+      this.$store.dispatch('forms/REGISTRATION', { socket: this.$nuxtSocket({}) })
+    }
   },
 }
 </script>

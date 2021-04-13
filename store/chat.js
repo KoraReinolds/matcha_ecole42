@@ -47,6 +47,10 @@ export const mutations = {
 
 export const actions = {
 
+  PUSH_MESSAGE ({ commit, getters, state, rootState, dispatch }, notif) {
+    console.log(notif)
+  },
+
   async SEND_MESSAGE ({ commit, getters, state, rootState, dispatch }) {
 
     if (getters.MSG_TRIM) {
