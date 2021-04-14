@@ -48,7 +48,17 @@ export const mutations = {
 export const actions = {
 
   PUSH_MESSAGE ({ commit, getters, state, rootState, dispatch }, notif) {
-    console.log(notif)
+
+    // if open chat with user who send msg
+    if (state.curUser?.login === notif.who.login) {
+      commit('PUSH_MESSAGE', {
+        ...notif,
+        target: state.curUser,
+        our: false,
+        created: new Date,
+      })
+    }
+
   },
 
   async SEND_MESSAGE ({ commit, getters, state, rootState, dispatch }) {

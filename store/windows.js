@@ -21,6 +21,8 @@ export const actions = {
 
     const id = Math.random().toString()
 
+    if (action === 'messages') message = ''
+
     const msg = message || who && (action === 'messages' ?
       `${who.fname} ${who.lname} send you message` :
       `${who.fname} ${who.lname} ${action} you`)

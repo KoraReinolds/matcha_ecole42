@@ -269,10 +269,8 @@ export const actions = {
 
     socket.on(rootState.auth.user.login, (notif, cb) => {
 
-      console.log(notif)
       if (notif.action === 'messages') {
-        console.log(notif)
-        // dispatch('chat/PUSH_MESSAGE', notif)
+        dispatch('chat/PUSH_MESSAGE', notif, { root: true })
       }
 
       dispatch('windows/PUSH_POP_WINDOW', notif, { root: true })
@@ -283,29 +281,6 @@ export const actions = {
       }
 
     })
-
-
-    // let socket = new WebSocket(
-    //   `ws://localhost:4567/chat?token=${this.$auth.getToken('local')}`,
-    // )
-
-    // socket.onopen = function(e) {
-    // }
-    
-    // socket.onclose = function(event) {
-    //   if (event.code === 1001) {
-    //     dispatch('INIT_SOCKETS')
-    //   } else {
-    //     dispatch('LOGOUT')
-    //   }
-    // }
-    
-    // socket.onerror = function(error) {
-    // }
-    
-    // socket.onmessage = function(event) {
-    //   dispatch('history/PUSH_NOTIFICATION', JSON.parse(event.data), { root: true })
-    // }.bind(this)
 
   },
 
@@ -319,8 +294,6 @@ export const actions = {
         location: state.realLocation // отправляем текущую локацию
       }
     })
-
-    // console.log(socket)
 
     if (type === 'ok') {
 

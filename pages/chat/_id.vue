@@ -38,10 +38,10 @@
           ref="messageBox"
         )
           template(
-            v-if="$store.getters['chat/MSG_LIST'].length"
+            v-if="messages.length"
           )
             div(
-              v-for="(message, index) in $store.getters['chat/MSG_LIST']"
+              v-for="(message, index) in messages"
               :key="'message'+index+curUser.login"
               :class="[$style.message, { [$style.our]: message.our }]"
             )
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import TextField from '@/components/TextField.vue'
 import SideBar from '@/components/ChatSidebar.vue'
 import RoundedIcon from '@/components/RoundedIcon.vue'
@@ -132,20 +132,29 @@ export default {
     ...mapState({
       curUser: state => state.chat.curUser,
     }),
+    ...mapGetters({
+      messages: 'chat/MSG_LIST',
+    }),
   },
   methods: {
     ...mapActions({
       sendMessage: 'chat/SEND_MESSAGE',
     }),
-  },
-  watch: {
-    messages() {
+    scroll() {
       this.$nextTick(() => {
         const objDiv = this.$refs.messageBox
         if (objDiv) objDiv.scrollTop = objDiv.scrollHeight
       })
+    }
+  },
+  watch: {
+    messages() {
+      this.scroll()
     },
   },
+  mounted() {
+    this.scroll()
+  }
 }
 </script>
 <style module lang="scss">
