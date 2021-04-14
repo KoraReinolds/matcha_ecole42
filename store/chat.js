@@ -102,7 +102,6 @@ export const actions = {
 
     const { data, type } = await this.$axios.$get('chat-list')
 
-    
     if (type === 'ok') {
       commit('SET_CUR_USER', null)
       commit('SET_MESSAGES', [])

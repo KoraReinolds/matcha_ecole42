@@ -129,7 +129,7 @@ export const state = () => ({
     },
   },
   realLocation: null, // реальное местоположение пользователя
-  popular_tags: ['lol', 'kek'],
+  popular_tags: '',
 })
 export const getters = {
   LOGIN_VALID: (state) => !!(state.formFields.login.value &&
@@ -177,7 +177,11 @@ export const actions = {
 
   async GET_POPULAR_TAGS ({ commit }) {
 
-    let res = await this.$axios.$get('get-tags')
+    // api call
+    const res = {
+      type: 'ok',
+      data: ['books', 'films', 'football'],
+    }
 
     if (res.type === 'ok') {
       commit('SET_POPULAR_TAGS', res.data)
@@ -243,6 +247,8 @@ export const actions = {
       await API.getLocationByGPS().catch((e) => {}) || // пытаемся получить локацию по gps
       await API.getLocationByIP().catch((e) => {}) || // иначе по ip
       { x: 0, y: 0 }
+    
+    console.log(location)
 
     commit('SET_LOCATION', location)
 
