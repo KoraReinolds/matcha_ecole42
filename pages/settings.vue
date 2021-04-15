@@ -106,6 +106,9 @@ export default {
       key: 'user',
       value,
     }, { root: true })
+    Object.entries(value).forEach(([key, value]) => {
+      store.commit('forms/VALIDATE_VALUE', { key, value })
+    })
     return true
   },
   components: {
@@ -136,12 +139,7 @@ export default {
       changeUserField: 'forms/CHANGE_USER_FIELD',
     }),
   },
-  mounted() {
-    Object.entries(this.$auth.user).forEach(([key, value]) => {
-      this.$store.commit('forms/VALIDATE_VALUE', { key, value })
-    })
-  },
-};
+}
 </script>
 
 <style module lang="scss">
@@ -180,7 +178,7 @@ export default {
 
 @include settingsMixin();
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include settingsMixin(
     $grid-gape: 0px,
     $width: 100%,

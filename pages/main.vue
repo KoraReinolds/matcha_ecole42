@@ -127,7 +127,7 @@ export default {
       top: calc(#{$header-height} + 16px);
       right: 16px;
       color: $main-color;
-      z-index: 5;
+      z-index: $tools_toggelr-z;
     }
     
   }

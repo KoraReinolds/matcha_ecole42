@@ -5,13 +5,15 @@
   
   .form {
     position: relative;
-    z-index: 1001;
+    z-index: $form-z;
     width: 95%;
     max-width: 500px;
     margin: 5% auto auto auto;
     background: #fff;
     padding: 40px 20px;
     border-radius: 10px;
+    transform: scale(1.0);
+    opacity: 1;
   
     .form_title {
       margin-bottom: 20px;
@@ -34,9 +36,11 @@
   }
 }
 
-@include formMixin();
+@media (min-width: map-get($grid-breakpoints, sm)) {
+  @include formMixin();
+}
 
-@media (max-width: 600px) {
+@media (max-width: map-get($grid-breakpoints, sm)) {
   @include formMixin(
     $actions_direction: column,
     $action_link_margin: 0 0 20px 0,

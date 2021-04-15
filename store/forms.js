@@ -128,7 +128,7 @@ export const state = () => ({
       valid: false,
     },
   },
-  realLocation: 'null', // реальное местоположение пользователя
+  realLocation: null, // реальное местоположение пользователя
   popular_tags: '',
 })
 export const getters = {
