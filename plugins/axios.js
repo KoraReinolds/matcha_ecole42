@@ -11,7 +11,7 @@ export default function ({ $axios, redirect, store }) {
   })
   $axios.onResponse(({ data }) => {
     if (data.type === '404') {
-      redirect('/404')
+      // redirect('/404')
     }
     if (process.client) {
       if (data.message === 'Ошибка авторизации') {

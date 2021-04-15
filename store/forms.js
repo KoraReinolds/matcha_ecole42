@@ -1,4 +1,4 @@
-import API from '~/api'
+import axios from 'axios'
 
 export const state = () => ({
   validationRules: {
@@ -128,7 +128,7 @@ export const state = () => ({
       valid: false,
     },
   },
-  realLocation: null, // реальное местоположение пользователя
+  realLocation: 'null', // реальное местоположение пользователя
   popular_tags: '',
 })
 export const getters = {
@@ -243,14 +243,22 @@ export const actions = {
 
   async GET_LOCATION ({ commit }) {
 
-    let location =
-      await API.getLocationByGPS().catch((e) => {}) || // пытаемся получить локацию по gps
-      await API.getLocationByIP().catch((e) => {}) || // иначе по ip
-      { x: 0, y: 0 }
-    
-    console.log(location)
-
-    commit('SET_LOCATION', location)
+    const getPosition = () => new Promise((res, rej) => {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { longitude: y, latitude: x } }) => res({ x, y }),
+        async err => {
+          try {
+            const { data: { longitude: y, latitude: x } } = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=7cdfe4b5e8434a8bb2108e614e9de6fa`)
+            res({ y, x })
+          } catch {
+            res({ x: 0, y: 0 })
+          }
+        },
+        { timeout: 1000 }
+      )
+    })
+  
+    commit('SET_LOCATION', await getPosition())
 
   },
 
@@ -335,7 +343,9 @@ export const actions = {
         img.avatar = !img.index // если изображение единственное, то присваевем ему статус основного
         const fd = new FormData() // создаем форму для отправки изображения в хранилище изображений
         fd.append('image', reader.result.split(',')[1])
-        const res = await API.uploadImage(fd) // отправляем изображение в хранилище
+        const res = await axios.post(`https://api.imgbb.com/1/upload?
+          expiration=3600&
+          key=52cdc2758163512d48d7ac9715a14c64`, fd) // отправляем изображение в хранилище
         img.src = res.data.data.display_url // устнавливаем ссылку на изображение в src
         // изменяем состояние новым массивом изображений
         dispatch('CHANGE_USER_FIELD', {
