@@ -123,7 +123,7 @@ module.exports = {
   io: {
     // module options
     sockets: [{
-      url: process.env.VUE_APP_BACKEND_URL,
+      url: process.env.VUE_APP_BACKEND_URL || 'http://localhost:4000',
       default: true,
     }]
   },
@@ -136,7 +136,7 @@ module.exports = {
   ],
   axios: {
     // credentials: true,
-    baseURL: process.env.VUE_APP_BACKEND_URL, // Used as fallback if no runtime config is provided
+    baseURL: process.env.VUE_APP_BACKEND_URL || 'http://localhost:4000', // Used as fallback if no runtime config is provided
   },
   auth: {
     token: {
