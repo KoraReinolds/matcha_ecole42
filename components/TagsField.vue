@@ -81,5 +81,5 @@ export default {
     margin-top: 10px;
     text-align: left;
   }
-
+  
 </style>

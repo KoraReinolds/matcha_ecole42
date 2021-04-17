@@ -112,7 +112,7 @@ export const state = () => ({
     tags: {
       value: [],
       errorMsg: '',
-      title: 'New tag',
+      title: 'Tag List',
       valid: false,
     },
     images: {

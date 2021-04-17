@@ -9,21 +9,24 @@
       h2(
         :class="$style.form_title"
       ) Login
-      TextField(
-        v-bind="$store.state.forms.formFields.login"
-        @input="$store.commit('forms/SET_VALUE', { key: 'login', value: $event })"
-        outlined
-        filled
-        name="matcha_login"
+      div(
+        :class="$style.fields"
       )
-      TextField(
-        v-bind="$store.state.forms.formFields.password"
-        @input="$store.commit('forms/SET_VALUE', { key: 'password', value: $event })"
-        type='password'
-        outlined
-        filled
-        name="matcha_password"
-      )
+        TextField(
+          v-bind="$store.state.forms.formFields.login"
+          @input="$store.commit('forms/SET_VALUE', { key: 'login', value: $event })"
+          outlined
+          filled
+          name="matcha_login"
+        )
+        TextField(
+          v-bind="$store.state.forms.formFields.password"
+          @input="$store.commit('forms/SET_VALUE', { key: 'password', value: $event })"
+          type='password'
+          outlined
+          filled
+          name="matcha_password"
+        )
       div(
         :class="$style.form_actions"
       )

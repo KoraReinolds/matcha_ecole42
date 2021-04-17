@@ -6,6 +6,7 @@
       :class="['wrapper', 'only_laptop', $style.footer_content]"
     ) Dating website form 21 School
     div(
+      v-if="$auth.user.isFilled"
       :class="['wrapper', 'only_mobile', $style.mobile_nav]"
     )
       Icon(

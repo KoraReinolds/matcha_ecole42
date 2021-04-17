@@ -1,48 +1,37 @@
-@mixin formMixin(
-  $actions_direction: row,
-  $action_link_margin: 0px,
-) {
-  
-  .form {
-    position: relative;
-    z-index: $form-z;
-    width: 95%;
-    max-width: 500px;
-    margin: 5% auto auto auto;
-    background: #fff;
-    padding: 40px 20px;
-    border-radius: 10px;
-    transform: scale(1.0);
-    opacity: 1;
-  
-    .form_title {
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-  
-    .form_actions {
-      display: flex;
-      flex-direction: $actions_direction;
-      justify-content: space-around;
-      align-items: center;
+.form {
+  position: relative;
+  max-height: calc(100vh - #{$header-height} - #{$footer-height});
+  display: flex;
+  flex-direction: column;
+  z-index: $form-z;
+  width: 95%;
+  max-width: 500px;
+  margin: 5% auto auto auto;
+  background: #fff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  transform: scale(1.0);
+  opacity: 1;
 
-      .form_action_link {
-        display: inline-block;
-        text-decoration: none;
-        margin: $action_link_margin;
-      }
-    }
-
+  .fields {
+    overflow: scroll;
   }
-}
+  
+  .form_title {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
 
-@media (min-width: map-get($grid-breakpoints, sm)) {
-  @include formMixin();
-}
+  .form_actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
 
-@media (max-width: map-get($grid-breakpoints, sm)) {
-  @include formMixin(
-    $actions_direction: column,
-    $action_link_margin: 0 0 20px 0,
-  );
+    .form_action_link {
+      display: inline-block;
+      text-decoration: none;
+    }
+  }
+
 }
