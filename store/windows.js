@@ -39,9 +39,9 @@ export const actions = {
       commit('PUSH_POP_WINDOW', newWindow)
   
       // hide added notification after 3 sec
-      // setTimeout(function() {
-      //   commit('HIDE_MSG', id)
-      // }.bind(this), 3000)
+      setTimeout(function() {
+        commit('HIDE_MSG', id)
+      }.bind(this), 3000)
 
     }
 
