@@ -45,6 +45,7 @@
 
 <script>
 import TextField from '@/components/TextField.vue'
+import gsap from 'gsap'
 
 export default {
   name: 'Login',
@@ -57,11 +58,37 @@ export default {
     store.commit('forms/SET_VALUE', { key: 'login', value: 'User_1' })
     store.commit('forms/SET_VALUE', { key: 'password', value: '123' })
   },
+  // transition: {
+  //   beforeEnter(el) {
+  //     el.style.opacity = 0.5
+  //     // el.style.transform = 'scale(0,0)'
+  //   },
+  //   enter(el, done) {
+  //     console.log(this)
+  //     // gsap.timeline()
+  //     //   .from(`.${this.$style.fields}`, {
+  //     //     duration: 1,
+  //     //     opacity: 1,
+  //     //     // scale: 1,
+  //     //     onComplete: done
+  //     //   })
+  //   },
+  // },
   methods: {
     login() {
       this.$store.dispatch('forms/SIGN_IN', { socket: this.$nuxtSocket({}) })
     }
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    gsap.timeline({ onComplete: next })
+      .to(`.${this.$style.form_actions}`, { opacity: 0, x: 30, duration: 0.3, ease: 'easy.out' })
+      .to(`.${this.$style.fields}`, { height: 0, opacity: 0.1, duration: 0.5, ease: 'expo.in' })
+  },
+  mounted() {
+    gsap.timeline()
+      .from(`.${this.$style.fields}`, { height: 0, opacity: 0.1, duration: 0.5, ease: 'expo.in' })
+      .from(`.${this.$style.form_actions}`, { opacity: 0, x: 30, duration: 0.3, ease: 'easy.out' })
+  },
 }
 </script>
 

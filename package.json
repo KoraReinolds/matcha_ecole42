@@ -24,6 +24,7 @@
     "@nuxtjs/axios": "^5.12.4",
     "@vue/cli-plugin-unit-jest": "^4.5.9",
     "@vue/test-utils": "^1.1.2",
+    "gsap": "^3.6.1",
     "nuxt": "^2.14.12",
     "nuxt-auth": "^2.0.10",
     "nuxt-fontawesome": "^0.4.0",

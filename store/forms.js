@@ -248,8 +248,8 @@ export const actions = {
         ({ coords: { longitude: y, latitude: x } }) => res({ x, y }),
         async err => {
           try {
-            const { data: { longitude: y, latitude: x } } = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=7cdfe4b5e8434a8bb2108e614e9de6fa`)
-            res({ y, x })
+            // const { data: { longitude: y, latitude: x } } = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=7cdfe4b5e8434a8bb2108e614e9de6fa`)
+            // res({ y, x })
           } catch {
             res({ x: 0, y: 0 })
           }
